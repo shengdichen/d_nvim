@@ -371,7 +371,7 @@ let g:ale_linters['c'] = 'all'
 "   3.  pyls [LS]
 "       install with
 "           sudo pacman -S python-language-server
-let g:ale_linters['python'] = ['pylint', 'flake8', 'pyls']
+let g:ale_linters['python'] = ['pyls']
 
 
 "   3.  black [Fixer]
