@@ -16,9 +16,10 @@ filetype plugin indent on
 
 " }}}
 
-" enable syntax highlighting
-syntax enable
+" default behavior of vim & nvim, just reinforcing
+syntax on
 
+colorscheme shrakula_theme
 
 " show linenumber on the left "gutter" relative to the current line
 set number relativenumber
