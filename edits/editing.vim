@@ -13,6 +13,9 @@ set tabstop=4 softtabstop=4 shiftwidth=4
 " use system clipboard
 set clipboard+=unnamedplus
 
+" unwritten modifications will no longer prevent further buffering
+set hidden
+
 " white-spaces removal {{{
 " remove trailing white-spaces without cursor displacement
 function! <SID>RemoveTrailingSpaces()
