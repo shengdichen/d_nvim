@@ -346,6 +346,11 @@ let g:ale_fixers['cpp'] = ['clangtidy', 'clang-format']
 let g:ale_cpp_clangtidy_extra_options = ""
 " }}}
 
+" cuda {{{
+let g:ale_linters['cuda'] = ['nvcc']
+
+let g:ale_fixers['cuda'] = ['clang-format']
+" }}}
 
 " C {{{
 let g:ale_linters['c'] = 'all'
