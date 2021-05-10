@@ -348,6 +348,8 @@ let g:ale_cpp_clangtidy_extra_options = ""
 
 " cuda {{{
 let g:ale_linters['cuda'] = ['nvcc']
+"       let g:ale_cuda_nvcc_executable =
+"           \ "/home/shengdi/mnt/FUSE/ptr/HPi7/opt/cuda/bin/nvcc"
 
 let g:ale_fixers['cuda'] = ['clang-format']
 " }}}
