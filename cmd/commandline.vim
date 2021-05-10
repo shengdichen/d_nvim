@@ -16,3 +16,6 @@ cnoremap :T packadd vifm <bar> TabVifm
 
 " mapping to Backspace also clears existing input at command-line
 cnoremap JJ <C-U><BS>
+
+set laststatus=0
+

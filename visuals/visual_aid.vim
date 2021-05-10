@@ -37,7 +37,7 @@ set cursorline
 "   1: if there are at least two panes visible at the same time
 "   2: always
 " set default to 0, i.e., always off
-set laststatus=2
+"       set laststatus=2
 
 
 " |ruler| displays information about line and cursor position
