@@ -101,6 +101,16 @@ augroup toggle_statusline
         \ set laststatus=0 | redraw
     " }}}
 
+    " hide after these events only if buffer has not changed
+    autocmd
+        \ InsertLeave,CmdLineLeave,TextChanged,TextChangedI,TextChangedP
+        \ *
+        \ if &modified != 0
+            \ | set laststatus=2
+        \ | else
+            \ | set laststatus=0
+        \ | endif
+
     " unconditionally show after these {{{
     autocmd
         \ InsertEnter
