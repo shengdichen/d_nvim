@@ -397,6 +397,14 @@ let g:ale_fixers['python'] = ['black']
 " }}}
 
 
+" shell {{{
+" language_server := bash-language-server
+let g:ale_linters['sh'] = ['shellcheck', 'language_server']
+
+let g:ale_fixers['sh'] = ['shfmt']
+" }}}
+
+
 " cmake {{{
 "   1.  cmakelint [Linter]
 "       install with:
