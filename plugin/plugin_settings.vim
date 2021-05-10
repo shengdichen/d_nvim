@@ -555,6 +555,9 @@ nmap <Leader>DV <Plug>(ale_go_to_type_definition_in_vsplit)
 " }}}
 
 
+" run fixer (if defined, fails silently otherwise)
+nmap <Leader>f <Plug>(ale_fix)
+
 nmap <Leader>r <Plug>(ale_rename)
 
 
