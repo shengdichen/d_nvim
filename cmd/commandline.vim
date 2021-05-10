@@ -37,5 +37,38 @@ highlight StatusInvert gui=NONE guibg=#ede3f7 guifg=#000000
 " start from scratch
 set statusline=""
 
+" on the left {{{
+set statusline+=%.37F
+
+" the first space is consumed by Vim, so this really is just one space
+set statusline+=%{\"\ \ \"}
+
+set statusline+=
+    \~%{
+        \&filetype!=\"\"
+        \?
+            \&filetype
+        \:
+            \\"voidType\"
+    \}
+
+set statusline+=
+    \%{
+        \&readonly==0
+        \?
+            \&modifiable!=0
+            \?
+                \\"\"
+            \:
+                \\"\|!W\"
+        \:
+            \&modifiable!=0
+            \?
+                \\"\|RO\"
+            \:
+                \\"\|RO!W\"
+    \}
+" }}}
+
 " }}}
 
