@@ -1,6 +1,3 @@
-" shortcut to bring up a terminal running bash in full screen
-cnoremap TER terminal /bin/bash <ENTER>
-
 " start terminal in a split window
 " the prefix-"+" is required to prevent editing a new file named "terminal"
 cnoremap :T split +terminal
