@@ -89,5 +89,30 @@ set statusline+=%2*(%02c,\ %03l/%03L)
 " }}}
 " }}}
 
+
+" toggling visibility of status-line {{{
+augroup toggle_statusline
+    autocmd!
+
+    " unconditionally hide after these {{{
+    autocmd
+        \ FileWritePost,BufWritePost,CmdlineLeave
+        \ *
+        \ set laststatus=0 | redraw
+    " }}}
+
+    " unconditionally show after these {{{
+    autocmd
+        \ InsertEnter
+        \ *
+        \ set laststatus=2
+
+    " a redrawstatus is required here for statusline to actually show
+    autocmd
+        \ CmdlineEnter
+        \ *
+        \ set laststatus=2 | redrawstatus
+    " }}}
+augroup END
 " }}}
 
