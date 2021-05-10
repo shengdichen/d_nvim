@@ -3,10 +3,7 @@ cnoremap TER terminal /bin/bash <ENTER>
 
 " start terminal in a split window
 " the prefix-"+" is required to prevent editing a new file named "terminal"
-cnoremap T split +terminal /bin/bash
-
-" make good for what has been done with "T"
-cnoremap TT T
+cnoremap :T split +terminal
 
 " a quick detour to autocommands:
 "{{{
