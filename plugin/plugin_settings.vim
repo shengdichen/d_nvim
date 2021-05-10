@@ -554,10 +554,14 @@ nmap <Leader>DS <Plug>(ale_go_to_type_definition_in_split)
 nmap <Leader>DV <Plug>(ale_go_to_type_definition_in_vsplit)
 " }}}
 
+
+nmap <Leader>r <Plug>(ale_rename)
+
+
 " reference {{{
 " by default only one plug mapping
 "       <Plug>(ale_find_references)     - ALEFindReferences
-nmap <Leader>r <Plug>(ale_find_references)
+nmap <Leader>R <Plug>(ale_find_references)
 
 " unnamed functions
 "       "       ALEFindReferences -relative     - show relative paths of referencing files
