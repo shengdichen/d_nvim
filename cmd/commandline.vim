@@ -13,3 +13,6 @@ cnoremap :V Vifm
 cnoremap :S SplitVifm
 cnoremap :H VsplitVifm
 cnoremap :T TabVifm
+
+" mapping to Backspace also clears existing input at command-line
+cnoremap JJ <C-U><BS>
