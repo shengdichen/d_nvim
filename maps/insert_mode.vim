@@ -1,8 +1,6 @@
-inoremap jj <ESC>
 " find name for keys from |:h key-notation|
 
-inoremap ` <C-O>
-inoremap `` `
+inoremap jj <ESC>
 
 set backspace=indent,eol,start
 
