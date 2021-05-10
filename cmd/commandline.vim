@@ -70,5 +70,8 @@ set statusline+=
     \}
 " }}}
 
+" separator in the middle
+set statusline+=%=
+
 " }}}
 
