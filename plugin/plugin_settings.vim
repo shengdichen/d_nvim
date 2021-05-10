@@ -850,8 +850,9 @@ nmap <Leader>R <Plug>(ale_find_references)
 
 
 " netrw {{{
-cnoremap :e split +Explore
-cnoremap :E tabnew +Explore
+" |::E| considered easier to hit than |::e|, thus opens a friendlier split
+cnoremap :E vsplit +Explore
+cnoremap :e tabnew +Explore
 
 " listing options {{{
 " do not show the banner
