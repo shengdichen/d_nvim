@@ -388,6 +388,7 @@ let g:ale_linters['python'] = ['pyls']
 "         # pacman -S autopep8
 "         $ pip install autopep8
 let g:ale_fixers['python'] = ['black']
+let g:ale_python_black_options = '--line-length 80'
 
 " install jedi directly:
 "       sudo pacman -S jedi
