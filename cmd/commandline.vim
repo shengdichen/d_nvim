@@ -73,5 +73,21 @@ set statusline+=
 " separator in the middle
 set statusline+=%=
 
+" on the right {{{
+set statusline+=
+    "\ highlighting holds for both active and inactive windows
+    \%#StatusInvert#%{
+        \&modified==\"\"
+        \?
+            \\"\"
+        \:
+            \\"!Pending!\ \ \"
+    \}
+
+" the positional numbers
+set statusline+=%2*(%02c,\ %03l/%03L)
+" }}}
+" }}}
+
 " }}}
 
