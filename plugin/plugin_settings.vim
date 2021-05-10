@@ -379,6 +379,22 @@ let g:ale_linters['c'] = 'all'
 "       install with
 "           sudo pacman -S python-language-server
 let g:ale_linters['python'] = ['pyls']
+let g:ale_python_pyls_config = {
+    \   'pyls': {
+    \       'plugins': {
+    \           'pycodestyle': {
+    \               'enabled': v:false,
+    \               'maxLineLength': 79,
+    \           },
+    \           'flake8': {
+    \               'maxLineLength': 79,
+    \           },
+    \       },
+    \   },
+    \ }
+
+
+
 
 
 "   3.  black [Fixer]
