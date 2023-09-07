@@ -1,3 +1,6 @@
 [submodule ".config/nvim/conf/rpre/pack/default/start/vim-surround"]
 	path = .config/nvim/conf/rpre/pack/default/start/vim-surround
 	url = https://github.com/tpope/vim-surround.git
+[submodule ".config/nvim/conf/rpre/pack/default/start/vifm.vim"]
+	path = .config/nvim/conf/rpre/pack/default/start/vifm.vim
+	url = https://github.com/vifm/vifm.vim.git
