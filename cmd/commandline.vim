@@ -9,10 +9,10 @@ set wildmode=list:longest
 cnoremap :W wa! <Enter>
 
 " everything about Vifm
-cnoremap :V Vifm
-cnoremap :S SplitVifm
-cnoremap :H VsplitVifm
-cnoremap :T TabVifm
+cnoremap :V packadd vifm <bar> Vifm
+cnoremap :S packadd vifm <bar> SplitVifm
+cnoremap :H packadd vifm <bar> VsplitVifm
+cnoremap :T packadd vifm <bar> TabVifm
 
 " mapping to Backspace also clears existing input at command-line
 cnoremap JJ <C-U><BS>
