@@ -470,7 +470,7 @@ let g:ale_fixers['cmake'] = ['cmakeformat']
 "   1.  vimls
 "       Official Repo at:
 "           https://github.com/iamcco/vim-language-server
-"       npm install -g vim-language-server
+"       $ npm install -g vim-language-server
 
 let g:ale_linters['vim'] = ['vimls']
 " }}}
