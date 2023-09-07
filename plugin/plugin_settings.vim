@@ -372,22 +372,41 @@ let g:ale_linters['c'] = 'all'
 "       OR, add(append) ~/.local/bin to $PATH
 
 "   2.  flake8 [Linter]
-"       install with:
-"         $ sudo pip install flake8
+"       a)  itself
+"           # pacman -S flake8
+"       b)  plugin for pylsp
+"           $ pip install --user pyls-flake8
 
-"   3.  pyls [LS]
+"   3.  isort
+"       # pacman -S python-isort
+"       $ pip install --user pyls-isort
+"   4.  rope
+"       # pacman -S python-rope
+"       $ pip install --user pylsp-rope
+
+"   3.  pylsp [LS]
 "       install with
-"           sudo pacman -S python-language-server
-let g:ale_linters['python'] = ['pyls']
-let g:ale_python_pyls_config = {
-    \   'pyls': {
+"           # pacman -S python-lsp-server
+
+" the language server
+let g:ale_linters['python'] = ['pylsp']
+
+" use flake8 instead of pycodestye
+" emphasis that we really want line-length 79, despite what Black says
+" 'maxLineLength': 88,
+let g:ale_python_pylsp_config = {
+    \   'pylsp': {
     \       'plugins': {
     \           'pycodestyle': {
     \               'enabled': v:false,
-    \               'maxLineLength': 79,
+    \           },
+    \           'pydocstyle': {
+    \               'enabled': v:false,
     \           },
     \           'flake8': {
-    \               'maxLineLength': 79,
+    \               'max-line-length': 88,
+    \               'max-doc-length': 79,
+    \               'extend-ignore': 'E203',
     \           },
     \       },
     \   },
@@ -400,16 +419,15 @@ let g:ale_python_pyls_config = {
 "   3.  black [Fixer]
 "         $ pip install black
 "         $ sudo pacman -S python-black
+let g:ale_fixers['python'] = ['black']
+" use black's default of 88 characters per line
+let g:ale_python_black_options = '--line-length 88'
+
 "   4.  autopep8 [Fixer]
 "         # pacman -S autopep8
 "         $ pip install autopep8
-let g:ale_fixers['python'] = ['black']
-let g:ale_python_black_options = '--line-length 80'
+" }}}
 
-" install jedi directly:
-"       sudo pacman -S jedi
-" Python LS by Palantir
-"       sudo pip install python-language-server
 
 " }}}
 
