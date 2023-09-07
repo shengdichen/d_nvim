@@ -619,10 +619,17 @@ nmap <Leader>DS <Plug>(ale_go_to_type_definition_in_split)
 nmap <Leader>DV <Plug>(ale_go_to_type_definition_in_vsplit)
 " }}}
 
+
+" run fixer (if defined, fails silently otherwise)
+nmap <Leader>f <Plug>(ale_fix)
+
+nmap <Leader>r <Plug>(ale_rename)
+
+
 " reference {{{
 " by default only one plug mapping
 "       <Plug>(ale_find_references)     - ALEFindReferences
-nmap <Leader>r <Plug>(ale_find_references)
+nmap <Leader>R <Plug>(ale_find_references)
 
 " unnamed functions
 "       "       ALEFindReferences -relative     - show relative paths of referencing files
@@ -908,8 +915,9 @@ nmap <Leader>r <Plug>(ale_find_references)
 
 
 " netrw {{{
-cnoremap :e split +Explore
-cnoremap :E tabnew +Explore
+" |::E| considered easier to hit than |::e|, thus opens a friendlier split
+cnoremap :E vsplit +Explore
+cnoremap :e tabnew +Explore
 
 " listing options {{{
 " do not show the banner
