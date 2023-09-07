@@ -346,6 +346,13 @@ let g:ale_fixers['cpp'] = ['clangtidy', 'clang-format']
 let g:ale_cpp_clangtidy_extra_options = ""
 " }}}
 
+" cuda {{{
+let g:ale_linters['cuda'] = ['nvcc']
+"       let g:ale_cuda_nvcc_executable =
+"           \ "/home/shengdi/mnt/FUSE/ptr/HPi7/opt/cuda/bin/nvcc"
+
+let g:ale_fixers['cuda'] = ['clang-format']
+" }}}
 
 " C {{{
 let g:ale_linters['c'] = 'all'
@@ -365,28 +372,81 @@ let g:ale_linters['c'] = 'all'
 "       OR, add(append) ~/.local/bin to $PATH
 
 "   2.  flake8 [Linter]
-"       install with:
-"         $ sudo pip install flake8
+"       a)  itself
+"           # pacman -S flake8
+"       b)  plugin for pylsp
+"           $ pip install --user pyls-flake8
 
-"   3.  pyls [LS]
+"   3.  isort
+"       # pacman -S python-isort
+"       $ pip install --user pyls-isort
+"   4.  rope
+"       # pacman -S python-rope
+"       $ pip install --user pylsp-rope
+
+"   3.  pylsp [LS]
 "       install with
-"           sudo pacman -S python-language-server
-let g:ale_linters['python'] = ['pyls']
+"           # pacman -S python-lsp-server
+
+" the language server
+let g:ale_linters['python'] = ['pylsp']
+
+" use flake8 instead of pycodestye
+" emphasis that we really want line-length 79, despite what Black says
+" 'maxLineLength': 88,
+let g:ale_python_pylsp_config = {
+    \   'pylsp': {
+    \       'plugins': {
+    \           'pycodestyle': {
+    \               'enabled': v:false,
+    \           },
+    \           'pydocstyle': {
+    \               'enabled': v:false,
+    \           },
+    \           'flake8': {
+    \               'max-line-length': 88,
+    \               'max-doc-length': 79,
+    \               'extend-ignore': 'E203',
+    \           },
+    \       },
+    \   },
+    \ }
+
+
+
 
 
 "   3.  black [Fixer]
 "         $ pip install black
 "         $ sudo pacman -S python-black
+let g:ale_fixers['python'] = ['black']
+" use black's default of 88 characters per line
+let g:ale_python_black_options = '--line-length 88'
+
 "   4.  autopep8 [Fixer]
 "         # pacman -S autopep8
 "         $ pip install autopep8
-let g:ale_fixers['python'] = ['black']
+" }}}
 
-" install jedi directly:
-"       sudo pacman -S jedi
-" Python LS by Palantir
-"       sudo pip install python-language-server
 
+" r {{{
+let g:ale_linters['r'] = ['languageserver', 'lintr']
+
+let g:ale_fixers['r'] = ['styler']
+" }}}
+
+
+" javascript {{{
+let g:ale_fixers['javascript'] = ['prettier', 'eslint']
+let g:ale_linters['javascript'] = ['prettier', 'eslint']
+" }}}
+
+
+" shell {{{
+" language_server := bash-language-server
+let g:ale_linters['sh'] = ['shellcheck', 'language_server']
+
+let g:ale_fixers['sh'] = ['shfmt']
 " }}}
 
 
@@ -410,7 +470,7 @@ let g:ale_fixers['cmake'] = ['cmakeformat']
 "   1.  vimls
 "       Official Repo at:
 "           https://github.com/iamcco/vim-language-server
-"       npm install -g vim-language-server
+"       $ npm install -g vim-language-server
 
 let g:ale_linters['vim'] = ['vimls']
 " }}}
@@ -436,6 +496,11 @@ let g:ale_linters['vim'] = ['vimls']
 
 
 let g:ale_linters['tex'] = ['texlab', 'writegood', 'alex', 'proselint']
+" }}}
+
+
+" sql {{{
+let g:ale_linters['sql'] = ['sqlformat']
 " }}}
 
 
