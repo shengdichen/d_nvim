@@ -429,6 +429,16 @@ let g:ale_python_black_options = '--line-length 88'
 " }}}
 
 
+" r {{{
+let g:ale_linters['r'] = ['languageserver', 'lintr']
+
+let g:ale_fixers['r'] = ['styler']
+" }}}
+
+
+" javascript {{{
+let g:ale_fixers['javascript'] = ['prettier', 'eslint']
+let g:ale_linters['javascript'] = ['prettier', 'eslint']
 " }}}
 
 
