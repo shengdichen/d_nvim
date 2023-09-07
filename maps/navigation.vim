@@ -35,4 +35,4 @@ vnoremap <PageUp> <C-U>
 vnoremap <PageDown> <C-D>
 
 " manually set folding
-set foldmethod=marker
+set foldmethod=indent
