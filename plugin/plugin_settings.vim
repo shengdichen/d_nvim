@@ -499,6 +499,11 @@ let g:ale_linters['tex'] = ['texlab', 'writegood', 'alex', 'proselint']
 " }}}
 
 
+" sql {{{
+let g:ale_linters['sql'] = ['sqlformat']
+" }}}
+
+
 " all other unnominated types {{{
 let g:ale_linters['*'] = ['writegood', 'alex', 'proselint']
 let g:ale_fixers['*'] = ['textlint']
