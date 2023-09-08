@@ -11,12 +11,12 @@ local function assemble()
     end
 
     local function separator()
-        conf = conf..[[%=%]]
+        conf = conf..[[%=]]
     end
 
     local function right()
-        conf = conf..[[#StatusInvert#%{&modified==""?"":"!Pending!  "}]]
-        conf = conf..[[%2*(%02c, %03l/%03L)]]
+        conf = conf..[[%{&modified==""?"":"!Pending!  "}]]
+        conf = conf.."(%02c, %03l/%03L)"
     end
 
     left()
