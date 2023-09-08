@@ -1,6 +1,6 @@
 local function bind()
     vim.keymap.set("c", ":V", "Vifm")
-    vim.keymap.set("c", ":T", "TabVifm")
+    vim.keymap.set("c", ":F", "TabVifm")
 end
 
 local function main()
