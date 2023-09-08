@@ -76,6 +76,8 @@ local function make_autocmds()
 end
 
 local function statusline()
+    vim.opt.laststatus = 0  -- hide by default
+
     vim.opt.ruler = false  -- use our own cursor-coordinate display instead
 
     -- display incomplete commands in operator-pending mode
