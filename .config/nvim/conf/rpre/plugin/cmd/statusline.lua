@@ -1,3 +1,30 @@
+local function assemble()
+    local conf = ""
+
+    local function left()
+        conf = conf.."%.37F"
+
+        conf = conf.."  ~"
+        conf = conf..[[%{&filetype!=""?&filetype:"voidType"}]]
+
+        conf = conf..[[%{&readonly==0?&modifiable!=0?"":"|!W":&modifiable!=0?"|RO":"|RO!W"}]]
+    end
+
+    local function separator()
+        conf = conf..[[%=%]]
+    end
+
+    local function right()
+        conf = conf..[[#StatusInvert#%{&modified==""?"":"!Pending!  "}]]
+        conf = conf..[[%2*(%02c, %03l/%03L)]]
+    end
+
+    left()
+    separator()
+    right()
+    vim.opt.statusline = conf
+end
+
 local function hide()
     vim.opt.laststatus = 0
     vim.cmd("redraw")
@@ -58,6 +85,8 @@ local function statusline()
 end
 
 local function main()
+    assemble()
+
     make_autocmds()
     statusline()
 end
