@@ -10,15 +10,21 @@ local function format()
     vim.opt.tabstop = 4
     vim.opt.softtabstop = 4
     vim.opt.shiftwidth = 4
+end
 
+local function remove_redundant_spaces()
     local function remove_trailing()
         pos = vim.api.nvim_win_get_cursor(0)
-
-        --  remove leading with %s/^\s\+//e
         vim.cmd([[%s/\s\+$//e]])
-
         vim.api.nvim_win_set_cursor(0, pos)
     end
+
+    local function remove_leading()
+        pos = vim.api.nvim_win_get_cursor(0)
+        vim.cmd([[%s/^\s\+//e]])
+        vim.api.nvim_win_set_cursor(0, pos)
+    end
+
     vim.api.nvim_create_autocmd({"BufWritePre"}, {
         pattern = {"*"},
         callback = remove_trailing,
@@ -36,6 +42,7 @@ end
 
 local function main()
     format()
+    remove_redundant_spaces()
     cmd()
 end
 main()
