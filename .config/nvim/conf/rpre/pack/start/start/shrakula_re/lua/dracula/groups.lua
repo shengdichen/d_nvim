@@ -1,55 +1,55 @@
 local function common(mapping, palette)
     local function general()
-        mapping["Normal"] = { fg = palette.fg, bg = palette.bg, }
-        mapping["NormalFloat"] = { fg = palette.fg, bg = palette.bg, }
-        mapping["Comment"] = { fg = palette.white_dark, }
-        mapping["MatchParen"] = { fg = palette.fg, underline = true, }
-        mapping["EndOfBuffer"] = { bg = palette.bg, fg = palette.black }  -- tilde at the end
+        mapping["Normal"] = { bg = palette.bg, fg = palette.fg }
+        mapping["NormalFloat"] = { bg = palette.bg, fg = palette.fg }
+        mapping["Comment"] = { fg = palette.white_dark }
+        mapping["MatchParen"] = { fg = palette.fg, underline = true }
+        mapping["EndOfBuffer"] = { bg = palette.bg, fg = palette.black } -- tilde at the end
 
-        mapping["IncSearch"] = { fg = palette.orange, bg = palette.comment, }
-        mapping["Search"] = { fg = palette.black, bg = palette.orange, }
+        mapping["IncSearch"] = { bg = palette.comment, fg = palette.orange }
+        mapping["Search"] = { reverse = true }
 
-        mapping["Visual"] = { bg = palette.visual, }
-        mapping["VisualNOS"] = { fg = palette.visual, }
+        mapping["Visual"] = { bg = palette.black_bright }
+        mapping["VisualNOS"] = { fg = palette.black_bright }
     end
 
     local function cursor()
-        mapping["Cursor"] = { reverse = true, }
-        mapping["CursorLine"] = { underline = true, }
-        mapping["QuickFixLine"] = { fg = palette.black, bg = palette.yellow, }
+        mapping["Cursor"] = { reverse = true }
+        mapping["CursorLine"] = { bg = palette.black_bright }
+        mapping["QuickFixLine"] = { bg = palette.yellow, fg = palette.black }
 
-        mapping["CursorLineNr"] = { fg = palette.fg, } -- the current line
-        mapping["LineNr"] = { fg = palette.comment, }  -- all other lines
+        mapping["CursorLineNr"] = { fg = palette.fg }   -- current
+        mapping["LineNr"] = { fg = palette.white_dark } -- non-current
 
-        mapping["CursorColumn"] = { reverse = true, }  -- horizontal indicator for |cursorcolumn|
-        mapping["ColorColumn"] = { bg = palette.selection, }
+        mapping["CursorColumn"] = { reverse = true }    -- horizontal indicator for |cursorcolumn|
+        mapping["ColorColumn"] = { bg = palette.black_bright }
     end
 
     local function line_horizontal()
-        mapping["StatusLine"] = { fg = palette.fg, }
-        mapping["StatusLineNC"] = { fg = palette.white_dark, }
+        mapping["StatusLine"] = { fg = palette.fg }           -- current
+        mapping["StatusLineNC"] = { fg = palette.white_dark } -- non-current
 
-        mapping["Folded"] = { fg = palette.comment, }
+        mapping["Folded"] = { fg = palette.white_dark }
         mapping["FoldColumn"] = {}
 
-        mapping["TabLine"] = { fg = palette.comment, }
-        mapping["TabLineSel"] = { fg = palette.white, }
-        mapping["TabLineFill"] = { bg = palette.bg, }
+        mapping["TabLineSel"] = { fg = palette.white_bright } -- current
+        mapping["TabLine"] = { fg = palette.white_dark }      -- non-current
+        mapping["TabLineFill"] = { bg = palette.bg }
     end
 
     local function cmd()
-        mapping["WarningMsg"] = { fg = palette.yellow, }
-        mapping["ErrorMsg"] = { fg = palette.bright_red, }
-        mapping["Question"] = { fg = palette.purple, }
+        mapping["WarningMsg"] = { fg = palette.orange }
+        mapping["ErrorMsg"] = { fg = palette.bright_red }
+        mapping["Question"] = { fg = palette.purple }
 
-        mapping["WildMenu"] = { fg = palette.black, bg = palette.white, }
+        mapping["WildMenu"] = { bg = palette.black_dark, fg = palette.black_bright }
 
-        mapping["Pmenu"] = { fg = palette.white, bg = palette.menu, }
-        mapping["PmenuSel"] = { fg = palette.white, bg = palette.selection, }
-        mapping["PmenuSbar"] = { bg = palette.bg, }
-        mapping["PmenuThumb"] = { bg = palette.selection, }
+        mapping["Pmenu"] = { bg = palette.menu, fg = palette.white }
+        mapping["PmenuSel"] = { bg = palette.selection, fg = palette.white }
+        mapping["PmenuSbar"] = { bg = palette.bg }
+        mapping["PmenuThumb"] = { bg = palette.selection }
 
-        mapping["Terminal"] = { fg = palette.white, bg = palette.black, }
+        mapping["Terminal"] = { bg = palette.black, fg = palette.white }
     end
 
     local function diff()
@@ -60,22 +60,24 @@ local function common(mapping, palette)
     end
 
     local function spellcheck()
-        mapping["SpellBad"] = { fg = palette.bright_red, underline = true, }
-        mapping["SpellCap"] = { fg = palette.yellow, }
-        mapping["SpellLocal"] = { fg = palette.yellow, }
-        mapping["SpellRare"] = { fg = palette.yellow, }
+        mapping["SpellCap"] = { fg = palette["yellow"] }
+
+        mapping["SpellLocal"] = { fg = palette["yellow"] }
+        mapping["SpellRare"] = { fg = palette["orange"] }
+
+        mapping["SpellBad"] = { fg = palette["bright_red"], underline = true }
     end
 
     local function misc()
-        mapping["SignColumn"] = { bg = palette.bg, }
+        mapping["SignColumn"] = { bg = palette.bg }
 
-        mapping["Directory"] = { fg = palette.cyan, }
+        mapping["Directory"] = { fg = palette.cyan }
 
-        mapping["VertSplit"] = { fg = palette.black, }
+        mapping["VertSplit"] = { fg = palette.black }
 
-        mapping["SpecialKey"] = { fg = palette.nontext, }
-        mapping["NonText"] = { fg = palette.nontext, }
-        mapping["Conceal"] = { fg = palette.comment, }
+        mapping["SpecialKey"] = { fg = palette.nontext }
+        mapping["NonText"] = { fg = palette.nontext }
+        mapping["Conceal"] = { fg = palette.comment }
     end
 
     general()
