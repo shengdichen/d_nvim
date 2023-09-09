@@ -48,6 +48,9 @@ local function lang()
 
     conf.lua_ls.setup({})
     conf.bashls.setup({})
+
+    conf.sqlls.setup({})
+    conf.vimls.setup({})
 end
 
 local function main()
