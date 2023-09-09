@@ -294,7 +294,7 @@ local function filetype(mapping, palette)
     debug()
 end
 
-local function external(mapping, palette)
+local function unused(mapping, palette)
     local function lsp_saga()
         mapping["LspFloatWinNormal"] = { fg = palette.fg, }
         mapping["LspFloatWinBorder"] = { fg = palette.comment, }
@@ -356,7 +356,7 @@ local function external(mapping, palette)
     completion()
 end
 
-local function main()
+local function main(load_unused)
     local function f(configs)
         local mapping = {}
         local palette = configs.colors
@@ -364,11 +364,13 @@ local function main()
         common(mapping, palette)
         syntax(mapping, palette)
         filetype(mapping, palette)
-        external(mapping, palette)
+        if load_unused then
+            unused(mapping, palette)
+        end
 
         return mapping
     end
 
     return { setup = f, }
 end
-return main()
+return main(false)
