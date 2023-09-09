@@ -273,63 +273,6 @@ local function setup(configs)
       debugPc = { bg = colors.menu, },
       debugBreakpoint = { fg = colors.red, reverse = true, },
 
-      -- Git Signs
-      GitSignsAdd = { fg = colors.bright_green, },
-      GitSignsChange = { fg = colors.cyan, },
-      GitSignsDelete = { fg = colors.bright_red, },
-      GitSignsAddLn = { fg = colors.black, bg = colors.bright_green, },
-      GitSignsChangeLn = { fg = colors.black, bg = colors.cyan, },
-      GitSignsDeleteLn = { fg = colors.black, bg = colors.bright_red, },
-      GitSignsCurrentLineBlame = { fg = colors.white, },
-
-      -- Telescope
-      TelescopePromptBorder = { fg = colors.comment, },
-      TelescopeResultsBorder = { fg = colors.comment, },
-      TelescopePreviewBorder = { fg = colors.comment, },
-      TelescopeSelection = { fg = colors.white, bg = colors.selection, },
-      TelescopeMultiSelection = { fg = colors.purple, bg = colors.selection, },
-      TelescopeNormal = { fg = colors.fg, bg = colors.bg, },
-      TelescopeMatching = { fg = colors.green, },
-      TelescopePromptPrefix = { fg = colors.purple, },
-      TelescopeResultsDiffDelete = { fg = colors.red },
-      TelescopeResultsDiffChange = { fg = colors.cyan },
-      TelescopeResultsDiffAdd = { fg = colors.green },
-
-      -- NvimTree
-      NvimTreeNormal = { fg = colors.fg, bg = colors.menu, },
-      NvimTreeVertSplit = { fg = colors.bg, bg = colors.bg, },
-      NvimTreeRootFolder = { fg = colors.fg, bold = true, },
-      NvimTreeGitDirty = { fg = colors.yellow, },
-      NvimTreeGitNew = { fg = colors.bright_green, },
-      NvimTreeImageFile = { fg = colors.pink, },
-      NvimTreeFolderIcon = { fg = colors.purple, },
-      NvimTreeIndentMarker = { fg = colors.nontext, },
-      NvimTreeEmptyFolderName = { fg = colors.comment, },
-      NvimTreeFolderName = { fg = colors.fg, },
-      NvimTreeSpecialFile = { fg = colors.pink, underline = true, },
-      NvimTreeOpenedFolderName = { fg = colors.fg, },
-      NvimTreeCursorLine = { bg = colors.selection, },
-      NvimTreeIn = { bg = colors.selection, },
-
-      NvimTreeEndOfBuffer = endOfBuffer,
-
-      -- NeoTree
-      NeoTreeNormal = { fg = colors.fg, bg = colors.menu, },
-      NeoTreeNormalNC = { fg = colors.fg, bg = colors.menu, },
-      NeoTreeDirectoryName = { fg = colors.fg },
-      NeoTreeGitUnstaged = { fg = colors.bright_magenta },
-      NeoTreeGitModified = { fg = colors.bright_magenta },
-      NeoTreeGitUntracked = { fg = colors.bright_green },
-      NeoTreeDirectoryIcon = { fg = colors.purple },
-      NeoTreeIndentMarker = { fg = colors.nontext },
-      NeoTreeDotfile = { fg = colors.comment },
-
-      -- Bufferline
-      BufferLineIndicatorSelected = { fg = colors.purple, },
-      BufferLineFill = { bg = colors.black, },
-      BufferLineBufferSelected = { bg = colors.bg, },
-      BufferLineSeparator = { fg = colors.black },
-
       -- LSP
       DiagnosticError = { fg = colors.red, },
       DiagnosticWarn = { fg = colors.yellow, },
@@ -382,24 +325,9 @@ local function setup(configs)
       LspSagaLspFinderBorder = { fg = colors.comment, },
       CodeActionNumber = { bg = 'NONE', fg = colors.cyan },
 
-      -- IndentBlankLine
-      IndentBlanklineContextChar = { fg = colors.bright_red, nocombine = true, },
-
       -- Nvim compe
       CmpItemAbbrDeprecated = { fg = colors.white, bg = colors.menu, },
       CmpItemAbbrMatch = { fg = colors.cyan, bg = colors.menu, },
-
-      -- barbar
-      BufferVisibleTarget = { fg = colors.red },
-      BufferTabpages = { fg = colors.nontext, bg = colors.black, bold = true },
-      BufferTabpageFill = { fg = colors.nontext, bg = colors.black },
-      BufferCurrentSign = { fg = colors.purple },
-      BufferCurrentTarget = { fg = colors.red },
-      BufferInactive = { fg = colors.comment, bg = colors.black, italic = true },
-      BufferInactiveIndex = { fg = colors.nontext, bg = colors.black, italic = true },
-      BufferInactiveMod = { fg = colors.yellow, bg = colors.black, italic = true },
-      BufferInactiveSign = { fg = colors.nontext, bg = colors.black, italic = true },
-      BufferInactiveTarget = { fg = colors.red, bg = colors.black, bold = true },
 
       -- Compe
       CompeDocumentation = { link = "Pmenu" },
@@ -433,89 +361,6 @@ local function setup(configs)
       CmpItemKindConstant = { link = "@constant" },
       CmpItemKindStruct = { link = "@structure" },
       CmpItemKindTypeParameter = { link = "@parameter" },
-
-      -- navic
-      NavicIconsFile = { link = "CmpItemKindFile" },
-      NavicIconsModule = { link = "CmpItemKindModule" },
-      NavicIconsNamespace = { link = "CmpItemKindModule" },
-      NavicIconsPackage = { link = "CmpItemKindModule" },
-      NavicIconsClass = { link = "CmpItemKindClass" },
-      NavicIconsMethod = { link = "CmpItemKindMethod" },
-      NavicIconsProperty = { link = "CmpItemKindProperty" },
-      NavicIconsField = { link = "CmpItemKindField" },
-      NavicIconsConstructor = { link = "CmpItemKindConstructor" },
-      NavicIconsEnum = { link = "CmpItemKindEnum" },
-      NavicIconsInterface = { link = "CmpItemKindInterface" },
-      NavicIconsFunction = { link = "CmpItemKindFunction" },
-      NavicIconsVariable = { link = "CmpItemKindVariable" },
-      NavicIconsConstant = { link = "CmpItemKindConstant" },
-      NavicIconsString = { link = "String" },
-      NavicIconsNumber = { link = "Number" },
-      NavicIconsBoolean = { link = "Boolean" },
-      NavicIconsArray = { link = "CmpItemKindClass" },
-      NavicIconsObject = { link = "CmpItemKindClass" },
-      NavicIconsKey = { link = "CmpItemKindKeyword" },
-      NavicIconsKeyword = { link = "CmpItemKindKeyword" },
-      NavicIconsNull = { fg = "blue" },
-      NavicIconsEnumMember = { link = "CmpItemKindEnumMember" },
-      NavicIconsStruct = { link = "CmpItemKindStruct" },
-      NavicIconsEvent = { link = "CmpItemKindEvent" },
-      NavicIconsOperator = { link = "CmpItemKindOperator" },
-      NavicIconsTypeParameter = { link = "CmpItemKindTypeParameter" },
-      NavicText = { fg = 'gray' },
-      NavicSeparator = { fg = 'gray' },
-
-      -- TS rainbow colors
-      rainbowcol1 = { fg = colors.red, },
-      rainbowcol2 = { fg = colors.green, },
-      rainbowcol3 = { fg = colors.yellow, },
-      rainbowcol4 = { fg = colors.purple, },
-      rainbowcol5 = { fg = colors.pink, },
-      rainbowcol6 = { fg = colors.cyan, },
-      rainbowcol7 = { fg = colors.white, },
-
-      -- goolord/alpha-nvim
-      AlphaHeader = { fg = colors.purple },
-      AlphaButtons = { fg = colors.cyan },
-      AlphaShortcut = { fg = colors.orange },
-      AlphaFooter = { fg = colors.purple, italic = true },
-
-      -- dap UI
-      DapUIPlayPause = { fg = colors.bright_green },
-      DapUIRestart = { fg = colors.green },
-      DapUIStop = { fg = colors.red },
-      DapUIStepOver = { fg = colors.cyan },
-      DapUIStepInto = { fg = colors.cyan },
-      DapUIStepOut = { fg = colors.cyan },
-      DapUIStepBack = { fg = colors.cyan },
-      DapUIType = { fg = colors.bright_blue },
-      DapUIScope = { fg = colors.bright_cyan },
-      DapUIModifiedValue = { fg = colors.bright_cyan, bold = true },
-      DapUIDecoration = { fg = colors.bright_cyan },
-      DapUIThread = { fg = colors.bright_green },
-      DapUIStoppedThread = { fg = colors.bright_cyan },
-      DapUISource = { fg = colors.bright_blue },
-      DapUILineNumber = { fg = colors.bright_cyan },
-      DapUIFloatBorder = { fg = colors.bright_cyan },
-      DapUIWatchesEmpty = { fg = colors.pink },
-      DapUIWatchesValue = { fg = colors.bright_green },
-      DapUIWatchesError = { fg = colors.pink },
-      DapUIBreakpointsPath = { fg = colors.bright_cyan },
-      DapUIBreakpointsInfo = { fg = colors.bright_green },
-      DapUIBreakpointsCurrentLine = { fg = colors.bright_green, bold = true },
-      DapStoppedLine = { default = true, link = 'Visual' },
-      DapUIWinSelect = { fg = colors.bright_cyan, bold = true },
-
-      -- Notify
-      NotifyInfoIcon = { fg = colors.green },
-      NotifyInfoTitle = { fg = colors.green },
-      NotifyInfoBorder = { fg = "#2C453F" },
-      NotifyErrorIcon = { fg = colors.red },
-      NotifyErrorTitle = { fg = colors.red },
-      NotifyErrorBorder = { fg = "#DD6E6B" },
-      NotifyWarnIcon = { fg = colors.orange },
-      NotifyWarnTitle = { fg = colors.orange },
-      NotifyWarnBorder = { fg = "#785637" },
    }
 end
 
