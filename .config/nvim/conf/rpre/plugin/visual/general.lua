@@ -28,6 +28,8 @@ local function visual()
     vim.opt.scrolloff = 2
 
     vim.opt.visualbell = true
+
+    vim.opt.foldmethod = "indent"
 end
 
 local function cursor()

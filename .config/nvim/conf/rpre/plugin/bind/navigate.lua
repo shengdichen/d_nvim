@@ -29,9 +29,5 @@ local function main()
     move_as_seen()
     vertical()
     horizontal()
-
-    -- TODO:
-    --  move this somewhere else
-    vim.opt.foldmethod = "indent"
 end
 main()
