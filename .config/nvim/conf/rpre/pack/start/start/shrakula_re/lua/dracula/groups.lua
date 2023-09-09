@@ -1,60 +1,90 @@
 local function common(mapping, palette)
-    mapping["Normal"] = { fg = palette.fg, bg = palette.bg, }
-    mapping["NormalFloat"] = { fg = palette.fg, bg = palette.bg, }
-    mapping["Comment"] = { fg = palette.white_dark, }
+    local function general()
+        mapping["Normal"] = { fg = palette.fg, bg = palette.bg, }
+        mapping["NormalFloat"] = { fg = palette.fg, bg = palette.bg, }
+        mapping["Comment"] = { fg = palette.white_dark, }
+        mapping["MatchParen"] = { fg = palette.fg, underline = true, }
+        mapping["EndOfBuffer"] = { bg = palette.bg, fg = palette.black }  -- tilde at the end
 
-    mapping["Cursor"] = { reverse = true, }
-    mapping["CursorLineNr"] = { fg = palette.fg, }
+        mapping["IncSearch"] = { fg = palette.orange, bg = palette.comment, }
+        mapping["Search"] = { fg = palette.black, bg = palette.orange, }
 
-    mapping["SignColumn"] = { bg = palette.bg, }
+        mapping["Visual"] = { bg = palette.visual, }
+        mapping["VisualNOS"] = { fg = palette.visual, }
+    end
 
-    mapping["Conceal"] = { fg = palette.comment, }
-    mapping["CursorColumn"] = { reverse = true, } -- horizontal indicator for |cursorcolumn|
-    mapping["CursorLine"] = { underline = true, }
-    mapping["ColorColumn"] = { bg = palette.selection, }
+    local function cursor()
+        mapping["Cursor"] = { reverse = true, }
+        mapping["CursorLine"] = { underline = true, }
+        mapping["QuickFixLine"] = { fg = palette.black, bg = palette.yellow, }
 
-    mapping["StatusLine"] = { fg = palette.fg, }
-    mapping["StatusLineNC"] = { fg = palette.white_dark, }
+        mapping["CursorLineNr"] = { fg = palette.fg, } -- the current line
+        mapping["LineNr"] = { fg = palette.comment, }  -- all other lines
 
-    mapping["Directory"] = { fg = palette.cyan, }
-    mapping["DiffAdd"] = { fg = palette.bg, bg = palette.green, }
-    mapping["DiffChange"] = { fg = palette.orange, }
-    mapping["DiffDelete"] = { fg = palette.red, }
-    mapping["DiffText"] = { fg = palette.comment, }
+        mapping["CursorColumn"] = { reverse = true, }  -- horizontal indicator for |cursorcolumn|
+        mapping["ColorColumn"] = { bg = palette.selection, }
+    end
 
-    mapping["ErrorMsg"] = { fg = palette.bright_red, }
-    mapping["VertSplit"] = { fg = palette.black, }
-    mapping["Folded"] = { fg = palette.comment, }
-    mapping["FoldColumn"] = {}
-    mapping["Search"] = { fg = palette.black, bg = palette.orange, }
-    mapping["IncSearch"] = { fg = palette.orange, bg = palette.comment, }
-    mapping["LineNr"] = { fg = palette.comment, }
-    mapping["MatchParen"] = { fg = palette.fg, underline = true, }
-    mapping["NonText"] = { fg = palette.nontext, }
-    mapping["Pmenu"] = { fg = palette.white, bg = palette.menu, }
-    mapping["PmenuSel"] = { fg = palette.white, bg = palette.selection, }
-    mapping["PmenuSbar"] = { bg = palette.bg, }
-    mapping["PmenuThumb"] = { bg = palette.selection, }
+    local function line_horizontal()
+        mapping["StatusLine"] = { fg = palette.fg, }
+        mapping["StatusLineNC"] = { fg = palette.white_dark, }
 
-    mapping["Question"] = { fg = palette.purple, }
-    mapping["QuickFixLine"] = { fg = palette.black, bg = palette.yellow, }
-    mapping["SpecialKey"] = { fg = palette.nontext, }
+        mapping["Folded"] = { fg = palette.comment, }
+        mapping["FoldColumn"] = {}
 
-    mapping["SpellBad"] = { fg = palette.bright_red, underline = true, }
-    mapping["SpellCap"] = { fg = palette.yellow, }
-    mapping["SpellLocal"] = { fg = palette.yellow, }
-    mapping["SpellRare"] = { fg = palette.yellow, }
+        mapping["TabLine"] = { fg = palette.comment, }
+        mapping["TabLineSel"] = { fg = palette.white, }
+        mapping["TabLineFill"] = { bg = palette.bg, }
+    end
 
-    mapping["TabLine"] = { fg = palette.comment, }
-    mapping["TabLineSel"] = { fg = palette.white, }
-    mapping["TabLineFill"] = { bg = palette.bg, }
-    mapping["Terminal"] = { fg = palette.white, bg = palette.black, }
-    mapping["Visual"] = { bg = palette.visual, }
-    mapping["VisualNOS"] = { fg = palette.visual, }
-    mapping["WarningMsg"] = { fg = palette.yellow, }
-    mapping["WildMenu"] = { fg = palette.black, bg = palette.white, }
+    local function cmd()
+        mapping["WarningMsg"] = { fg = palette.yellow, }
+        mapping["ErrorMsg"] = { fg = palette.bright_red, }
+        mapping["Question"] = { fg = palette.purple, }
 
-    mapping["EndOfBuffer"] = { bg = palette.bg, fg = palette.black }
+        mapping["WildMenu"] = { fg = palette.black, bg = palette.white, }
+
+        mapping["Pmenu"] = { fg = palette.white, bg = palette.menu, }
+        mapping["PmenuSel"] = { fg = palette.white, bg = palette.selection, }
+        mapping["PmenuSbar"] = { bg = palette.bg, }
+        mapping["PmenuThumb"] = { bg = palette.selection, }
+
+        mapping["Terminal"] = { fg = palette.white, bg = palette.black, }
+    end
+
+    local function diff()
+        mapping["DiffAdd"] = { fg = palette.bg, bg = palette.green, }
+        mapping["DiffChange"] = { fg = palette.orange, }
+        mapping["DiffDelete"] = { fg = palette.red, }
+        mapping["DiffText"] = { fg = palette.comment, }
+    end
+
+    local function spellcheck()
+        mapping["SpellBad"] = { fg = palette.bright_red, underline = true, }
+        mapping["SpellCap"] = { fg = palette.yellow, }
+        mapping["SpellLocal"] = { fg = palette.yellow, }
+        mapping["SpellRare"] = { fg = palette.yellow, }
+    end
+
+    local function misc()
+        mapping["SignColumn"] = { bg = palette.bg, }
+
+        mapping["Directory"] = { fg = palette.cyan, }
+
+        mapping["VertSplit"] = { fg = palette.black, }
+
+        mapping["SpecialKey"] = { fg = palette.nontext, }
+        mapping["NonText"] = { fg = palette.nontext, }
+        mapping["Conceal"] = { fg = palette.comment, }
+    end
+
+    general()
+    cursor()
+    line_horizontal()
+    cmd()
+    diff()
+    spellcheck()
+    misc()
 end
 
 local function syntax(mapping, palette)
