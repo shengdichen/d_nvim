@@ -2,6 +2,14 @@ local function make_greyscale(palette)
     palette["bg"] = "None"
     palette["fg"] = "None"
 
+    palette["white"] = "#ABB2BF"
+    palette["black"] = "#191A21"
+
+    palette["black_dark"] = "#000000"
+    palette["black_bright"] = "#352c37"
+    palette["white_dark"] = "#897397"
+    palette["white_bright"] = "#ede3f7"
+
     palette["selection"] = "#44475A"
     palette["comment"] = "#6272A4"
 
@@ -9,8 +17,6 @@ local function make_greyscale(palette)
     palette["visual"] = "#3E4452"
     palette["gutter_fg"] = "#4B5263"
     palette["nontext"] = "#3B4048"
-    palette["white"] = "#ABB2BF"
-    palette["black"] = "#191A21"
 end
 
 local function make_color(palette)

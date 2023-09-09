@@ -31,14 +31,12 @@
 ---@nodiscard
 local function setup(configs)
     local colors = configs.colors
-    local endOfBuffer = {
-        fg = configs.show_end_of_buffer and colors.visual or colors.bg,
-    }
 
     return {
         Normal = { fg = colors.fg, bg = colors.bg, },
         NormalFloat = { fg = colors.fg, bg = colors.bg, },
-        Comment = { fg = colors.comment, italic = configs.italic_comment, },
+        Comment = { fg = colors.white_dark, },
+
         Constant = { fg = colors.yellow, },
         String = { fg = colors.yellow, },
         Character = { fg = colors.green, },
@@ -73,19 +71,17 @@ local function setup(configs)
         Underlined = { fg = colors.cyan, underline = true, },
 
         Cursor = { reverse = true, },
-        CursorLineNr = { fg = colors.fg, bold = true, },
+        CursorLineNr = { fg = colors.fg, },
 
         SignColumn = { bg = colors.bg, },
 
         Conceal = { fg = colors.comment, },
-        CursorColumn = { bg = colors.black, },
-        CursorLine = { bg = colors.selection, },
+        CursorColumn = { reverse = true, }, -- horizontal indicator for |cursorcolumn|
+        CursorLine = { underline = true, },
         ColorColumn = { bg = colors.selection, },
 
-        StatusLine = { fg = colors.white, bg = colors.black, },
-        StatusLineNC = { fg = colors.comment, },
-        StatusLineTerm = { fg = colors.white, bg = colors.black, },
-        StatusLineTermNC = { fg = colors.comment, },
+        StatusLine = { fg = colors.fg, },
+        StatusLineNC = { fg = colors.white_dark, },
 
         Directory = { fg = colors.cyan, },
         DiffAdd = { fg = colors.bg, bg = colors.green, },
@@ -125,7 +121,7 @@ local function setup(configs)
         WarningMsg = { fg = colors.yellow, },
         WildMenu = { fg = colors.black, bg = colors.white, },
 
-        EndOfBuffer = endOfBuffer,
+        EndOfBuffer = { bg = colors.bg, fg = colors.black },
 
         -- TreeSitter
         ['@error'] = { fg = colors.bright_red, },
