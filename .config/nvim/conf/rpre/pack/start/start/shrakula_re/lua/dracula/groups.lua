@@ -175,12 +175,12 @@ local function setup(configs)
         ['@variable.builtin'] = { fg = colors.purple, },
 
         ['@text'] = { fg = colors.orange, },
-        ['@text.strong'] = { fg = colors.orange, bold = true, },   -- bold
+        ['@text.strong'] = { fg = colors.orange, bold = true, },     -- bold
         ['@text.emphasis'] = { fg = colors.yellow, italic = true, }, -- italic
         ['@text.underline'] = { fg = colors.orange, },
-        ['@text.title'] = { fg = colors.pink, bold = true, },      -- title
-        ['@text.literal'] = { fg = colors.yellow, },               -- inline code
-        ['@text.uri'] = { fg = colors.yellow, italic = true, },    -- urls
+        ['@text.title'] = { fg = colors.pink, bold = true, },        -- title
+        ['@text.literal'] = { fg = colors.yellow, },                 -- inline code
+        ['@text.uri'] = { fg = colors.yellow, italic = true, },      -- urls
         ['@text.reference'] = { fg = colors.orange, bold = true, },
 
         ['@tag'] = { fg = colors.cyan, },
