@@ -1,365 +1,345 @@
----@class Highlight
----@field fg string color name or "#RRGGBB"
----@field foreground string same fg, color name or "#RRGGBB"
----@field bg string color name or "#RRGGBB"
----@field background string same bg, color name or "#RRGGBB"
----@field sp string color name or "#RRGGBB"
----@field special string same sg, color name or "#RRGGBB"
----@field blend integer value between 0 and 100
----@field bold boolean
----@field standout boolean
----@field underline boolean
----@field undercurl boolean
----@field underdouble boolean
----@field underdotted boolean
----@field underdashed boolean
----@field strikethrough boolean
----@field italic boolean
----@field reverse boolean
----@field nocombine boolean
----@field link string name of another highlight group to link to, see |:hi-link|.
----@field default string Don't override existing definition |:hi-default|
----@field ctermfg integer Sets foreground of cterm color |highlight-ctermfg|
----@field ctermbg integer Sets background of cterm color |highlight-ctermbg|
----@field cterm table cterm attribute map, like |highlight-args|.
+local function common(mapping, palette)
+    mapping["Normal"] = { fg = palette.fg, bg = palette.bg, }
+    mapping["NormalFloat"] = { fg = palette.fg, bg = palette.bg, }
+    mapping["Comment"] = { fg = palette.white_dark, }
 
----@alias HighlightGroups table<string, Highlight>
+    mapping["Cursor"] = { reverse = true, }
+    mapping["CursorLineNr"] = { fg = palette.fg, }
 
----setup highlight groups
----@param configs DraculaConfig
----@return HighlightGroups
----@nodiscard
-local function setup(configs)
-    local colors = configs.colors
+    mapping["SignColumn"] = { bg = palette.bg, }
 
-    return {
-        Normal = { fg = colors.fg, bg = colors.bg, },
-        NormalFloat = { fg = colors.fg, bg = colors.bg, },
-        Comment = { fg = colors.white_dark, },
+    mapping["Conceal"] = { fg = palette.comment, }
+    mapping["CursorColumn"] = { reverse = true, } -- horizontal indicator for |cursorcolumn|
+    mapping["CursorLine"] = { underline = true, }
+    mapping["ColorColumn"] = { bg = palette.selection, }
 
-        Constant = { fg = colors.yellow, },
-        String = { fg = colors.yellow, },
-        Character = { fg = colors.green, },
-        Number = { fg = colors.orange, },
-        Boolean = { fg = colors.cyan, },
-        Float = { fg = colors.orange, },
-        FloatBorder = { fg = colors.white, },
-        Operator = { fg = colors.purple, },
-        Keyword = { fg = colors.cyan, },
-        Keywords = { fg = colors.cyan, },
-        Identifier = { fg = colors.cyan, },
-        Function = { fg = colors.yellow, },
-        Statement = { fg = colors.purple, },
-        Conditional = { fg = colors.pink, },
-        Repeat = { fg = colors.pink, },
-        Label = { fg = colors.cyan, },
-        Exception = { fg = colors.purple, },
-        PreProc = { fg = colors.yellow, },
-        Include = { fg = colors.purple, },
-        Define = { fg = colors.purple, },
-        Title = { fg = colors.cyan, },
-        Macro = { fg = colors.purple, },
-        PreCondit = { fg = colors.cyan, },
-        Type = { fg = colors.cyan, },
-        StorageClass = { fg = colors.pink, },
-        Structure = { fg = colors.yellow, },
-        TypeDef = { fg = colors.yellow, },
-        Special = { fg = colors.green, italic = true },
-        SpecialComment = { fg = colors.comment, italic = true, },
-        Error = { fg = colors.bright_red, },
-        Todo = { fg = colors.purple, bold = true, italic = true, },
-        Underlined = { fg = colors.cyan, underline = true, },
+    mapping["StatusLine"] = { fg = palette.fg, }
+    mapping["StatusLineNC"] = { fg = palette.white_dark, }
 
-        Cursor = { reverse = true, },
-        CursorLineNr = { fg = colors.fg, },
+    mapping["Directory"] = { fg = palette.cyan, }
+    mapping["DiffAdd"] = { fg = palette.bg, bg = palette.green, }
+    mapping["DiffChange"] = { fg = palette.orange, }
+    mapping["DiffDelete"] = { fg = palette.red, }
+    mapping["DiffText"] = { fg = palette.comment, }
 
-        SignColumn = { bg = colors.bg, },
+    mapping["ErrorMsg"] = { fg = palette.bright_red, }
+    mapping["VertSplit"] = { fg = palette.black, }
+    mapping["Folded"] = { fg = palette.comment, }
+    mapping["FoldColumn"] = {}
+    mapping["Search"] = { fg = palette.black, bg = palette.orange, }
+    mapping["IncSearch"] = { fg = palette.orange, bg = palette.comment, }
+    mapping["LineNr"] = { fg = palette.comment, }
+    mapping["MatchParen"] = { fg = palette.fg, underline = true, }
+    mapping["NonText"] = { fg = palette.nontext, }
+    mapping["Pmenu"] = { fg = palette.white, bg = palette.menu, }
+    mapping["PmenuSel"] = { fg = palette.white, bg = palette.selection, }
+    mapping["PmenuSbar"] = { bg = palette.bg, }
+    mapping["PmenuThumb"] = { bg = palette.selection, }
 
-        Conceal = { fg = colors.comment, },
-        CursorColumn = { reverse = true, }, -- horizontal indicator for |cursorcolumn|
-        CursorLine = { underline = true, },
-        ColorColumn = { bg = colors.selection, },
+    mapping["Question"] = { fg = palette.purple, }
+    mapping["QuickFixLine"] = { fg = palette.black, bg = palette.yellow, }
+    mapping["SpecialKey"] = { fg = palette.nontext, }
 
-        StatusLine = { fg = colors.fg, },
-        StatusLineNC = { fg = colors.white_dark, },
+    mapping["SpellBad"] = { fg = palette.bright_red, underline = true, }
+    mapping["SpellCap"] = { fg = palette.yellow, }
+    mapping["SpellLocal"] = { fg = palette.yellow, }
+    mapping["SpellRare"] = { fg = palette.yellow, }
 
-        Directory = { fg = colors.cyan, },
-        DiffAdd = { fg = colors.bg, bg = colors.green, },
-        DiffChange = { fg = colors.orange, },
-        DiffDelete = { fg = colors.red, },
-        DiffText = { fg = colors.comment, },
+    mapping["TabLine"] = { fg = palette.comment, }
+    mapping["TabLineSel"] = { fg = palette.white, }
+    mapping["TabLineFill"] = { bg = palette.bg, }
+    mapping["Terminal"] = { fg = palette.white, bg = palette.black, }
+    mapping["Visual"] = { bg = palette.visual, }
+    mapping["VisualNOS"] = { fg = palette.visual, }
+    mapping["WarningMsg"] = { fg = palette.yellow, }
+    mapping["WildMenu"] = { fg = palette.black, bg = palette.white, }
 
-        ErrorMsg = { fg = colors.bright_red, },
-        VertSplit = { fg = colors.black, },
-        Folded = { fg = colors.comment, },
-        FoldColumn = {},
-        Search = { fg = colors.black, bg = colors.orange, },
-        IncSearch = { fg = colors.orange, bg = colors.comment, },
-        LineNr = { fg = colors.comment, },
-        MatchParen = { fg = colors.fg, underline = true, },
-        NonText = { fg = colors.nontext, },
-        Pmenu = { fg = colors.white, bg = colors.menu, },
-        PmenuSel = { fg = colors.white, bg = colors.selection, },
-        PmenuSbar = { bg = colors.bg, },
-        PmenuThumb = { bg = colors.selection, },
-
-        Question = { fg = colors.purple, },
-        QuickFixLine = { fg = colors.black, bg = colors.yellow, },
-        SpecialKey = { fg = colors.nontext, },
-
-        SpellBad = { fg = colors.bright_red, underline = true, },
-        SpellCap = { fg = colors.yellow, },
-        SpellLocal = { fg = colors.yellow, },
-        SpellRare = { fg = colors.yellow, },
-
-        TabLine = { fg = colors.comment, },
-        TabLineSel = { fg = colors.white, },
-        TabLineFill = { bg = colors.bg, },
-        Terminal = { fg = colors.white, bg = colors.black, },
-        Visual = { bg = colors.visual, },
-        VisualNOS = { fg = colors.visual, },
-        WarningMsg = { fg = colors.yellow, },
-        WildMenu = { fg = colors.black, bg = colors.white, },
-
-        EndOfBuffer = { bg = colors.bg, fg = colors.black },
-
-        -- TreeSitter
-        ['@error'] = { fg = colors.bright_red, },
-        ['@punctuation.delimiter'] = { fg = colors.fg, },
-        ['@punctuation.bracket'] = { fg = colors.fg, },
-        ['@punctuation.special'] = { fg = colors.cyan, },
-
-        ['@constant'] = { fg = colors.purple, },
-        ['@constant.builtin'] = { fg = colors.purple, },
-        ['@symbol'] = { fg = colors.purple, },
-
-        ['@constant.macro'] = { fg = colors.cyan, },
-        ['@string.regex'] = { fg = colors.red, },
-        ['@string'] = { fg = colors.yellow, },
-        ['@string.escape'] = { fg = colors.cyan, },
-        ['@character'] = { fg = colors.green, },
-        ['@number'] = { fg = colors.purple, },
-        ['@boolean'] = { fg = colors.purple, },
-        ['@float'] = { fg = colors.green, },
-        ['@annotation'] = { fg = colors.yellow, },
-        ['@attribute'] = { fg = colors.cyan, },
-        ['@namespace'] = { fg = colors.orange, },
-
-        ['@function.builtin'] = { fg = colors.cyan, },
-        ['@function'] = { fg = colors.green, },
-        ['@function.macro'] = { fg = colors.green, },
-        ['@parameter'] = { fg = colors.orange, },
-        ['@parameter.reference'] = { fg = colors.orange, },
-        ['@method'] = { fg = colors.green, },
-        ['@field'] = { fg = colors.orange, },
-        ['@property'] = { fg = colors.purple, },
-        ['@constructor'] = { fg = colors.cyan, },
-
-        ['@conditional'] = { fg = colors.pink, },
-        ['@repeat'] = { fg = colors.pink, },
-        ['@label'] = { fg = colors.cyan, },
-
-        ['@keyword'] = { fg = colors.pink, },
-        ['@keyword.function'] = { fg = colors.cyan, },
-        ['@keyword.function.ruby'] = { fg = colors.pink, },
-        ['@keyword.operator'] = { fg = colors.pink, },
-        ['@operator'] = { fg = colors.pink, },
-        ['@exception'] = { fg = colors.purple, },
-        ['@type'] = { fg = colors.bright_cyan, },
-        ['@type.builtin'] = { fg = colors.cyan, italic = true, },
-        ['@type.qualifier'] = { fg = colors.pink, },
-        ['@structure'] = { fg = colors.purple, },
-        ['@include'] = { fg = colors.pink, },
-
-        ['@variable'] = { fg = colors.fg, },
-        ['@variable.builtin'] = { fg = colors.purple, },
-
-        ['@text'] = { fg = colors.orange, },
-        ['@text.strong'] = { fg = colors.orange, bold = true, },     -- bold
-        ['@text.emphasis'] = { fg = colors.yellow, italic = true, }, -- italic
-        ['@text.underline'] = { fg = colors.orange, },
-        ['@text.title'] = { fg = colors.pink, bold = true, },        -- title
-        ['@text.literal'] = { fg = colors.yellow, },                 -- inline code
-        ['@text.uri'] = { fg = colors.yellow, italic = true, },      -- urls
-        ['@text.reference'] = { fg = colors.orange, bold = true, },
-
-        ['@tag'] = { fg = colors.cyan, },
-        ['@tag.attribute'] = { fg = colors.green, },
-        ['@tag.delimiter'] = { fg = colors.cyan, },
-
-        -- Semantic
-        ['@class'] = { fg = colors.cyan },
-        ['@struct'] = { fg = colors.cyan },
-        ['@enum'] = { fg = colors.cyan },
-        ['@enumMember'] = { fg = colors.purple },
-        ['@event'] = { fg = colors.cyan },
-        ['@interface'] = { fg = colors.cyan },
-        ['@modifier'] = { fg = colors.cyan },
-        ['@regexp'] = { fg = colors.yellow },
-        ['@typeParameter'] = { fg = colors.cyan },
-        ['@decorator'] = { fg = colors.cyan },
-
-        -- LSP Semantic (0.9+)
-        ['@lsp.type.class'] = { fg = colors.cyan },
-        ['@lsp.type.enum'] = { fg = colors.cyan },
-        ['@lsp.type.decorator'] = { fg = colors.green },
-        ['@lsp.type.enumMember'] = { fg = colors.purple },
-        ['@lsp.type.function'] = { fg = colors.green, },
-        ['@lsp.type.interface'] = { fg = colors.cyan },
-        ['@lsp.type.macro'] = { fg = colors.cyan },
-        ['@lsp.type.method'] = { fg = colors.green, },
-        ['@lsp.type.namespace'] = { fg = colors.orange, },
-        ['@lsp.type.parameter'] = { fg = colors.orange, },
-        ['@lsp.type.property'] = { fg = colors.purple, },
-        ['@lsp.type.struct'] = { fg = colors.cyan },
-        ['@lsp.type.type'] = { fg = colors.bright_cyan, },
-        ['@lsp.type.variable'] = { fg = colors.fg, },
-
-        -- HTML
-        htmlArg = { fg = colors.green, },
-        htmlBold = { fg = colors.yellow, bold = true, },
-        htmlEndTag = { fg = colors.cyan, },
-        htmlH1 = { fg = colors.pink, },
-        htmlH2 = { fg = colors.pink, },
-        htmlH3 = { fg = colors.pink, },
-        htmlH4 = { fg = colors.pink, },
-        htmlH5 = { fg = colors.pink, },
-        htmlH6 = { fg = colors.pink, },
-        htmlItalic = { fg = colors.purple, italic = true, },
-        htmlLink = { fg = colors.purple, underline = true, },
-        htmlSpecialChar = { fg = colors.yellow, },
-        htmlSpecialTagName = { fg = colors.cyan, },
-        htmlTag = { fg = colors.cyan, },
-        htmlTagN = { fg = colors.cyan, },
-        htmlTagName = { fg = colors.cyan, },
-        htmlTitle = { fg = colors.white, },
-
-        -- Markdown
-        markdownBlockquote = { fg = colors.yellow, italic = true, },
-        markdownBold = { fg = colors.orange, bold = true, },
-        markdownCode = { fg = colors.green, },
-        markdownCodeBlock = { fg = colors.orange, },
-        markdownCodeDelimiter = { fg = colors.red, },
-        markdownH1 = { fg = colors.pink, bold = true, },
-        markdownH2 = { fg = colors.pink, bold = true, },
-        markdownH3 = { fg = colors.pink, bold = true, },
-        markdownH4 = { fg = colors.pink, bold = true, },
-        markdownH5 = { fg = colors.pink, bold = true, },
-        markdownH6 = { fg = colors.pink, bold = true, },
-        markdownHeadingDelimiter = { fg = colors.red, },
-        markdownHeadingRule = { fg = colors.comment, },
-        markdownId = { fg = colors.purple, },
-        markdownIdDeclaration = { fg = colors.cyan, },
-        markdownIdDelimiter = { fg = colors.purple, },
-        markdownItalic = { fg = colors.yellow, italic = true, },
-        markdownLinkDelimiter = { fg = colors.purple, },
-        markdownLinkText = { fg = colors.pink, },
-        markdownListMarker = { fg = colors.cyan, },
-        markdownOrderedListMarker = { fg = colors.red, },
-        markdownRule = { fg = colors.comment, },
-
-        --  Diff
-        diffAdded = { fg = colors.green, },
-        diffRemoved = { fg = colors.red, },
-        diffFileId = { fg = colors.yellow, bold = true, reverse = true, },
-        diffFile = { fg = colors.nontext, },
-        diffNewFile = { fg = colors.green, },
-        diffOldFile = { fg = colors.red, },
-
-        debugPc = { bg = colors.menu, },
-        debugBreakpoint = { fg = colors.red, reverse = true, },
-
-        -- LSP
-        DiagnosticError = { fg = colors.red, },
-        DiagnosticWarn = { fg = colors.yellow, },
-        DiagnosticInfo = { fg = colors.cyan, },
-        DiagnosticHint = { fg = colors.cyan, },
-        DiagnosticUnderlineError = { undercurl = true, sp = colors.red, },
-        DiagnosticUnderlineWarn = { undercurl = true, sp = colors.yellow, },
-        DiagnosticUnderlineInfo = { undercurl = true, sp = colors.cyan, },
-        DiagnosticUnderlineHint = { undercurl = true, sp = colors.cyan, },
-        DiagnosticSignError = { fg = colors.red, },
-        DiagnosticSignWarn = { fg = colors.yellow, },
-        DiagnosticSignInfo = { fg = colors.cyan, },
-        DiagnosticSignHint = { fg = colors.cyan, },
-        DiagnosticFloatingError = { fg = colors.red, },
-        DiagnosticFloatingWarn = { fg = colors.yellow, },
-        DiagnosticFloatingInfo = { fg = colors.cyan, },
-        DiagnosticFloatingHint = { fg = colors.cyan, },
-        DiagnosticVirtualTextError = { fg = colors.red, },
-        DiagnosticVirtualTextWarn = { fg = colors.yellow, },
-        DiagnosticVirtualTextInfo = { fg = colors.cyan, },
-        DiagnosticVirtualTextHint = { fg = colors.cyan, },
-
-        LspDiagnosticsDefaultError = { fg = colors.red, },
-        LspDiagnosticsDefaultWarning = { fg = colors.yellow, },
-        LspDiagnosticsDefaultInformation = { fg = colors.cyan, },
-        LspDiagnosticsDefaultHint = { fg = colors.cyan, },
-        LspDiagnosticsUnderlineError = { fg = colors.red, undercurl = true, },
-        LspDiagnosticsUnderlineWarning = { fg = colors.yellow, undercurl = true, },
-        LspDiagnosticsUnderlineInformation = { fg = colors.cyan, undercurl = true, },
-        LspDiagnosticsUnderlineHint = { fg = colors.cyan, undercurl = true, },
-        LspReferenceText = { fg = colors.orange, },
-        LspReferenceRead = { fg = colors.orange, },
-        LspReferenceWrite = { fg = colors.orange, },
-        LspCodeLens = { fg = colors.cyan, },
-
-        --LSP Saga
-        LspFloatWinNormal = { fg = colors.fg, },
-        LspFloatWinBorder = { fg = colors.comment, },
-        LspSagaHoverBorder = { fg = colors.comment, },
-        LspSagaSignatureHelpBorder = { fg = colors.comment, },
-        LspSagaCodeActionBorder = { fg = colors.comment, },
-        LspSagaDefPreviewBorder = { fg = colors.comment, },
-        LspLinesDiagBorder = { fg = colors.comment, },
-        LspSagaRenameBorder = { fg = colors.comment, },
-        LspSagaBorderTitle = { fg = colors.menu, },
-        LSPSagaDiagnosticTruncateLine = { fg = colors.comment, },
-        LspSagaDiagnosticBorder = { fg = colors.comment, },
-        LspSagaShTruncateLine = { fg = colors.comment, },
-        LspSagaDocTruncateLine = { fg = colors.comment, },
-        LspSagaLspFinderBorder = { fg = colors.comment, },
-        CodeActionNumber = { bg = 'NONE', fg = colors.cyan },
-
-        -- Nvim compe
-        CmpItemAbbrDeprecated = { fg = colors.white, bg = colors.menu, },
-        CmpItemAbbrMatch = { fg = colors.cyan, bg = colors.menu, },
-
-        -- Compe
-        CompeDocumentation = { link = "Pmenu" },
-        CompeDocumentationBorder = { link = "Pmenu" },
-
-        -- Cmp
-        CmpItemKind = { link = "Pmenu" },
-        CmpItemAbbr = { link = "Pmenu" },
-        CmpItemKindMethod = { link = "@method" },
-        CmpItemKindText = { link = "@text" },
-        CmpItemKindFunction = { link = "@function" },
-        CmpItemKindConstructor = { link = "@type" },
-        CmpItemKindVariable = { link = "@variable" },
-        CmpItemKindClass = { link = "@type" },
-        CmpItemKindInterface = { link = "@type" },
-        CmpItemKindModule = { link = "@namespace" },
-        CmpItemKindProperty = { link = "@property" },
-        CmpItemKindOperator = { link = "@operator" },
-        CmpItemKindReference = { link = "@parameter.reference" },
-        CmpItemKindUnit = { link = "@field" },
-        CmpItemKindValue = { link = "@field" },
-        CmpItemKindField = { link = "@field" },
-        CmpItemKindEnum = { link = "@field" },
-        CmpItemKindKeyword = { link = "@keyword" },
-        CmpItemKindSnippet = { link = "@text" },
-        CmpItemKindColor = { link = "DevIconCss" },
-        CmpItemKindFile = { link = "TSURI" },
-        CmpItemKindFolder = { link = "TSURI" },
-        CmpItemKindEvent = { link = "@constant" },
-        CmpItemKindEnumMember = { link = "@field" },
-        CmpItemKindConstant = { link = "@constant" },
-        CmpItemKindStruct = { link = "@structure" },
-        CmpItemKindTypeParameter = { link = "@parameter" },
-    }
+    mapping["EndOfBuffer"] = { bg = palette.bg, fg = palette.black }
 end
 
-return {
-    setup = setup,
-}
+local function syntax(mapping, palette)
+    mapping["Constant"] = { fg = palette.yellow, }
+    mapping["String"] = { fg = palette.yellow, }
+    mapping["Character"] = { fg = palette.green, }
+    mapping["Number"] = { fg = palette.orange, }
+    mapping["Boolean"] = { fg = palette.cyan, }
+    mapping["Float"] = { fg = palette.orange, }
+    mapping["FloatBorder"] = { fg = palette.white, }
+    mapping["Operator"] = { fg = palette.purple, }
+    mapping["Keyword"] = { fg = palette.cyan, }
+    mapping["Keywords"] = { fg = palette.cyan, }
+    mapping["Identifier"] = { fg = palette.cyan, }
+    mapping["Function"] = { fg = palette.yellow, }
+    mapping["Statement"] = { fg = palette.purple, }
+    mapping["Conditional"] = { fg = palette.pink, }
+    mapping["Repeat"] = { fg = palette.pink, }
+    mapping["Label"] = { fg = palette.cyan, }
+    mapping["Exception"] = { fg = palette.purple, }
+    mapping["PreProc"] = { fg = palette.yellow, }
+    mapping["Include"] = { fg = palette.purple, }
+    mapping["Define"] = { fg = palette.purple, }
+    mapping["Title"] = { fg = palette.cyan, }
+    mapping["Macro"] = { fg = palette.purple, }
+    mapping["PreCondit"] = { fg = palette.cyan, }
+    mapping["Type"] = { fg = palette.cyan, }
+    mapping["StorageClass"] = { fg = palette.pink, }
+    mapping["Structure"] = { fg = palette.yellow, }
+    mapping["TypeDef"] = { fg = palette.yellow, }
+    mapping["Special"] = { fg = palette.green, italic = true }
+    mapping["SpecialComment"] = { fg = palette.comment, italic = true, }
+    mapping["Error"] = { fg = palette.bright_red, }
+    mapping["Todo"] = { fg = palette.purple, bold = true, italic = true, }
+    mapping["Underlined"] = { fg = palette.cyan, underline = true, }
+
+    mapping["htmlArg"] = { fg = palette.green, }
+    mapping["htmlBold"] = { fg = palette.yellow, bold = true, }
+    mapping["htmlEndTag"] = { fg = palette.cyan, }
+    mapping["htmlH1"] = { fg = palette.pink, }
+    mapping["htmlH2"] = { fg = palette.pink, }
+    mapping["htmlH3"] = { fg = palette.pink, }
+    mapping["htmlH4"] = { fg = palette.pink, }
+    mapping["htmlH5"] = { fg = palette.pink, }
+    mapping["htmlH6"] = { fg = palette.pink, }
+    mapping["htmlItalic"] = { fg = palette.purple, italic = true, }
+    mapping["htmlLink"] = { fg = palette.purple, underline = true, }
+    mapping["htmlSpecialChar"] = { fg = palette.yellow, }
+    mapping["htmlSpecialTagName"] = { fg = palette.cyan, }
+    mapping["htmlTag"] = { fg = palette.cyan, }
+    mapping["htmlTagN"] = { fg = palette.cyan, }
+    mapping["htmlTagName"] = { fg = palette.cyan, }
+    mapping["htmlTitle"] = { fg = palette.white, }
+
+    -- Markdown
+    mapping["markdownBlockquote"] = { fg = palette.yellow, italic = true, }
+    mapping["markdownBold"] = { fg = palette.orange, bold = true, }
+    mapping["markdownCode"] = { fg = palette.green, }
+    mapping["markdownCodeBlock"] = { fg = palette.orange, }
+    mapping["markdownCodeDelimiter"] = { fg = palette.red, }
+    mapping["markdownH1"] = { fg = palette.pink, bold = true, }
+    mapping["markdownH2"] = { fg = palette.pink, bold = true, }
+    mapping["markdownH3"] = { fg = palette.pink, bold = true, }
+    mapping["markdownH4"] = { fg = palette.pink, bold = true, }
+    mapping["markdownH5"] = { fg = palette.pink, bold = true, }
+    mapping["markdownH6"] = { fg = palette.pink, bold = true, }
+    mapping["markdownHeadingDelimiter"] = { fg = palette.red, }
+    mapping["markdownHeadingRule"] = { fg = palette.comment, }
+    mapping["markdownId"] = { fg = palette.purple, }
+    mapping["markdownIdDeclaration"] = { fg = palette.cyan, }
+    mapping["markdownIdDelimiter"] = { fg = palette.purple, }
+    mapping["markdownItalic"] = { fg = palette.yellow, italic = true, }
+    mapping["markdownLinkDelimiter"] = { fg = palette.purple, }
+    mapping["markdownLinkText"] = { fg = palette.pink, }
+    mapping["markdownListMarker"] = { fg = palette.cyan, }
+    mapping["markdownOrderedListMarker"] = { fg = palette.red, }
+    mapping["markdownRule"] = { fg = palette.comment, }
+end
+
+local function external(mapping, palette)
+    -- TreeSitter
+    mapping["@error"] = { fg = palette.bright_red, }
+    mapping["@punctuation.delimiter"] = { fg = palette.fg, }
+    mapping["@punctuation.bracket"] = { fg = palette.fg, }
+    mapping["@punctuation.special"] = { fg = palette.cyan, }
+
+    mapping["@constant"] = { fg = palette.purple, }
+    mapping["@constant.builtin"] = { fg = palette.purple, }
+    mapping["@symbol"] = { fg = palette.purple, }
+
+    mapping["@constant.macro"] = { fg = palette.cyan, }
+    mapping["@string.regex"] = { fg = palette.red, }
+    mapping["@string"] = { fg = palette.yellow, }
+    mapping["@string.escape"] = { fg = palette.cyan, }
+    mapping["@character"] = { fg = palette.green, }
+    mapping["@number"] = { fg = palette.purple, }
+    mapping["@boolean"] = { fg = palette.purple, }
+    mapping["@float"] = { fg = palette.green, }
+    mapping["@annotation"] = { fg = palette.yellow, }
+    mapping["@attribute"] = { fg = palette.cyan, }
+    mapping["@namespace"] = { fg = palette.orange, }
+
+    mapping["@function.builtin"] = { fg = palette.cyan, }
+    mapping["@function"] = { fg = palette.green, }
+    mapping["@function.macro"] = { fg = palette.green, }
+    mapping["@parameter"] = { fg = palette.orange, }
+    mapping["@parameter.reference"] = { fg = palette.orange, }
+    mapping["@method"] = { fg = palette.green, }
+    mapping["@field"] = { fg = palette.orange, }
+    mapping["@property"] = { fg = palette.purple, }
+    mapping["@constructor"] = { fg = palette.cyan, }
+
+    mapping["@conditional"] = { fg = palette.pink, }
+    mapping["@repeat"] = { fg = palette.pink, }
+    mapping["@label"] = { fg = palette.cyan, }
+
+    mapping["@keyword"] = { fg = palette.pink, }
+    mapping["@keyword.function"] = { fg = palette.cyan, }
+    mapping["@keyword.function.ruby"] = { fg = palette.pink, }
+    mapping["@keyword.operator"] = { fg = palette.pink, }
+    mapping["@operator"] = { fg = palette.pink, }
+    mapping["@exception"] = { fg = palette.purple, }
+    mapping["@type"] = { fg = palette.bright_cyan, }
+    mapping["@type.builtin"] = { fg = palette.cyan, italic = true, }
+    mapping["@type.qualifier"] = { fg = palette.pink, }
+    mapping["@structure"] = { fg = palette.purple, }
+    mapping["@include"] = { fg = palette.pink, }
+
+    mapping["@variable"] = { fg = palette.fg, }
+    mapping["@variable.builtin"] = { fg = palette.purple, }
+
+    mapping["@text"] = { fg = palette.orange, }
+    mapping["@text.strong"] = { fg = palette.orange, bold = true, }     -- bold
+    mapping["@text.emphasis"] = { fg = palette.yellow, italic = true, } -- italic
+    mapping["@text.underline"] = { fg = palette.orange, }
+    mapping["@text.title"] = { fg = palette.pink, bold = true, }        -- title
+    mapping["@text.literal"] = { fg = palette.yellow, }                 -- inline code
+    mapping["@text.uri"] = { fg = palette.yellow, italic = true, }      -- urls
+    mapping["@text.reference"] = { fg = palette.orange, bold = true, }
+
+    mapping["@tag"] = { fg = palette.cyan, }
+    mapping["@tag.attribute"] = { fg = palette.green, }
+    mapping["@tag.delimiter"] = { fg = palette.cyan, }
+
+    -- Semantic
+    mapping["@class"] = { fg = palette.cyan }
+    mapping["@struct"] = { fg = palette.cyan }
+    mapping["@enum"] = { fg = palette.cyan }
+    mapping["@enumMember"] = { fg = palette.purple }
+    mapping["@event"] = { fg = palette.cyan }
+    mapping["@interface"] = { fg = palette.cyan }
+    mapping["@modifier"] = { fg = palette.cyan }
+    mapping["@regexp"] = { fg = palette.yellow }
+    mapping["@typeParameter"] = { fg = palette.cyan }
+    mapping["@decorator"] = { fg = palette.cyan }
+
+    -- LSP Semantic (0.9+)
+    mapping["@lsp.type.class"] = { fg = palette.cyan }
+    mapping["@lsp.type.enum"] = { fg = palette.cyan }
+    mapping["@lsp.type.decorator"] = { fg = palette.green }
+    mapping["@lsp.type.enumMember"] = { fg = palette.purple }
+    mapping["@lsp.type.function"] = { fg = palette.green, }
+    mapping["@lsp.type.interface"] = { fg = palette.cyan }
+    mapping["@lsp.type.macro"] = { fg = palette.cyan }
+    mapping["@lsp.type.method"] = { fg = palette.green, }
+    mapping["@lsp.type.namespace"] = { fg = palette.orange, }
+    mapping["@lsp.type.parameter"] = { fg = palette.orange, }
+    mapping["@lsp.type.property"] = { fg = palette.purple, }
+    mapping["@lsp.type.struct"] = { fg = palette.cyan }
+    mapping["@lsp.type.type"] = { fg = palette.bright_cyan, }
+    mapping["@lsp.type.variable"] = { fg = palette.fg, }
+
+    --  Diff
+    mapping["diffAdded"] = { fg = palette.green, }
+    mapping["diffRemoved"] = { fg = palette.red, }
+    mapping["diffFileId"] = { fg = palette.yellow, bold = true, reverse = true, }
+    mapping["diffFile"] = { fg = palette.nontext, }
+    mapping["diffNewFile"] = { fg = palette.green, }
+    mapping["diffOldFile"] = { fg = palette.red, }
+
+    mapping["debugPc"] = { bg = palette.menu, }
+    mapping["debugBreakpoint"] = { fg = palette.red, reverse = true, }
+
+    -- LSP
+    mapping["DiagnosticError"] = { fg = palette.red, }
+    mapping["DiagnosticWarn"] = { fg = palette.yellow, }
+    mapping["DiagnosticInfo"] = { fg = palette.cyan, }
+    mapping["DiagnosticHint"] = { fg = palette.cyan, }
+    mapping["DiagnosticUnderlineError"] = { undercurl = true, sp = palette.red, }
+    mapping["DiagnosticUnderlineWarn"] = { undercurl = true, sp = palette.yellow, }
+    mapping["DiagnosticUnderlineInfo"] = { undercurl = true, sp = palette.cyan, }
+    mapping["DiagnosticUnderlineHint"] = { undercurl = true, sp = palette.cyan, }
+    mapping["DiagnosticSignError"] = { fg = palette.red, }
+    mapping["DiagnosticSignWarn"] = { fg = palette.yellow, }
+    mapping["DiagnosticSignInfo"] = { fg = palette.cyan, }
+    mapping["DiagnosticSignHint"] = { fg = palette.cyan, }
+    mapping["DiagnosticFloatingError"] = { fg = palette.red, }
+    mapping["DiagnosticFloatingWarn"] = { fg = palette.yellow, }
+    mapping["DiagnosticFloatingInfo"] = { fg = palette.cyan, }
+    mapping["DiagnosticFloatingHint"] = { fg = palette.cyan, }
+    mapping["DiagnosticVirtualTextError"] = { fg = palette.red, }
+    mapping["DiagnosticVirtualTextWarn"] = { fg = palette.yellow, }
+    mapping["DiagnosticVirtualTextInfo"] = { fg = palette.cyan, }
+    mapping["DiagnosticVirtualTextHint"] = { fg = palette.cyan, }
+
+    mapping["LspDiagnosticsDefaultError"] = { fg = palette.red, }
+    mapping["LspDiagnosticsDefaultWarning"] = { fg = palette.yellow, }
+    mapping["LspDiagnosticsDefaultInformation"] = { fg = palette.cyan, }
+    mapping["LspDiagnosticsDefaultHint"] = { fg = palette.cyan, }
+    mapping["LspDiagnosticsUnderlineError"] = { fg = palette.red, undercurl = true, }
+    mapping["LspDiagnosticsUnderlineWarning"] = { fg = palette.yellow, undercurl = true, }
+    mapping["LspDiagnosticsUnderlineInformation"] = { fg = palette.cyan, undercurl = true, }
+    mapping["LspDiagnosticsUnderlineHint"] = { fg = palette.cyan, undercurl = true, }
+    mapping["LspReferenceText"] = { fg = palette.orange, }
+    mapping["LspReferenceRead"] = { fg = palette.orange, }
+    mapping["LspReferenceWrite"] = { fg = palette.orange, }
+    mapping["LspCodeLens"] = { fg = palette.cyan, }
+
+    --LSP Saga
+    mapping["LspFloatWinNormal"] = { fg = palette.fg, }
+    mapping["LspFloatWinBorder"] = { fg = palette.comment, }
+    mapping["LspSagaHoverBorder"] = { fg = palette.comment, }
+    mapping["LspSagaSignatureHelpBorder"] = { fg = palette.comment, }
+    mapping["LspSagaCodeActionBorder"] = { fg = palette.comment, }
+    mapping["LspSagaDefPreviewBorder"] = { fg = palette.comment, }
+    mapping["LspLinesDiagBorder"] = { fg = palette.comment, }
+    mapping["LspSagaRenameBorder"] = { fg = palette.comment, }
+    mapping["LspSagaBorderTitle"] = { fg = palette.menu, }
+    mapping["LSPSagaDiagnosticTruncateLine"] = { fg = palette.comment, }
+    mapping["LspSagaDiagnosticBorder"] = { fg = palette.comment, }
+    mapping["LspSagaShTruncateLine"] = { fg = palette.comment, }
+    mapping["LspSagaDocTruncateLine"] = { fg = palette.comment, }
+    mapping["LspSagaLspFinderBorder"] = { fg = palette.comment, }
+    mapping["CodeActionNumber"] = { bg = 'NONE', fg = palette.cyan }
+
+    -- Nvim compe
+    mapping["CmpItemAbbrDeprecated"] = { fg = palette.white, bg = palette.menu, }
+    mapping["CmpItemAbbrMatch"] = { fg = palette.cyan, bg = palette.menu, }
+
+    -- Compe
+    mapping["CompeDocumentation"] = { link = "Pmenu" }
+    mapping["CompeDocumentationBorder"] = { link = "Pmenu" }
+
+    -- Cmp
+    mapping["CmpItemKind"] = { link = "Pmenu" }
+    mapping["CmpItemAbbr"] = { link = "Pmenu" }
+    mapping["CmpItemKindMethod"] = { link = "@method" }
+    mapping["CmpItemKindText"] = { link = "@text" }
+    mapping["CmpItemKindFunction"] = { link = "@function" }
+    mapping["CmpItemKindConstructor"] = { link = "@type" }
+    mapping["CmpItemKindVariable"] = { link = "@variable" }
+    mapping["CmpItemKindClass"] = { link = "@type" }
+    mapping["CmpItemKindInterface"] = { link = "@type" }
+    mapping["CmpItemKindModule"] = { link = "@namespace" }
+    mapping["CmpItemKindProperty"] = { link = "@property" }
+    mapping["CmpItemKindOperator"] = { link = "@operator" }
+    mapping["CmpItemKindReference"] = { link = "@parameter.reference" }
+    mapping["CmpItemKindUnit"] = { link = "@field" }
+    mapping["CmpItemKindValue"] = { link = "@field" }
+    mapping["CmpItemKindField"] = { link = "@field" }
+    mapping["CmpItemKindEnum"] = { link = "@field" }
+    mapping["CmpItemKindKeyword"] = { link = "@keyword" }
+    mapping["CmpItemKindSnippet"] = { link = "@text" }
+    mapping["CmpItemKindColor"] = { link = "DevIconCss" }
+    mapping["CmpItemKindFile"] = { link = "TSURI" }
+    mapping["CmpItemKindFolder"] = { link = "TSURI" }
+    mapping["CmpItemKindEvent"] = { link = "@constant" }
+    mapping["CmpItemKindEnumMember"] = { link = "@field" }
+    mapping["CmpItemKindConstant"] = { link = "@constant" }
+    mapping["CmpItemKindStruct"] = { link = "@structure" }
+    mapping["CmpItemKindTypeParameter"] = { link = "@parameter" }
+end
+
+local function main()
+    local function f(configs)
+        local mapping = {}
+        local palette = configs.colors
+
+        common(mapping, palette)
+        syntax(mapping, palette)
+        external(mapping, palette)
+
+        return mapping
+    end
+
+    return { setup = f, }
+end
+return main()
