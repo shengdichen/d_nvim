@@ -28,15 +28,17 @@ local function layout()
 
         -- left
         vim.cmd("wincmd h")
+        vim.cmd("startinsert")
     end
 
     local function double()
         -- right
         vim.cmd("rightbelow vsplit")
-        vim.cmd([[terminal $SHELL -c "git log --all --oneline --graph"]])
+        vim.cmd([[terminal $SHELL -c "git log --all --patch --graph"]])
 
         -- left
         vim.cmd("wincmd h")
+        vim.cmd("startinsert")
     end
 
     vim.api.nvim_create_autocmd(
