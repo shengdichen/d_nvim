@@ -191,7 +191,7 @@ local function setup(configs)
       ['@tag.attribute'] = { fg = colors.green, },
       ['@tag.delimiter'] = { fg = colors.cyan, },
 
-        -- Semantic 
+        -- Semantic
       ['@class'] = { fg = colors.cyan },
       ['@struct'] = { fg = colors.cyan },
       ['@enum'] = { fg = colors.cyan },
