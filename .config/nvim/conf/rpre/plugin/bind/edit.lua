@@ -4,9 +4,9 @@
 local function general()
     vim.keymap.set("i", "jj", "<ESC>")
 
-    vim.opt.backspace = {"indent", "eol", "start"}
+    vim.opt.backspace = { "indent", "eol", "start" }
 
-    vim.keymap.set("n", "<CR>", "o<Esc>0\"_D")  -- must escape blackhole-buffer
+    vim.keymap.set("n", "<CR>", "o<Esc>0\"_D") -- must escape blackhole-buffer
 end
 
 local function navigation()

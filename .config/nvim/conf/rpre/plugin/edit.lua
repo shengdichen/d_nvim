@@ -3,7 +3,7 @@ local function format()
 
     vim.opt.autoindent = true
 
-    vim.opt.expandtab = true  -- spaces instead of tabs
+    vim.opt.expandtab = true -- spaces instead of tabs
     vim.opt.smarttab = true
     vim.opt.shiftround = true
 
@@ -25,8 +25,8 @@ local function remove_redundant_spaces()
         vim.api.nvim_win_set_cursor(0, pos)
     end
 
-    vim.api.nvim_create_autocmd({"BufWritePre"}, {
-        pattern = {"*"},
+    vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+        pattern = { "*" },
         callback = remove_trailing,
     })
 end
@@ -34,7 +34,7 @@ end
 local function cmd()
     vim.opt.undolevels = 1000
 
-    vim.opt.clipboard:append("unnamedplus")  -- use system clipboard
+    vim.opt.clipboard:append("unnamedplus") -- use system clipboard
 
     -- allow buffering even if unwritten modifications exist
     vim.opt.hidden = true
@@ -46,4 +46,3 @@ local function main()
     cmd()
 end
 main()
-
