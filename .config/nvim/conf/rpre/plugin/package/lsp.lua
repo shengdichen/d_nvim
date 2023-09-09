@@ -43,7 +43,11 @@ end
 local function lang()
     local conf = require("lspconfig")
 
+    conf.pylsp.setup({})
+    conf.tsserver.setup({})
+
     conf.lua_ls.setup({})
+    conf.bashls.setup({})
 end
 
 local function main()
