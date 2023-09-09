@@ -4,3 +4,6 @@
 [submodule ".config/nvim/conf/rpre/pack/default/start/vifm.vim"]
 	path = .config/nvim/conf/rpre/pack/start/start/vifm.vim
 	url = https://github.com/vifm/vifm.vim.git
+[submodule ".config/nvim/conf/rpre/pack/start/start/nvim-lspconfig"]
+	path = .config/nvim/conf/rpre/pack/start/start/nvim-lspconfig
+	url = https://github.com/neovim/nvim-lspconfig.git
