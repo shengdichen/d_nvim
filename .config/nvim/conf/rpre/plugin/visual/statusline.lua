@@ -2,21 +2,21 @@ local function assemble()
     local conf = ""
 
     local function left()
-        conf = conf.."%.37F"
+        conf = conf .. "%.37F"
 
-        conf = conf.."  ~"
-        conf = conf..[[%{&filetype!=""?&filetype:"voidType"}]]
+        conf = conf .. "  ~"
+        conf = conf .. [[%{&filetype!=""?&filetype:"voidType"}]]
 
-        conf = conf..[[%{&readonly==0?&modifiable!=0?"":"|!W":&modifiable!=0?"|RO":"|RO!W"}]]
+        conf = conf .. [[%{&readonly==0?&modifiable!=0?"":"|!W":&modifiable!=0?"|RO":"|RO!W"}]]
     end
 
     local function separator()
-        conf = conf..[[%=]]
+        conf = conf .. [[%=]]
     end
 
     local function right()
-        conf = conf..[[%{&modified==""?"":"!Pending!  "}]]
-        conf = conf.."(%02c, %03l/%03L)"
+        conf = conf .. [[%{&modified==""?"":"!Pending!  "}]]
+        conf = conf .. "(%02c, %03l/%03L)"
     end
 
     left()
@@ -52,31 +52,31 @@ end
 local function make_autocmds()
     local gid = vim.api.nvim_create_augroup(
         "StatuslineToggle",
-        {clear = true}
+        { clear = true }
     )
 
     vim.api.nvim_create_autocmd(
-        {"FileWritePost", "BufWritePost", "CmdlineLeave"},
-        {pattern = {"*"}, group = gid, callback = hide}
+        { "FileWritePost", "BufWritePost", "CmdlineLeave" },
+        { pattern = { "*" }, group = gid, callback = hide }
     )
 
     vim.api.nvim_create_autocmd(
-        {"InsertLeave", "CmdLineLeave", "TextChanged", "TextChangedI", "TextChangedP"},
-        {pattern = {"*"}, group = gid, callback = show_if_modified}
+        { "InsertLeave", "CmdLineLeave", "TextChanged", "TextChangedI", "TextChangedP" },
+        { pattern = { "*" }, group = gid, callback = show_if_modified }
     )
 
     vim.api.nvim_create_autocmd(
-        {"InsertEnter"},
-        {pattern = {"*"}, group = gid, callback = show(false)}
+        { "InsertEnter" },
+        { pattern = { "*" }, group = gid, callback = show(false) }
     )
     vim.api.nvim_create_autocmd(
-        {"CmdlineEnter"},
-        {pattern = {"*"}, group = gid, callback = show(true)}
+        { "CmdlineEnter" },
+        { pattern = { "*" }, group = gid, callback = show(true) }
     )
 end
 
 local function statusline()
-    vim.opt.laststatus = 0  -- hide by default
+    vim.opt.laststatus = 0 -- hide by default
 
     vim.opt.ruler = false  -- use our own cursor-coordinate display instead
 

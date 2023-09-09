@@ -1,5 +1,5 @@
 local function set_leader()
-    vim.g.mapleader = " "  -- |space| as leader-key
+    vim.g.mapleader = " " -- |space| as leader-key
 end
 
 local function main()

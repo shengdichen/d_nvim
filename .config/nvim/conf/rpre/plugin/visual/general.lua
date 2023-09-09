@@ -13,8 +13,8 @@ local function colorscheme()
 end
 
 local function visual()
-    vim.opt.number = true  -- show line-number...
-    vim.opt.relativenumber = true  -- ...relative to current
+    vim.opt.number = true         -- show line-number...
+    vim.opt.relativenumber = true -- ...relative to current
 
     -- width of "gutter" column:
     --  1. 3 digits for line-number (will increase if insufficient)
@@ -34,8 +34,8 @@ end
 
 local function cursor()
     local styles = {
-        "n:block-Cursor", -- normal
-        "i-c:ver100-Cursor",  -- insert & commandline
+        "n:block-Cursor",    -- normal
+        "i-c:ver100-Cursor", -- insert & commandline
         "v-o:hor100-Cursor"  -- visual & operator-pending
     }
     vim.opt.guicursor = table.concat(styles, ",")
@@ -44,8 +44,8 @@ local function cursor()
         -- steady, beam-shaped
         vim.opt.guicursor = "a:ver100-blinkon0"
     end
-    vim.api.nvim_create_autocmd({"VimLeave"}, {
-        pattern = {"*"},
+    vim.api.nvim_create_autocmd({ "VimLeave" }, {
+        pattern = { "*" },
         callback = restore_cursor,
     })
 end

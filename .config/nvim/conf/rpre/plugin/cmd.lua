@@ -4,19 +4,19 @@ local function terminal()
 
     local gid = vim.api.nvim_create_augroup(
         "TerminalMode",
-        {clear = true}
+        { clear = true }
     )
     vim.api.nvim_create_autocmd(
-        {"TermOpen"},
-        {pattern = {"*"}, group = gid, command = "startinsert"}
+        { "TermOpen" },
+        { pattern = { "*" }, group = gid, command = "startinsert" }
     )
 
-    vim.keymap.set("t", "<C-C>", "<C-\\><C-n>")  -- exit terminal-mode
+    vim.keymap.set("t", "<C-C>", "<C-\\><C-n>") -- exit terminal-mode
 end
 
 local function commandline()
-    vim.opt.wildmenu = true  -- enable completion
-    vim.optwildmode = "list:longest"  -- complete as much as possible
+    vim.opt.wildmenu = true          -- enable completion
+    vim.optwildmode = "list:longest" -- complete as much as possible
 
     vim.keymap.set("c", ":W", "wa!<Enter>")
     vim.keymap.set("c", "JJ", "<C-U><BS>")
