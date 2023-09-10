@@ -63,9 +63,11 @@ local function common(mapping, palette)
     local function diff()
         mapping["DiffAdd"] = { bg = "none", fg = palette["green"] }
         mapping["DiffDelete"] = { bg = "none", fg = palette["red"] }
-        mapping["DiffChange"] = { bg = "none", fg = palette["pink"] }
 
-        mapping["DiffText"] = { bg = "none", fg = palette["white_dark"] }
+        -- lines with differences
+        mapping["DiffChange"] = { bg = palette["white_dark"], fg = palette["black_dark"] }
+        -- the differences themselves
+        mapping["DiffText"] = { bg = palette["white_bright"], fg = palette["black_dark"] }
     end
 
     local function spellcheck()
@@ -173,21 +175,11 @@ local function syntax(mapping, palette)
 end
 
 local function filetype(mapping, palette)
-    local function diff()
-        mapping["diffAdded"] = { fg = palette.green, }
-        mapping["diffRemoved"] = { fg = palette.red, }
-        mapping["diffFileId"] = { fg = palette.yellow, bold = true, reverse = true, }
-        mapping["diffFile"] = { fg = palette.nontext, }
-        mapping["diffNewFile"] = { fg = palette.green, }
-        mapping["diffOldFile"] = { fg = palette.red, }
-    end
-
     local function debug()
         mapping["debugPc"] = { bg = palette.menu, }
         mapping["debugBreakpoint"] = { fg = palette.red, reverse = true, }
     end
 
-    diff()
     debug()
 end
 
