@@ -20,22 +20,12 @@ local function setup_vim()
     vim.g.colors_name = "shrakula"
 end
 
-local function set_color_true(palette)
-    local normal, mapping = require("shrakula.mapping")(palette)
-
-    -- define "Normal" first to allow shortcuts "fg"&"bg"
-    vim.api.nvim_set_hl(0, "Normal", normal)
-    for item, color in pairs(mapping) do
-        vim.api.nvim_set_hl(0, item, color)
-    end
-end
-
 local function main()
     if not check_version() then return end
     setup_vim()
 
     local palette = require("shrakula.palette")
-    set_color_true(palette)
+    require("shrakula.color_true")(palette)
     require("shrakula.color_16")(palette)
 end
 

@@ -185,13 +185,16 @@ end
 
 local function main()
     local function f(palette)
-        local mapping = {}
+        -- define "Normal" first to allow shortcuts "fg"&"bg"
+        vim.api.nvim_set_hl(0, "Normal", normal(palette))
 
+        local mapping = {}
         common(mapping, palette)
         syntax(mapping, palette)
         filetype(mapping, palette)
-
-        return normal(palette), mapping
+        for item, color in pairs(mapping) do
+            vim.api.nvim_set_hl(0, item, color)
+        end
     end
 
     return f
