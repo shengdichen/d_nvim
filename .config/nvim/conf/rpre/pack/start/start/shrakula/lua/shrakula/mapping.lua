@@ -141,6 +141,17 @@ local function syntax(mapping, palette)
         mapping["Todo"] = { bg = "none", fg = "fg", reverse = true }
     end
 
+    local function diagnostic()
+        -- REF
+        --  |:help diagnostic-highlights|
+
+        mapping["DiagnosticError"] = { bg = "none", fg = palette["red"] }
+        mapping["DiagnosticWarn"] = { bg = "none", fg = palette["yellow"] }
+        mapping["DiagnosticInfo"] = { bg = "none", fg = palette["white_bright"] }
+        mapping["DiagnosticHint"] = { bg = "none", fg = palette["white_dark"] }
+        mapping["DiagnosticOk"] = { bg = "none", fg = palette["black_bright"] }
+    end
+
     local function lsp()
         mapping["@lsp.type.class"] = { fg = palette.cyan }
         mapping["@lsp.type.enum"] = { fg = palette.cyan }
@@ -156,27 +167,6 @@ local function syntax(mapping, palette)
         mapping["@lsp.type.struct"] = { fg = palette.cyan }
         mapping["@lsp.type.type"] = { fg = palette.bright_cyan, }
         mapping["@lsp.type.variable"] = { fg = palette.fg, }
-
-        mapping["DiagnosticError"] = { fg = palette.red, }
-        mapping["DiagnosticWarn"] = { fg = palette.yellow, }
-        mapping["DiagnosticInfo"] = { fg = palette.cyan, }
-        mapping["DiagnosticHint"] = { fg = palette.cyan, }
-        mapping["DiagnosticUnderlineError"] = { undercurl = true, sp = palette.red, }
-        mapping["DiagnosticUnderlineWarn"] = { undercurl = true, sp = palette.yellow, }
-        mapping["DiagnosticUnderlineInfo"] = { undercurl = true, sp = palette.cyan, }
-        mapping["DiagnosticUnderlineHint"] = { undercurl = true, sp = palette.cyan, }
-        mapping["DiagnosticSignError"] = { fg = palette.red, }
-        mapping["DiagnosticSignWarn"] = { fg = palette.yellow, }
-        mapping["DiagnosticSignInfo"] = { fg = palette.cyan, }
-        mapping["DiagnosticSignHint"] = { fg = palette.cyan, }
-        mapping["DiagnosticFloatingError"] = { fg = palette.red, }
-        mapping["DiagnosticFloatingWarn"] = { fg = palette.yellow, }
-        mapping["DiagnosticFloatingInfo"] = { fg = palette.cyan, }
-        mapping["DiagnosticFloatingHint"] = { fg = palette.cyan, }
-        mapping["DiagnosticVirtualTextError"] = { fg = palette.red, }
-        mapping["DiagnosticVirtualTextWarn"] = { fg = palette.yellow, }
-        mapping["DiagnosticVirtualTextInfo"] = { fg = palette.cyan, }
-        mapping["DiagnosticVirtualTextHint"] = { fg = palette.cyan, }
 
         mapping["LspDiagnosticsDefaultError"] = { fg = palette.red, }
         mapping["LspDiagnosticsDefaultWarning"] = { fg = palette.yellow, }
@@ -211,6 +201,7 @@ local function syntax(mapping, palette)
     end
 
     internal()
+    diagnostic()
     lsp()
     treesitter()
     semantic()
