@@ -183,82 +183,17 @@ local function filetype(mapping, palette)
     debug()
 end
 
-local function unused(mapping, palette)
-    local function lsp_saga()
-        mapping["LspFloatWinNormal"] = { fg = palette.fg, }
-        mapping["LspFloatWinBorder"] = { fg = palette.comment, }
-        mapping["LspSagaHoverBorder"] = { fg = palette.comment, }
-        mapping["LspSagaSignatureHelpBorder"] = { fg = palette.comment, }
-        mapping["LspSagaCodeActionBorder"] = { fg = palette.comment, }
-        mapping["LspSagaDefPreviewBorder"] = { fg = palette.comment, }
-        mapping["LspLinesDiagBorder"] = { fg = palette.comment, }
-        mapping["LspSagaRenameBorder"] = { fg = palette.comment, }
-        mapping["LspSagaBorderTitle"] = { fg = palette.menu, }
-        mapping["LSPSagaDiagnosticTruncateLine"] = { fg = palette.comment, }
-        mapping["LspSagaDiagnosticBorder"] = { fg = palette.comment, }
-        mapping["LspSagaShTruncateLine"] = { fg = palette.comment, }
-        mapping["LspSagaDocTruncateLine"] = { fg = palette.comment, }
-        mapping["LspSagaLspFinderBorder"] = { fg = palette.comment, }
-        mapping["CodeActionNumber"] = { bg = 'NONE', fg = palette.cyan }
-    end
-
-    local function completion()
-        -- Nvim compe
-        mapping["CmpItemAbbrDeprecated"] = { fg = palette.white, bg = palette.menu, }
-        mapping["CmpItemAbbrMatch"] = { fg = palette.cyan, bg = palette.menu, }
-
-        -- Compe
-        mapping["CompeDocumentation"] = { link = "Pmenu" }
-        mapping["CompeDocumentationBorder"] = { link = "Pmenu" }
-
-        -- Cmp
-        mapping["CmpItemKind"] = { link = "Pmenu" }
-        mapping["CmpItemAbbr"] = { link = "Pmenu" }
-        mapping["CmpItemKindMethod"] = { link = "@method" }
-        mapping["CmpItemKindText"] = { link = "@text" }
-        mapping["CmpItemKindFunction"] = { link = "@function" }
-        mapping["CmpItemKindConstructor"] = { link = "@type" }
-        mapping["CmpItemKindVariable"] = { link = "@variable" }
-        mapping["CmpItemKindClass"] = { link = "@type" }
-        mapping["CmpItemKindInterface"] = { link = "@type" }
-        mapping["CmpItemKindModule"] = { link = "@namespace" }
-        mapping["CmpItemKindProperty"] = { link = "@property" }
-        mapping["CmpItemKindOperator"] = { link = "@operator" }
-        mapping["CmpItemKindReference"] = { link = "@parameter.reference" }
-        mapping["CmpItemKindUnit"] = { link = "@field" }
-        mapping["CmpItemKindValue"] = { link = "@field" }
-        mapping["CmpItemKindField"] = { link = "@field" }
-        mapping["CmpItemKindEnum"] = { link = "@field" }
-        mapping["CmpItemKindKeyword"] = { link = "@keyword" }
-        mapping["CmpItemKindSnippet"] = { link = "@text" }
-        mapping["CmpItemKindColor"] = { link = "DevIconCss" }
-        mapping["CmpItemKindFile"] = { link = "TSURI" }
-        mapping["CmpItemKindFolder"] = { link = "TSURI" }
-        mapping["CmpItemKindEvent"] = { link = "@constant" }
-        mapping["CmpItemKindEnumMember"] = { link = "@field" }
-        mapping["CmpItemKindConstant"] = { link = "@constant" }
-        mapping["CmpItemKindStruct"] = { link = "@structure" }
-        mapping["CmpItemKindTypeParameter"] = { link = "@parameter" }
-    end
-
-    lsp_saga()
-    completion()
-end
-
-local function main(load_unused)
+local function main()
     local function f(palette)
         local mapping = {}
 
         common(mapping, palette)
         syntax(mapping, palette)
         filetype(mapping, palette)
-        if load_unused then
-            unused(mapping, palette)
-        end
 
         return normal(palette), mapping
     end
 
     return f
 end
-return main(false)
+return main()
