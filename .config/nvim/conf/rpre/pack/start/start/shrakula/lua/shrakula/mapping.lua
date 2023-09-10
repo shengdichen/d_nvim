@@ -95,43 +95,46 @@ end
 
 local function syntax(mapping, palette)
     local function internal()
-        mapping["Constant"] = { bg = "none", fg = palette["cyan"] }
+        mapping["Constant"] = { bg = "none", fg = palette["green"] }
         mapping["String"] = { bg = "none", fg = palette["green"] }
         mapping["Character"] = { bg = "none", fg = palette["green"] }
-        mapping["Number"] = { bg = "none", fg = palette["purple"] }
-        mapping["Float"] = { bg = "none", fg = palette["purple"] }
-        mapping["Boolean"] = { bg = "none", fg = palette["purple"] }
+        mapping["Number"] = { bg = "none", fg = palette["green"] }
+        mapping["Boolean"] = { bg = "none", fg = palette["green"] }
+        mapping["Float"] = { bg = "none", fg = palette["green"] }
 
-        mapping["Operator"] = { bg = "none", fg = "fg" }
-
-        mapping["Keyword"] = { bg = "none", fg = palette["cyan"] }
-        mapping["Keywords"] = { bg = "none", fg = palette["cyan"] }
         mapping["Identifier"] = { bg = "none", fg = palette["cyan"] }
         mapping["Function"] = { bg = "none", fg = palette["cyan"] }
-        mapping["Label"] = { bg = "none", fg = palette["cyan"] }
-
-        mapping["Conditional"] = { bg = "none", fg = palette["pink"] }
-        mapping["Repeat"] = { bg = "none", fg = palette["pink"] }
 
         mapping["Statement"] = { bg = "none", fg = palette["purple"] }
+        mapping["Conditional"] = { bg = "none", fg = palette["purple"] }
+        mapping["Repeat"] = { bg = "none", fg = palette["purple"] }
+        mapping["Label"] = { bg = "none", fg = palette["purple"] }
+        mapping["Operator"] = { bg = "none", fg = palette["purple"] }
+        mapping["Keyword"] = { bg = "none", fg = palette["purple"] }
         mapping["Exception"] = { bg = "none", fg = palette["purple"] }
+
+        mapping["PreProc"] = { bg = "none", fg = palette["purple"] }
         mapping["Include"] = { bg = "none", fg = palette["purple"] }
         mapping["Define"] = { bg = "none", fg = palette["purple"] }
-        mapping["PreProc"] = { bg = "none", fg = palette["purple"] }
-
         mapping["Macro"] = { bg = "none", fg = palette["purple"] }
-        mapping["PreCondit"] = { bg = "none", fg = palette["cyan"] }
+        mapping["PreCondit"] = { bg = "none", fg = palette["purple"] }
+
         mapping["Type"] = { bg = "none", fg = palette["pink"] }
         mapping["StorageClass"] = { bg = "none", fg = palette["pink"] }
+        mapping["Structure"] = { bg = "none", fg = palette["pink"] }
+        mapping["TypeDef"] = { bg = "none", fg = palette["pink"] }
 
-        mapping["Structure"] = { bg = "none", fg = palette["yellow"] }
-        mapping["TypeDef"] = { bg = "none", fg = palette["yellow"] }
-        mapping["Special"] = { bg = "none", fg = palette["green"], italic = true }
-        mapping["SpecialComment"] = { bg = "none", fg = palette["comment"], italic = true }
+        mapping["Special"] = { bg = "none", fg = palette["yellow"] }
+        mapping["Specialchar"] = { bg = "none", fg = palette["yellow"] }
+        mapping["Tag"] = { bg = "none", fg = palette["yellow"] }
+        mapping["Delimtiter"] = { bg = "none", fg = palette["yellow"] }
+        mapping["SpecialComment"] = { bg = "none", fg = palette["yellow"] }
+        mapping["Debug"] = { bg = "none", fg = palette["yellow"] }
 
-        mapping["Error"] = { bg = "none", fg = palette["bright_red"] }
-        mapping["Todo"] = { bg = "none", fg = palette["purple"], bold = true }
-        mapping["Underlined"] = { bg = "none", fg = palette["cyan"], underline = true }
+        mapping["Underlined"] = { bg = "none", fg = "fg", underline = true }
+        mapping["Ignore"] = { bg = "none", fg = palette["black_bright"] }
+        mapping["Error"] = { bg = "none", fg = palette["red"] }
+        mapping["Todo"] = { bg = "none", fg = "fg", reverse = true }
     end
 
     local function lsp()
