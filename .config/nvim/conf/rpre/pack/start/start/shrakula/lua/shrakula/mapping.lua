@@ -89,7 +89,7 @@ local function common(mapping, palette)
         mapping["NonText"] = { bg = "none", fg = palette["white_dark"] }
         mapping["Conceal"] = { bg = "none", fg = palette["white_dark"] }
 
-        mapping["FloatBorder"] = { bg = "none", fg = palette["white"] }
+        mapping["FloatBorder"] = { bg = "none", fg = palette["white_dark"] }
     end
 
     general()
