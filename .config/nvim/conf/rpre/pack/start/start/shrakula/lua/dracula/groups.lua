@@ -389,9 +389,8 @@ local function unused(mapping, palette)
 end
 
 local function main(load_unused)
-    local function f(configs)
+    local function f(palette)
         local mapping = {}
-        local palette = configs.colors
 
         common(mapping, palette)
         syntax(mapping, palette)
@@ -403,6 +402,6 @@ local function main(load_unused)
         return mapping
     end
 
-    return { setup = f, }
+    return f
 end
 return main(false)
