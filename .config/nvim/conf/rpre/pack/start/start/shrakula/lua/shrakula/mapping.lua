@@ -153,58 +153,23 @@ local function syntax(mapping, palette)
     end
 
     local function lsp()
-        mapping["@lsp.type.class"] = { fg = palette.cyan }
-        mapping["@lsp.type.enum"] = { fg = palette.cyan }
-        mapping["@lsp.type.decorator"] = { fg = palette.green }
-        mapping["@lsp.type.enumMember"] = { fg = palette.purple }
-        mapping["@lsp.type.function"] = { fg = palette.green, }
-        mapping["@lsp.type.interface"] = { fg = palette.cyan }
-        mapping["@lsp.type.macro"] = { fg = palette.cyan }
-        mapping["@lsp.type.method"] = { fg = palette.green, }
-        mapping["@lsp.type.namespace"] = { fg = palette.orange, }
-        mapping["@lsp.type.parameter"] = { fg = palette.orange, }
-        mapping["@lsp.type.property"] = { fg = palette.purple, }
-        mapping["@lsp.type.struct"] = { fg = palette.cyan }
-        mapping["@lsp.type.type"] = { fg = palette.bright_cyan, }
-        mapping["@lsp.type.variable"] = { fg = palette.fg, }
+        -- REF:
+        --  |:help lsp-semantic-highlight|
 
-        mapping["LspDiagnosticsDefaultError"] = { fg = palette.red, }
-        mapping["LspDiagnosticsDefaultWarning"] = { fg = palette.yellow, }
-        mapping["LspDiagnosticsDefaultInformation"] = { fg = palette.cyan, }
-        mapping["LspDiagnosticsDefaultHint"] = { fg = palette.cyan, }
-        mapping["LspDiagnosticsUnderlineError"] = { fg = palette.red, undercurl = true, }
-        mapping["LspDiagnosticsUnderlineWarning"] = { fg = palette.yellow, undercurl = true, }
-        mapping["LspDiagnosticsUnderlineInformation"] = { fg = palette.cyan, undercurl = true, }
-        mapping["LspDiagnosticsUnderlineHint"] = { fg = palette.cyan, undercurl = true, }
-        mapping["LspReferenceText"] = { fg = palette.orange, }
-        mapping["LspReferenceRead"] = { fg = palette.orange, }
-        mapping["LspReferenceWrite"] = { fg = palette.orange, }
-        mapping["LspCodeLens"] = { fg = palette.cyan, }
+        return 0
     end
 
     local function treesitter()
         -- REF:
         --  |:help treesitter-highlight-groups|
-    end
 
-    local function semantic()
-        mapping["@class"] = { fg = palette.cyan }
-        mapping["@struct"] = { fg = palette.cyan }
-        mapping["@enum"] = { fg = palette.cyan }
-        mapping["@enumMember"] = { fg = palette.purple }
-        mapping["@event"] = { fg = palette.cyan }
-        mapping["@interface"] = { fg = palette.cyan }
-        mapping["@modifier"] = { fg = palette.cyan }
-        mapping["@regexp"] = { fg = palette.yellow }
-        mapping["@typeParameter"] = { fg = palette.cyan }
-        mapping["@decorator"] = { fg = palette.cyan }
+        return 0
     end
 
     internal()
     diagnostic()
     lsp()
     treesitter()
-    semantic()
 end
 
 local function filetype(mapping, palette)
