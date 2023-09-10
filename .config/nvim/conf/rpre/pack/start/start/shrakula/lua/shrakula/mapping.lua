@@ -176,8 +176,8 @@ end
 
 local function filetype(mapping, palette)
     local function debug()
-        mapping["debugPc"] = { bg = palette.menu, }
-        mapping["debugBreakpoint"] = { fg = palette.red, reverse = true, }
+        mapping["debugPc"] = { bg = palette["white_bright"], fg = palette["black_dark"] }
+        mapping["debugBreakpoint"] = { bg = palette["red"], fg = "fg" }
     end
 
     debug()
