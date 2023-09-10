@@ -1,8 +1,9 @@
 local function check_version()
     if vim.version().minor < 7 then
         vim.notify_once("Update neovim to >= v0.7")
-        return
+        return false
     end
+    return true
 end
 
 local function setup_vim()
@@ -20,7 +21,7 @@ local function setup_vim()
 end
 
 local function set_color_true(palette)
-    local mapping = require("dracula.groups")(palette)
+    local mapping = require("shrakula.mapping")(palette)
     for item, color in pairs(mapping) do
         vim.api.nvim_set_hl(0, item, color)
     end
@@ -49,10 +50,10 @@ local function set_color_256(palette)
 end
 
 local function main()
-    check_version()
+    if not check_version() then return end
     setup_vim()
 
-    palette = require("dracula.palette")
+    local palette = require("shrakula.palette")
     set_color_true(palette)
     set_color_256(palette)
 end
