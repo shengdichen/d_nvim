@@ -4,84 +4,81 @@ end
 
 local function common(mapping, palette)
     local function general()
-        mapping["Normal"] = { bg = palette.bg, fg = palette.fg }
-        mapping["NormalFloat"] = { bg = palette.bg, fg = palette.fg }
-        mapping["Comment"] = { fg = palette.white_dark }
-        mapping["MatchParen"] = { fg = palette.fg, underline = true }
-        mapping["EndOfBuffer"] = { bg = palette.bg, fg = palette.black } -- tilde at the end
+        mapping["NormalFloat"] = { bg = "none", fg = palette["white_bright"] }
+        mapping["Comment"] = { bg = "none", fg = palette["white_dark"] }
+        mapping["MatchParen"] = { bg = "none", fg = palette["cyan"], underline = true }
+        mapping["EndOfBuffer"] = { bg = "none", fg = palette["black_dark"] }                -- tilde at EOF
 
-        mapping["IncSearch"] = { bg = palette.comment, fg = palette.orange }
-        mapping["Search"] = { reverse = true }
+        mapping["IncSearch"] = { bg = palette["white_bright"], fg = palette["black_dark"] } -- current match
+        mapping["Search"] = { bg = palette["white_dark"], fg = palette["white_bright"] }    -- other matches
 
-        mapping["Visual"] = { bg = palette.black_bright }
-        mapping["VisualNOS"] = { fg = palette.black_bright }
+        mapping["Visual"] = { bg = palette["black_bright"], fg = "none" }
+        mapping["VisualNOS"] = { bg = palette["black_bright"], fg = "none" }
     end
 
     local function cursor()
-        mapping["Cursor"] = { reverse = true }
-        mapping["CursorLine"] = { bg = palette.black_bright }
-        mapping["QuickFixLine"] = { bg = palette.yellow, fg = palette.black }
+        mapping["Cursor"] = { bg = "none", fg = "none", reverse = true }
+        mapping["CursorLine"] = { bg = palette["black_bright"], fg = "none" }
+        mapping["QuickFixLine"] = { bg = palette["yellow"], fg = palette["black_dark"] }
 
-        mapping["CursorLineNr"] = { fg = palette.fg }   -- current
-        mapping["LineNr"] = { fg = palette.white_dark } -- non-current
+        mapping["CursorLineNr"] = { bg = "none", fg = "fg", bold = true }    -- current
+        mapping["LineNr"] = { bg = "none", fg = palette["white_dark"] }      -- non-current
 
-        mapping["CursorColumn"] = { reverse = true }    -- horizontal indicator for |cursorcolumn|
-        mapping["ColorColumn"] = { bg = palette.black_bright }
+        mapping["CursorColumn"] = { bg = "none", fg = "fg", reverse = true } -- horizontal indicator for |cursorcolumn|
+        mapping["ColorColumn"] = { bg = palette["black_bright"], fg = "none" }
     end
 
     local function line_horizontal()
-        mapping["StatusLine"] = { fg = palette.fg }           -- current
-        mapping["StatusLineNC"] = { fg = palette.white_dark } -- non-current
+        mapping["StatusLine"] = { bg = "none", fg = "fg" }                    -- current
+        mapping["StatusLineNC"] = { bg = "none", fg = palette["white_dark"] } -- non-current
 
-        mapping["Folded"] = { fg = palette.white_dark }
-        mapping["FoldColumn"] = {}
-
-        mapping["TabLineSel"] = { fg = palette.white_bright } -- current
-        mapping["TabLine"] = { fg = palette.white_dark }      -- non-current
-        mapping["TabLineFill"] = { bg = palette.bg }
+        mapping["Folded"] = { bg = "none", fg = palette["white_dark"] }
+        mapping["FoldColumn"] = { bg = "none", fg = palette["white_dark"] }
+        mapping["TabLine"] = { bg = "none", fg = palette["white_dark"] } -- non-current
+        mapping["TabLineFill"] = { bg = "none", fg = "none" }
     end
 
     local function cmd()
-        mapping["WarningMsg"] = { fg = palette.orange }
-        mapping["ErrorMsg"] = { fg = palette.bright_red }
-        mapping["Question"] = { fg = palette.purple }
+        mapping["WarningMsg"] = { bg = "none", fg = palette["orange"] }
+        mapping["ErrorMsg"] = { bg = "none", fg = palette["bright_red"] }
+        mapping["Question"] = { bg = "none", fg = palette["purple"] }
 
-        mapping["WildMenu"] = { bg = palette.black_dark, fg = palette.black_bright }
+        mapping["WildMenu"] = { bg = "none", fg = palette["white_dark"] }
 
-        mapping["Pmenu"] = { bg = palette.menu, fg = palette.white }
-        mapping["PmenuSel"] = { bg = palette.selection, fg = palette.white }
-        mapping["PmenuSbar"] = { bg = palette.bg }
-        mapping["PmenuThumb"] = { bg = palette.selection }
+        mapping["PmenuSel"] = { bg = palette["white_bright"], fg = palette["black_dark"] } -- selected
+        mapping["Pmenu"] = { bg = palette["black_bright"], fg = palette["white_bright"] }  -- non-selected
+        mapping["PmenuSbar"] = { bg = "none", fg = palette["black_bright"] }               -- scrollbar
+        mapping["PmenuThumb"] = { bg = "none", fg = palette["white_dark"] }                -- none
 
-        mapping["Terminal"] = { bg = palette.black, fg = palette.white }
+        mapping["Terminal"] = { bg = "none", fg = "none" }                                 -- cursor in builtin terminal
     end
 
     local function diff()
-        mapping["DiffAdd"] = { fg = palette.bg, bg = palette.green, }
-        mapping["DiffChange"] = { fg = palette.orange, }
-        mapping["DiffDelete"] = { fg = palette.red, }
-        mapping["DiffText"] = { fg = palette.comment, }
+        mapping["DiffAdd"] = { bg = "none", fg = palette["green"] }
+        mapping["DiffDelete"] = { bg = "none", fg = palette["red"] }
+        mapping["DiffChange"] = { bg = "none", fg = palette["pink"] }
+
+        mapping["DiffText"] = { bg = "none", fg = palette["white_dark"] }
     end
 
     local function spellcheck()
-        mapping["SpellCap"] = { fg = palette["yellow"] }
+        mapping["SpellCap"] = { bg = "none", fg = palette["yellow"] }
+        mapping["SpellLocal"] = { bg = "none", fg = palette["yellow"] }
+        mapping["SpellRare"] = { bg = "none", fg = palette["orange"] }
 
-        mapping["SpellLocal"] = { fg = palette["yellow"] }
-        mapping["SpellRare"] = { fg = palette["orange"] }
-
-        mapping["SpellBad"] = { fg = palette["bright_red"], underline = true }
+        mapping["SpellBad"] = { bg = "none", fg = palette["red"], underline = true }
     end
 
     local function misc()
-        mapping["SignColumn"] = { bg = palette.bg }
+        mapping["SignColumn"] = { bg = "none" }
 
-        mapping["Directory"] = { fg = palette.cyan }
+        mapping["Directory"] = { bg = "none", fg = palette["cyan"] }
 
-        mapping["VertSplit"] = { fg = palette.black }
+        mapping["VertSplit"] = { bg = "none", fg = palette["white_dark"] }
 
-        mapping["SpecialKey"] = { fg = palette.nontext }
-        mapping["NonText"] = { fg = palette.nontext }
-        mapping["Conceal"] = { fg = palette.comment }
+        mapping["SpecialKey"] = { bg = "none", fg = palette["white_dark"] }
+        mapping["NonText"] = { bg = "none", fg = palette["white_dark"] }
+        mapping["Conceal"] = { bg = "none", fg = palette["white_dark"] }
     end
 
     general()
