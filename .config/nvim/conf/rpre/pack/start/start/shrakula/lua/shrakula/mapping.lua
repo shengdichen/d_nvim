@@ -173,51 +173,6 @@ local function syntax(mapping, palette)
 end
 
 local function filetype(mapping, palette)
-    local function html()
-        mapping["htmlArg"] = { fg = palette.green, }
-        mapping["htmlBold"] = { fg = palette.yellow, bold = true, }
-        mapping["htmlEndTag"] = { fg = palette.cyan, }
-        mapping["htmlH0"] = { fg = palette.pink, }
-        mapping["htmlH1"] = { fg = palette.pink, }
-        mapping["htmlH2"] = { fg = palette.pink, }
-        mapping["htmlH3"] = { fg = palette.pink, }
-        mapping["htmlH4"] = { fg = palette.pink, }
-        mapping["htmlH5"] = { fg = palette.pink, }
-        mapping["htmlItalic"] = { fg = palette.purple, italic = true, }
-        mapping["htmlLink"] = { fg = palette.purple, underline = true, }
-        mapping["htmlSpecialChar"] = { fg = palette.yellow, }
-        mapping["htmlSpecialTagName"] = { fg = palette.cyan, }
-        mapping["htmlTag"] = { fg = palette.cyan, }
-        mapping["htmlTagN"] = { fg = palette.cyan, }
-        mapping["htmlTagName"] = { fg = palette.cyan, }
-        mapping["htmlTitle"] = { fg = palette.white, }
-    end
-
-    local function markdown()
-        mapping["markdownBlockquote"] = { fg = palette.yellow, italic = true, }
-        mapping["markdownBold"] = { fg = palette.orange, bold = true, }
-        mapping["markdownCode"] = { fg = palette.green, }
-        mapping["markdownCodeBlock"] = { fg = palette.orange, }
-        mapping["markdownCodeDelimiter"] = { fg = palette.red, }
-        mapping["markdownH1"] = { fg = palette.pink, bold = true, }
-        mapping["markdownH2"] = { fg = palette.pink, bold = true, }
-        mapping["markdownH3"] = { fg = palette.pink, bold = true, }
-        mapping["markdownH4"] = { fg = palette.pink, bold = true, }
-        mapping["markdownH5"] = { fg = palette.pink, bold = true, }
-        mapping["markdownH6"] = { fg = palette.pink, bold = true, }
-        mapping["markdownHeadingDelimiter"] = { fg = palette.red, }
-        mapping["markdownHeadingRule"] = { fg = palette.comment, }
-        mapping["markdownId"] = { fg = palette.purple, }
-        mapping["markdownIdDeclaration"] = { fg = palette.cyan, }
-        mapping["markdownIdDelimiter"] = { fg = palette.purple, }
-        mapping["markdownItalic"] = { fg = palette.yellow, italic = true, }
-        mapping["markdownLinkDelimiter"] = { fg = palette.purple, }
-        mapping["markdownLinkText"] = { fg = palette.pink, }
-        mapping["markdownListMarker"] = { fg = palette.cyan, }
-        mapping["markdownOrderedListMarker"] = { fg = palette.red, }
-        mapping["markdownRule"] = { fg = palette.comment, }
-    end
-
     local function diff()
         mapping["diffAdded"] = { fg = palette.green, }
         mapping["diffRemoved"] = { fg = palette.red, }
@@ -232,8 +187,6 @@ local function filetype(mapping, palette)
         mapping["debugBreakpoint"] = { fg = palette.red, reverse = true, }
     end
 
-    html()
-    markdown()
     diff()
     debug()
 end
