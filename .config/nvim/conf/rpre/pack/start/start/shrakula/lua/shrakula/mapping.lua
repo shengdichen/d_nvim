@@ -193,68 +193,8 @@ local function syntax(mapping, palette)
     end
 
     local function treesitter()
-        mapping["@error"] = { fg = palette.bright_red, }
-        mapping["@punctuation.delimiter"] = { fg = palette.fg, }
-        mapping["@punctuation.bracket"] = { fg = palette.fg, }
-        mapping["@punctuation.special"] = { fg = palette.cyan, }
-
-        mapping["@constant"] = { fg = palette.purple, }
-        mapping["@constant.builtin"] = { fg = palette.purple, }
-        mapping["@symbol"] = { fg = palette.purple, }
-
-        mapping["@constant.macro"] = { fg = palette.cyan, }
-        mapping["@string.regex"] = { fg = palette.red, }
-        mapping["@string"] = { fg = palette.yellow, }
-        mapping["@string.escape"] = { fg = palette.cyan, }
-        mapping["@character"] = { fg = palette.green, }
-        mapping["@number"] = { fg = palette.purple, }
-        mapping["@boolean"] = { fg = palette.purple, }
-        mapping["@float"] = { fg = palette.green, }
-        mapping["@annotation"] = { fg = palette.yellow, }
-        mapping["@attribute"] = { fg = palette.cyan, }
-        mapping["@namespace"] = { fg = palette.orange, }
-
-        mapping["@function.builtin"] = { fg = palette.cyan, }
-        mapping["@function"] = { fg = palette.green, }
-        mapping["@function.macro"] = { fg = palette.green, }
-        mapping["@parameter"] = { fg = palette.orange, }
-        mapping["@parameter.reference"] = { fg = palette.orange, }
-        mapping["@method"] = { fg = palette.green, }
-        mapping["@field"] = { fg = palette.orange, }
-        mapping["@property"] = { fg = palette.purple, }
-        mapping["@constructor"] = { fg = palette.cyan, }
-
-        mapping["@conditional"] = { fg = palette.pink, }
-        mapping["@repeat"] = { fg = palette.pink, }
-        mapping["@label"] = { fg = palette.cyan, }
-
-        mapping["@keyword"] = { fg = palette.pink, }
-        mapping["@keyword.function"] = { fg = palette.cyan, }
-        mapping["@keyword.function.ruby"] = { fg = palette.pink, }
-        mapping["@keyword.operator"] = { fg = palette.pink, }
-        mapping["@operator"] = { fg = palette.pink, }
-        mapping["@exception"] = { fg = palette.purple, }
-        mapping["@type"] = { fg = palette.bright_cyan, }
-        mapping["@type.builtin"] = { fg = palette.cyan, italic = true, }
-        mapping["@type.qualifier"] = { fg = palette.pink, }
-        mapping["@structure"] = { fg = palette.purple, }
-        mapping["@include"] = { fg = palette.pink, }
-
-        mapping["@variable"] = { fg = palette.fg, }
-        mapping["@variable.builtin"] = { fg = palette.purple, }
-
-        mapping["@text"] = { fg = palette.orange, }
-        mapping["@text.strong"] = { fg = palette.orange, bold = true, }     -- bold
-        mapping["@text.emphasis"] = { fg = palette.yellow, italic = true, } -- italic
-        mapping["@text.underline"] = { fg = palette.orange, }
-        mapping["@text.title"] = { fg = palette.pink, bold = true, }        -- title
-        mapping["@text.literal"] = { fg = palette.yellow, }                 -- inline code
-        mapping["@text.uri"] = { fg = palette.yellow, italic = true, }      -- urls
-        mapping["@text.reference"] = { fg = palette.orange, bold = true, }
-
-        mapping["@tag"] = { fg = palette.cyan, }
-        mapping["@tag.attribute"] = { fg = palette.green, }
-        mapping["@tag.delimiter"] = { fg = palette.cyan, }
+        -- REF:
+        --  |:help treesitter-highlight-groups|
     end
 
     local function semantic()
