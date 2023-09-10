@@ -6,7 +6,7 @@ local function general()
 
     vim.opt.backspace = { "indent", "eol", "start" }
 
-    vim.keymap.set("n", "<CR>", "o<Esc>0\"_D") -- must escape blackhole-buffer
+    vim.keymap.set("n", "<S-CR>", 'o<Esc>0"_D') -- |"_| := blackhole-buffer
 end
 
 local function navigation()
