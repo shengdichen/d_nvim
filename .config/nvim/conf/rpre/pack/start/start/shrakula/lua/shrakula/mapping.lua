@@ -109,8 +109,7 @@ local function syntax(mapping, palette)
             { "Constant", "String", "Character", "Number", "Boolean", "Float" },
             { bg = "none", fg = palette["orange"] }
         )
-
-        map_each(mapping, { "Identifier", "Function" }, { bg = "none", fg = palette["purple"] })
+        map_each(mapping, { "Identifier" }, { bg = "none", fg = palette["purple"] })
 
         map_each(
             mapping,
@@ -120,7 +119,7 @@ local function syntax(mapping, palette)
 
         map_each(
             mapping,
-            { "PreProc", "Include", "Define", "Macro", "PreCondit" },
+            { "Function", "PreProc", "Include", "Define", "Macro", "PreCondit" },
             { bg = "none", fg = palette["green"] }
         )
 
