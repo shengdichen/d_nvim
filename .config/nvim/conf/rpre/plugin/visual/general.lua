@@ -9,7 +9,7 @@ local function colorscheme()
     -- use RGB color if available
     vim.opt.termguicolors = true
 
-    vim.cmd("colorscheme shrakula_theme")
+    vim.cmd("colorscheme shrakula")
 end
 
 local function visual()
