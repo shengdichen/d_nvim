@@ -1,3 +1,7 @@
+local function normal(palette)
+    return { bg = "none", fg = palette["white_bright"] }
+end
+
 local function common(mapping, palette)
     local function general()
         mapping["Normal"] = { bg = palette.bg, fg = palette.fg }
@@ -399,7 +403,7 @@ local function main(load_unused)
             unused(mapping, palette)
         end
 
-        return mapping
+        return normal(palette), mapping
     end
 
     return f

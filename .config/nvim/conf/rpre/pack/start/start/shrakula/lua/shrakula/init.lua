@@ -21,7 +21,10 @@ local function setup_vim()
 end
 
 local function set_color_true(palette)
-    local mapping = require("shrakula.mapping")(palette)
+    local normal, mapping = require("shrakula.mapping")(palette)
+
+    -- define "Normal" first to allow shortcuts "fg"&"bg"
+    vim.api.nvim_set_hl(0, "Normal", normal)
     for item, color in pairs(mapping) do
         vim.api.nvim_set_hl(0, item, color)
     end
