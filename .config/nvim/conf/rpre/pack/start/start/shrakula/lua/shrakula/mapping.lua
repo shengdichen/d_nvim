@@ -44,6 +44,7 @@ local function common(mapping, palette)
         mapping["Question"] = { bg = "none", fg = palette["purple"] }
 
         mapping["WildMenu"] = { bg = "none", fg = palette["white_dark"] }
+        mapping["Title"] = { bg = "none", fg = palette["cyan"] }
 
         mapping["PmenuSel"] = { bg = palette["white_bright"], fg = palette["black_dark"] } -- selected
         mapping["Pmenu"] = { bg = palette["black_bright"], fg = palette["white_bright"] }  -- non-selected
@@ -79,6 +80,8 @@ local function common(mapping, palette)
         mapping["SpecialKey"] = { bg = "none", fg = palette["white_dark"] }
         mapping["NonText"] = { bg = "none", fg = palette["white_dark"] }
         mapping["Conceal"] = { bg = "none", fg = palette["white_dark"] }
+
+        mapping["FloatBorder"] = { bg = "none", fg = palette["white"] }
     end
 
     general()
@@ -92,38 +95,37 @@ end
 
 local function syntax(mapping, palette)
     local function internal()
-        mapping["Constant"] = { fg = palette.yellow, }
-        mapping["String"] = { fg = palette.yellow, }
-        mapping["Character"] = { fg = palette.green, }
-        mapping["Number"] = { fg = palette.orange, }
-        mapping["Boolean"] = { fg = palette.cyan, }
-        mapping["Float"] = { fg = palette.orange, }
-        mapping["FloatBorder"] = { fg = palette.white, }
-        mapping["Operator"] = { fg = palette.purple, }
-        mapping["Keyword"] = { fg = palette.cyan, }
-        mapping["Keywords"] = { fg = palette.cyan, }
-        mapping["Identifier"] = { fg = palette.cyan, }
-        mapping["Function"] = { fg = palette.yellow, }
-        mapping["Statement"] = { fg = palette.purple, }
-        mapping["Conditional"] = { fg = palette.pink, }
-        mapping["Repeat"] = { fg = palette.pink, }
-        mapping["Label"] = { fg = palette.cyan, }
-        mapping["Exception"] = { fg = palette.purple, }
-        mapping["PreProc"] = { fg = palette.yellow, }
-        mapping["Include"] = { fg = palette.purple, }
-        mapping["Define"] = { fg = palette.purple, }
-        mapping["Title"] = { fg = palette.cyan, }
-        mapping["Macro"] = { fg = palette.purple, }
-        mapping["PreCondit"] = { fg = palette.cyan, }
-        mapping["Type"] = { fg = palette.cyan, }
-        mapping["StorageClass"] = { fg = palette.pink, }
-        mapping["Structure"] = { fg = palette.yellow, }
-        mapping["TypeDef"] = { fg = palette.yellow, }
-        mapping["Special"] = { fg = palette.green, italic = true }
-        mapping["SpecialComment"] = { fg = palette.comment, italic = true, }
-        mapping["Error"] = { fg = palette.bright_red, }
-        mapping["Todo"] = { fg = palette.purple, bold = true, italic = true, }
-        mapping["Underlined"] = { fg = palette.cyan, underline = true, }
+        mapping["Constant"] = { bg = "none", fg = palette["yellow"] }
+        mapping["String"] = { bg = "none", fg = palette["yellow"] }
+        mapping["Character"] = { bg = "none", fg = palette["green"] }
+        mapping["Number"] = { bg = "none", fg = palette["orange"] }
+        mapping["Boolean"] = { bg = "none", fg = palette["cyan"] }
+        mapping["Float"] = { bg = "none", fg = palette["orange"] }
+        mapping["Operator"] = { bg = "none", fg = palette["purple"] }
+        mapping["Keyword"] = { bg = "none", fg = palette["cyan"] }
+        mapping["Keywords"] = { bg = "none", fg = palette["cyan"] }
+        mapping["Identifier"] = { bg = "none", fg = palette["cyan"] }
+        mapping["Function"] = { bg = "none", fg = palette["yellow"] }
+        mapping["Statement"] = { bg = "none", fg = palette["purple"] }
+        mapping["Conditional"] = { bg = "none", fg = palette["pink"] }
+        mapping["Repeat"] = { bg = "none", fg = palette["pink"] }
+        mapping["Label"] = { bg = "none", fg = palette["cyan"] }
+        mapping["Exception"] = { bg = "none", fg = palette["purple"] }
+        mapping["PreProc"] = { bg = "none", fg = palette["yellow"] }
+        mapping["Include"] = { bg = "none", fg = palette["purple"] }
+        mapping["Define"] = { bg = "none", fg = palette["purple"] }
+        mapping["Macro"] = { bg = "none", fg = palette["purple"] }
+        mapping["PreCondit"] = { bg = "none", fg = palette["cyan"] }
+        mapping["Type"] = { bg = "none", fg = palette["cyan"] }
+        mapping["StorageClass"] = { bg = "none", fg = palette["pink"] }
+        mapping["Structure"] = { bg = "none", fg = palette["yellow"] }
+        mapping["TypeDef"] = { bg = "none", fg = palette["yellow"] }
+        mapping["Special"] = { bg = "none", fg = palette["green"], italic = true }
+        mapping["SpecialComment"] = { bg = "none", fg = palette["comment"], italic = true }
+
+        mapping["Error"] = { bg = "none", fg = palette["bright_red"] }
+        mapping["Todo"] = { bg = "none", fg = palette["purple"], bold = true, italic = true }
+        mapping["Underlined"] = { bg = "none", fg = palette["cyan"], underline = true }
     end
 
     local function lsp()
