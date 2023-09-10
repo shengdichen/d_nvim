@@ -46,7 +46,7 @@ local function common(mapping, palette)
 
     local function cmd()
         mapping["WarningMsg"] = { bg = "none", fg = palette["orange"] }
-        mapping["ErrorMsg"] = { bg = "none", fg = palette["bright_red"] }
+        mapping["ErrorMsg"] = { bg = "none", fg = palette["red"] }
         mapping["Question"] = { bg = "none", fg = palette["purple"] }
 
         mapping["WildMenu"] = { bg = "none", fg = palette["white_dark"] }

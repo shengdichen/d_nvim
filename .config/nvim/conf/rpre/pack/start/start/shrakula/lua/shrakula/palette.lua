@@ -7,19 +7,20 @@ end
 
 local function make_color(palette)
     palette["red"] = "#ff5555"
-    palette["orange"] = "#ffb86c"
-    palette["yellow"] = "#F1FA8C"
     palette["green"] = "#50fa7b"
+    palette["yellow"] = "#f1fa8c"
     palette["purple"] = "#bd93f9"
+    palette["magenta"] = "#ff79c6"
     palette["cyan"] = "#8be9fd"
-    palette["pink"] = "#ff79c6"
 
-    palette["bright_red"] = "#ff6e6e"
-    palette["bright_green"] = "#69ff94"
-    palette["bright_yellow"] = "#ffffa5"
-    palette["bright_blue"] = "#d6acff"
-    palette["bright_magenta"] = "#ff92df"
-    palette["bright_cyan"] = "#a4ffff"
+    palette["red_bright"] = "#ff6e6e"
+    palette["green_bright"] = "#69ff94"
+    palette["yellow_bright"] = "#ffffa5"
+    palette["purple_bright"] = "#d6acff"
+    palette["magenta_bright"] = "#ff92df"
+    palette["cyan_bright"] = "#a4ffff"
+
+    palette["orange"] = "#ffb86c"
 end
 
 local function main()
