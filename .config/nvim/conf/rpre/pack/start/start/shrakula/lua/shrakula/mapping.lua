@@ -1,3 +1,9 @@
+local function map_each(mapping, groups, color)
+    for _, group in ipairs(groups) do
+        mapping[group] = color
+    end
+end
+
 local function normal(palette)
     return { bg = "none", fg = palette["white_bright"] }
 end
@@ -95,41 +101,40 @@ end
 
 local function syntax(mapping, palette)
     local function internal()
-        mapping["Constant"] = { bg = "none", fg = palette["green"] }
-        mapping["String"] = { bg = "none", fg = palette["green"] }
-        mapping["Character"] = { bg = "none", fg = palette["green"] }
-        mapping["Number"] = { bg = "none", fg = palette["green"] }
-        mapping["Boolean"] = { bg = "none", fg = palette["green"] }
-        mapping["Float"] = { bg = "none", fg = palette["green"] }
+        -- REF:
+        --  |:help group-name|
 
-        mapping["Identifier"] = { bg = "none", fg = palette["cyan"] }
-        mapping["Function"] = { bg = "none", fg = palette["cyan"] }
+        map_each(
+            mapping,
+            { "Constant", "String", "Character", "Number", "Boolean", "Float" },
+            { bg = "none", fg = palette["orange"] }
+        )
 
-        mapping["Statement"] = { bg = "none", fg = palette["purple"] }
-        mapping["Conditional"] = { bg = "none", fg = palette["purple"] }
-        mapping["Repeat"] = { bg = "none", fg = palette["purple"] }
-        mapping["Label"] = { bg = "none", fg = palette["purple"] }
-        mapping["Operator"] = { bg = "none", fg = palette["purple"] }
-        mapping["Keyword"] = { bg = "none", fg = palette["purple"] }
-        mapping["Exception"] = { bg = "none", fg = palette["purple"] }
+        map_each(mapping, { "Identifier", "Function" }, { bg = "none", fg = palette["purple"] })
 
-        mapping["PreProc"] = { bg = "none", fg = palette["purple"] }
-        mapping["Include"] = { bg = "none", fg = palette["purple"] }
-        mapping["Define"] = { bg = "none", fg = palette["purple"] }
-        mapping["Macro"] = { bg = "none", fg = palette["purple"] }
-        mapping["PreCondit"] = { bg = "none", fg = palette["purple"] }
+        map_each(
+            mapping,
+            { "Statement", "Conditional", "Repeat", "Label", "Operator", "Keyword", "Exception" },
+            { bg = "none", fg = palette["cyan"] }
+        )
 
-        mapping["Type"] = { bg = "none", fg = palette["pink"] }
-        mapping["StorageClass"] = { bg = "none", fg = palette["pink"] }
-        mapping["Structure"] = { bg = "none", fg = palette["pink"] }
-        mapping["TypeDef"] = { bg = "none", fg = palette["pink"] }
+        map_each(
+            mapping,
+            { "PreProc", "Include", "Define", "Macro", "PreCondit" },
+            { bg = "none", fg = palette["green"] }
+        )
 
-        mapping["Special"] = { bg = "none", fg = palette["yellow"] }
-        mapping["Specialchar"] = { bg = "none", fg = palette["yellow"] }
-        mapping["Tag"] = { bg = "none", fg = palette["yellow"] }
-        mapping["Delimtiter"] = { bg = "none", fg = palette["yellow"] }
-        mapping["SpecialComment"] = { bg = "none", fg = palette["yellow"] }
-        mapping["Debug"] = { bg = "none", fg = palette["yellow"] }
+        map_each(
+            mapping,
+            { "Type", "StorageClass", "Structure", "TypeDef" },
+            { bg = "none", fg = palette["pink"] }
+        )
+
+        map_each(
+            mapping,
+            { "Special", "Specialchar", "Tag", "Delimtiter", "SpecialComment", "Debug" },
+            { bg = "none", fg = palette["yellow"] }
+        )
 
         mapping["Underlined"] = { bg = "none", fg = "fg", underline = true }
         mapping["Ignore"] = { bg = "none", fg = palette["black_bright"] }
