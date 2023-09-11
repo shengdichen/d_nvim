@@ -44,6 +44,7 @@ local function lang()
     local conf = require("lspconfig")
 
     conf.pylsp.setup({})
+    conf.clangd.setup({})
     conf.tsserver.setup({})
 
     conf.lua_ls.setup({})
