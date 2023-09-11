@@ -1,26 +1,30 @@
 local function make_greyscale(palette)
     palette["black_dark"] = "#000000"
-    palette["black_bright"] = "#352c37"
-    palette["white_dark"] = "#897397"
-    palette["white_bright"] = "#ede3f7"
+    palette["black_bright"] = "#2b272f"
+    palette["white_dark"] = "#97879f"
+    palette["white_bright"] = "#efe3fb"
 end
 
 local function make_color_normal(palette)
-    palette["red"] = "#ff5555"
-    palette["green"] = "#50fa7b"
-    palette["yellow"] = "#f1fa8c"
-    palette["purple"] = "#bd93f9"
-    palette["magenta"] = "#ff79c6"
-    palette["cyan"] = "#8be9fd"
+    palette["red"] = "#ef1757"
+    palette["green"] = "#3fbf4f"
+    palette["blue"] = "3f1ff7"
 
-    palette["orange"] = "#ffb86c" -- non-16 color
+    palette["yellow"] = "#efd767"
+    palette["magenta"] = "#ef2fef"
+
+    palette["orange"] = "#efa74f"
+
+    palette["cyan"] = "#77eff7"
+    palette["purple"] = "#a787f7"
+    palette["pink"] = "#ef77c7"
 end
 
 local function make_color_bright(palette)
     palette["red_bright"] = "#ff6e6e"
     palette["green_bright"] = "#69ff94"
     palette["yellow_bright"] = "#ffffa5"
-    palette["purple_bright"] = "#d6acff"
+    palette["blue_bright"] = "#d6acff"
     palette["magenta_bright"] = "#ff92df"
     palette["cyan_bright"] = "#a4ffff"
 end
