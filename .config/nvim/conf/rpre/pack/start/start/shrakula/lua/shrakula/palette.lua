@@ -14,12 +14,11 @@ local function make_color_normal(palette)
     -- secondary
     palette["yellow"] = "#efd767"
     palette["cyan"] = "#77eff7"
-    palette["magenta"] = "#ef2fef"
+    palette["magenta"] = "#ef77c7"
 
     -- tertiary
     palette["orange"] = "#efa74f"
     palette["purple"] = "#a787f7"
-    palette["pink"] = "#ef77c7"
 end
 
 local function make_color_bright(palette)

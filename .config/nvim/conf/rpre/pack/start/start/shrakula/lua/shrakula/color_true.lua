@@ -128,7 +128,7 @@ local function syntax(mapping, palette)
         map_each(
             mapping,
             { "Type", "StorageClass", "Structure", "TypeDef" },
-            { bg = "none", fg = palette["pink"] }
+            { bg = "none", fg = palette["magenta"] }
         )
 
         map_each(
