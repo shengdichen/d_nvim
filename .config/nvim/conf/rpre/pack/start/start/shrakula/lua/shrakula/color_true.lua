@@ -18,7 +18,7 @@ local function common(mapping, palette)
         mapping["IncSearch"] = { bg = palette["white_bright"], fg = palette["black_dark"] } -- current match
         mapping["Search"] = { bg = palette["white_dark"], fg = palette["white_bright"] }    -- other matches
 
-        mapping["Visual"] = { bg = palette["black_bright"], fg = "none" }
+        mapping["Visual"] = { bg = palette["white_dark"], fg = palette["black_dark"] }
         mapping["VisualNOS"] = { bg = palette["black_bright"], fg = "none" }
     end
 
