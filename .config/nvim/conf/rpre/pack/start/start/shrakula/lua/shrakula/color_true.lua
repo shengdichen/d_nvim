@@ -111,7 +111,7 @@ local function syntax(mapping, palette)
             { "Constant", "String", "Character", "Number", "Boolean", "Float" },
             { bg = "none", fg = palette["orange"] }
         )
-        map_each(mapping, { "Identifier" }, { bg = "none", fg = palette["green"] })
+        map_each(mapping, { "Identifier" }, { bg = "none", fg = "fg" })
 
         map_each(
             mapping,
