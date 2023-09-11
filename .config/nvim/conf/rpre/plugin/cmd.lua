@@ -3,8 +3,7 @@ local function terminal()
     vim.keymap.set("c", ":T", "split +terminal")
 
     local gid = vim.api.nvim_create_augroup(
-        "TerminalMode",
-        { clear = true }
+        "TerminalMode", { clear = true }
     )
     vim.api.nvim_create_autocmd(
         { "TermOpen" },
@@ -24,7 +23,7 @@ end
 
 local function search()
     vim.opt.hlsearch = true
-    vim.opt.incsearch = ture
+    vim.opt.incsearch = true
 
     vim.opt.ignorecase = true
     vim.opt.smartcase = true

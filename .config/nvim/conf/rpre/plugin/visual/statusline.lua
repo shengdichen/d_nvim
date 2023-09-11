@@ -51,8 +51,7 @@ end
 
 local function make_autocmds()
     local gid = vim.api.nvim_create_augroup(
-        "StatuslineToggle",
-        { clear = true }
+        "StatuslineToggle", { clear = true }
     )
 
     vim.api.nvim_create_autocmd(

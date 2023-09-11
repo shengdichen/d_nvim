@@ -11,8 +11,7 @@ end
 
 local function layout()
     local gid = vim.api.nvim_create_augroup(
-        "GitComposeLayout",
-        { clear = true }
+        "GitComposeLayout", { clear = true }
     )
 
     local function triple()

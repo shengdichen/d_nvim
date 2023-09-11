@@ -28,5 +28,4 @@ local function main()
     require("shrakula.color_true")(palette)
     require("shrakula.color_16")(palette)
 end
-
 return main
