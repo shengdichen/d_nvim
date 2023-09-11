@@ -1,47 +1,41 @@
 local function make_greyscale(palette)
-    palette["bg"] = "None"
-    palette["fg"] = "None"
-
-    palette["white"] = "#abb2bf"
-    palette["black"] = "#191a21"
-
-    palette["black_dark"] = "#000000"
-    palette["black_bright"] = "#352c37"
-    palette["white_dark"] = "#897397"
-    palette["white_bright"] = "#ede3f7"
-
-    palette["selection"] = "#44475a"
-    palette["comment"] = "#6272a4"
-
-    palette["menu"] = "#21222C"
-    palette["visual"] = "#3e4452"
-    palette["gutter_fg"] = "#4b5263"
-    palette["nontext"] = "#3b4048"
+    palette["black"] = "#000000"
+    palette["grey_dark"] = "#2b272f"
+    palette["grey_bright"] = "#97879f"
+    palette["white"] = "#efe3fb"
 end
 
-local function make_color(palette)
-    palette["red"] = "#ff5555"
-    palette["orange"] = "#ffb86c"
-    palette["yellow"] = "#F1FA8C"
-    palette["green"] = "#50fa7b"
-    palette["purple"] = "#bd93f9"
-    palette["cyan"] = "#8be9fd"
-    palette["pink"] = "#ff79c6"
+local function make_color_normal(palette)
+    -- primary
+    palette["red"] = "#ef1757"
+    palette["green"] = "#3fbf4f"
+    palette["blue"] = "3f1ff7"
 
-    palette["bright_red"] = "#ff6e6e"
-    palette["bright_green"] = "#69ff94"
-    palette["bright_yellow"] = "#ffffa5"
-    palette["bright_blue"] = "#d6acff"
-    palette["bright_magenta"] = "#ff92df"
-    palette["bright_cyan"] = "#a4ffff"
-    palette["bright_white"] = "#ffffff"
+    -- secondary
+    palette["yellow"] = "#efd767"
+    palette["cyan"] = "#77eff7"
+    palette["magenta"] = "#ef77c7"
+
+    -- tertiary
+    palette["orange"] = "#efa74f"
+    palette["purple"] = "#a787f7"
+end
+
+local function make_color_bright(palette)
+    palette["red_bright"] = "#ff6e6e"
+    palette["green_bright"] = "#69ff94"
+    palette["yellow_bright"] = "#ffffa5"
+    palette["blue_bright"] = "#d6acff"
+    palette["magenta_bright"] = "#ff92df"
+    palette["cyan_bright"] = "#a4ffff"
 end
 
 local function main()
     local palette = {}
 
     make_greyscale(palette)
-    make_color(palette)
+    make_color_normal(palette)
+    make_color_bright(palette)
 
     return palette
 end
