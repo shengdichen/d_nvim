@@ -3,8 +3,7 @@ local function terminal()
     vim.keymap.set("c", ":T", "split +terminal")
 
     local gid = vim.api.nvim_create_augroup(
-        "TerminalMode",
-        { clear = true }
+        "TerminalMode", { clear = true }
     )
     vim.api.nvim_create_autocmd(
         { "TermOpen" },

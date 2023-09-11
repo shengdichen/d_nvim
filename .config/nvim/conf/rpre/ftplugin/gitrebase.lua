@@ -8,8 +8,7 @@ end
 
 local function layout()
     local gid = vim.api.nvim_create_augroup(
-        "GitRebaseLayout",
-        { clear = true }
+        "GitRebaseLayout", { clear = true }
     )
 
     local function double()
