@@ -60,5 +60,4 @@ local function main()
     set_color_true(palette)
     set_color_256(palette)
 end
-
 return main
