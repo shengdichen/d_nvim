@@ -6,16 +6,18 @@ local function make_greyscale(palette)
 end
 
 local function make_color_normal(palette)
+    -- primary
     palette["red"] = "#ef1757"
     palette["green"] = "#3fbf4f"
     palette["blue"] = "3f1ff7"
 
+    -- secondary
     palette["yellow"] = "#efd767"
+    palette["cyan"] = "#77eff7"
     palette["magenta"] = "#ef2fef"
 
+    -- tertiary
     palette["orange"] = "#efa74f"
-
-    palette["cyan"] = "#77eff7"
     palette["purple"] = "#a787f7"
     palette["pink"] = "#ef77c7"
 end
