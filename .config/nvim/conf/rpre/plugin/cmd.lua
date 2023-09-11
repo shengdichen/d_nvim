@@ -24,7 +24,7 @@ end
 
 local function search()
     vim.opt.hlsearch = true
-    vim.opt.incsearch = ture
+    vim.opt.incsearch = true
 
     vim.opt.ignorecase = true
     vim.opt.smartcase = true
