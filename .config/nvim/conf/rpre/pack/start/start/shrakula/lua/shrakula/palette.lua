@@ -1,8 +1,8 @@
 local function make_greyscale(palette)
-    palette["black_dark"] = "#000000"
+    palette["black"] = "#000000"
     palette["black_bright"] = "#2b272f"
     palette["white_dark"] = "#97879f"
-    palette["white_bright"] = "#efe3fb"
+    palette["white"] = "#efe3fb"
 end
 
 local function make_color_normal(palette)
