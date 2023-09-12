@@ -24,10 +24,10 @@ end
 
 local function bind()
     -- NOTE:
-    --  :split =: netrw-o
-    --  :vsplit =: netrw-v
-    --  :tabnew =: netrw-t
-    --  preview =: netrw-p
+    --  netrw-o := :split
+    --  netrw-v := :vsplit
+    --  netrw-t := :tabnew
+    --  netrw-p := "preview"
 
     vim.keymap.set("c", ":E", "vsplit +Explore")
     vim.keymap.set("c", ":e", "tabnew +Explore")
