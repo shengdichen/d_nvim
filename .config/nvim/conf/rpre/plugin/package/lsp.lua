@@ -48,6 +48,14 @@ local function python(conf)
     local off = { enabled = false }
     local c = {}
 
+    -- checker & linter
+    c["mccabe"] = on
+    c["flake8"] = on
+    c["pylint"] = off
+    c["pyflakes"] = off
+    c["pycodestyle"] = off
+    c["pydocstyle"] = off
+
     -- formater
     c["black"] = on
     c["autopep8"] = off
