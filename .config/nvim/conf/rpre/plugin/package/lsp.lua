@@ -50,7 +50,8 @@ local function python(conf)
 
     -- checker & linter
     c["mccabe"] = on
-    c["flake8"] = on
+    -- https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
+    c["flake8"] = { enabled = true, maxLineLength = 88, ignore = { "E203" } }
     c["pylint"] = off
     c["pyflakes"] = off
     c["pycodestyle"] = off
