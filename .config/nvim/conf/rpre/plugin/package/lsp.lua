@@ -40,10 +40,28 @@ local function bind()
     )
 end
 
+local function python(conf)
+    -- REF:
+    --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
+
+    local on = { enabled = true }
+    local off = { enabled = false }
+    local c = {}
+
+    -- formater
+    c["black"] = on
+    c["autopep8"] = off
+    c["yapf"] = off
+
+    conf.pylsp.setup({
+        settings = { pylsp = { plugins = c } }
+    })
+end
+
 local function lang()
     local conf = require("lspconfig")
 
-    conf.pylsp.setup({})
+    python(conf)
     conf.clangd.setup({})
     conf.tsserver.setup({})
 
