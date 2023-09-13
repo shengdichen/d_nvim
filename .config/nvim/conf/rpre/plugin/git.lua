@@ -65,7 +65,7 @@ local function create()
         { "VimEnter" },
         {
             group = gid,
-            pattern = { "TAG_EDITMSG", "MERGE_MSG" },
+            pattern = { "TAG_EDITMSG" },
             callback = layout_double(true)
         }
     )
@@ -73,7 +73,7 @@ local function create()
         { "VimEnter" },
         {
             group = gid,
-            pattern = { "git-rebase-todo" },
+            pattern = { "MERGE_MSG", "git-rebase-todo" },
             callback = layout_double(false)
         }
     )
