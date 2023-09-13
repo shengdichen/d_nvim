@@ -10,8 +10,8 @@ local function move_as_seen()
 end
 
 local function vertical()
-    vim.keymap.set({ "n", "v" }, "J", "4j")
-    vim.keymap.set({ "n", "v" }, "K", "4k")
+    vim.keymap.set({ "n", "v" }, "J", "4gj")
+    vim.keymap.set({ "n", "v" }, "K", "4gk")
 
     vim.keymap.set({ "n", "v" }, "<Up>", "")
     vim.keymap.set({ "n", "v" }, "<Down>", "")
