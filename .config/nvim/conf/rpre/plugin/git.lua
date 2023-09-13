@@ -56,17 +56,27 @@ local function create()
 
     vim.api.nvim_create_autocmd(
         { "VimEnter" },
-        { pattern = { "COMMIT_EDITMSG" }, group = gid, callback = layout_triple }
+        {
+            group = gid,
+            pattern = { "COMMIT_EDITMSG" },
+            callback = layout_triple
+        }
     )
-
     vim.api.nvim_create_autocmd(
         { "VimEnter" },
-        { pattern = { "TAG_EDITMSG", "MERGE_MSG" }, group = gid, callback = layout_double(true) }
+        {
+            group = gid,
+            pattern = { "TAG_EDITMSG", "MERGE_MSG" },
+            callback = layout_double(true)
+        }
     )
-
     vim.api.nvim_create_autocmd(
         { "VimEnter" },
-        { pattern = { "git-rebase-todo" }, group = gid, callback = layout_double(false) }
+        {
+            group = gid,
+            pattern = { "git-rebase-todo" },
+            callback = layout_double(false)
+        }
     )
 end
 
