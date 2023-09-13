@@ -23,7 +23,8 @@ local function layout()
 
         -- upper-right
         vim.cmd("wincmd k")
-        vim.cmd([[terminal $SHELL -c "git diff --cached --unified=1"]])
+        local shell_cmd = "if git diff --cached --quiet; then git show @; else git diff --cached; fi"
+        vim.cmd("terminal $SHELL -c " .. '"' .. shell_cmd .. '"')
 
         -- left
         vim.cmd("wincmd h")
