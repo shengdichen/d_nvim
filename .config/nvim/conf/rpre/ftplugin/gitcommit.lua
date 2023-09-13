@@ -17,9 +17,16 @@ local function show_log()
     return "git log --all --patch --graph"
 end
 
-local function show_cache()
+local function show_cache_smart()
     -- show currently staged if existent, otherwise inspect HEAD
-    return "if git diff --cached --quiet; then git show @; else git diff --cached; fi"
+    cmd = "if " ..
+        "git diff --cached --quiet" ..
+        "; then " ..
+        "git show @" ..
+        "; else " ..
+        "git diff --cached" ..
+        "; fi"
+    return cmd
 end
 
 local function layout()
@@ -36,7 +43,7 @@ local function layout()
 
         -- upper-right
         vim.cmd("wincmd k")
-        run_in_terminal(show_cache())
+        run_in_terminal(show_cache_smart())
 
         -- left
         vim.cmd("wincmd h")
