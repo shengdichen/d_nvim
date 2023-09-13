@@ -47,7 +47,7 @@ local function layout()
 
     vim.api.nvim_create_autocmd(
         { "VimEnter" },
-        { pattern = { "TAG_EDITMSG", "MERGE_EDITMSG" }, group = gid, callback = double }
+        { pattern = { "TAG_EDITMSG", "MERGE_MSG" }, group = gid, callback = double }
     )
 end
 
