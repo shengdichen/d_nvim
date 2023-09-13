@@ -8,14 +8,13 @@ end
 
 local function show_cache_smart()
     -- show currently staged if existent, otherwise inspect HEAD
-    cmd = "if " ..
+    return "if " ..
         "git diff --cached --quiet" ..
         "; then " ..
         "git show @" ..
         "; else " ..
         "git diff --cached" ..
         "; fi"
-    return cmd
 end
 
 local function layout_triple()
