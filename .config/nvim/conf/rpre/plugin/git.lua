@@ -18,33 +18,38 @@ local function show_cache_smart()
     return cmd
 end
 
-local function commit(gid)
-    local function triple()
-        vim.cmd("rightbelow vsplit")
+local function triple()
+    vim.cmd("rightbelow vsplit")
 
-        -- lower-right
-        vim.cmd("rightbelow split")
-        run_in_terminal(show_log())
+    -- lower-right
+    vim.cmd("rightbelow split")
+    run_in_terminal(show_log())
 
-        -- upper-right
-        vim.cmd("wincmd k")
-        run_in_terminal(show_cache_smart())
+    -- upper-right
+    vim.cmd("wincmd k")
+    run_in_terminal(show_cache_smart())
 
-        -- left
-        vim.cmd("wincmd h")
-        vim.cmd("startinsert")
-    end
+    -- left
+    vim.cmd("wincmd h")
+    vim.cmd("startinsert")
+end
 
-    local function double()
+local function double(start_insert)
+    local function f()
         -- right
         vim.cmd("rightbelow vsplit")
         run_in_terminal(show_log())
 
         -- left
         vim.cmd("wincmd h")
-        vim.cmd("startinsert")
+        if startinsert then
+            vim.cmd("startinsert")
+        end
     end
+    return f
+end
 
+local function commit(gid)
     vim.api.nvim_create_autocmd(
         { "VimEnter" },
         { pattern = { "COMMIT_EDITMSG" }, group = gid, callback = triple }
@@ -52,23 +57,14 @@ local function commit(gid)
 
     vim.api.nvim_create_autocmd(
         { "VimEnter" },
-        { pattern = { "TAG_EDITMSG", "MERGE_MSG" }, group = gid, callback = double }
+        { pattern = { "TAG_EDITMSG", "MERGE_MSG" }, group = gid, callback = double(true) }
     )
 end
 
 local function rebase(gid)
-    local function double()
-        -- right
-        vim.cmd("rightbelow vsplit")
-        vim.cmd([[terminal $SHELL -c "git log --all --patch --graph"]])
-
-        -- left
-        vim.cmd("wincmd h")
-    end
-
     vim.api.nvim_create_autocmd(
         { "VimEnter" },
-        { pattern = { "git-rebase-todo" }, group = gid, callback = double }
+        { pattern = { "git-rebase-todo" }, group = gid, callback = double(false) }
     )
 end
 
