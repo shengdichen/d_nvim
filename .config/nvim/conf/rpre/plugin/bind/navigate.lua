@@ -24,8 +24,25 @@ local function unbind()
     vim.keymap.set(modes, "<PageUp>", "")
 end
 
+local function insert()
+    vim.keymap.set("i", "<PageUp>", "")
+    vim.keymap.set("i", "<PageDown>", "")
+
+    vim.keymap.set("i", "<C-h>", "<Left>")
+    vim.keymap.set("i", "<C-j>", "<Down>")
+    vim.keymap.set("i", "<C-k>", "<Up>")
+    vim.keymap.set("i", "<C-l>", "<Right>")
+
+    vim.keymap.set("i", "<C-b>", "<C-Left>")
+    vim.keymap.set("i", "<C-w>", "<C-Right>")
+
+    vim.keymap.set("i", "<C-e>", "<ScrollWheelDown>")
+    vim.keymap.set("i", "<C-y>", "<ScrollWheelUp>")
+end
+
 local function main()
     move_as_seen()
     unbind()
+    insert()
 end
 main()
