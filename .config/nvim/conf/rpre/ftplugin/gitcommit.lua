@@ -18,6 +18,7 @@ local function show_log()
 end
 
 local function show_cache()
+    -- show currently staged if existent, otherwise inspect HEAD
     return "if git diff --cached --quiet; then git show @; else git diff --cached; fi"
 end
 
