@@ -60,7 +60,28 @@ local function commit()
     )
 end
 
+local function rebase()
+    local gid = vim.api.nvim_create_augroup(
+        "GitRebaseLayout", { clear = true }
+    )
+
+    local function double()
+        -- right
+        vim.cmd("rightbelow vsplit")
+        vim.cmd([[terminal $SHELL -c "git log --all --patch --graph"]])
+
+        -- left
+        vim.cmd("wincmd h")
+    end
+
+    vim.api.nvim_create_autocmd(
+        { "VimEnter" },
+        { pattern = { "git-rebase-todo" }, group = gid, callback = double }
+    )
+end
+
 local function main()
     commit()
+    rebase()
 end
 main()
