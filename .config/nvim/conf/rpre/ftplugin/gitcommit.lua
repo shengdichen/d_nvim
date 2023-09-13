@@ -9,6 +9,18 @@ local function bind()
     vim.keymap.set("c", "wq", "w <bar> qa", { buffer = 0 })
 end
 
+local function run_in_terminal(cmd)
+    vim.cmd("terminal $SHELL -c " .. '"' .. cmd .. '"')
+end
+
+local function show_log()
+    return "git log --all --patch --graph"
+end
+
+local function show_cache()
+    return "if git diff --cached --quiet; then git show @; else git diff --cached; fi"
+end
+
 local function layout()
     local gid = vim.api.nvim_create_augroup(
         "GitComposeLayout", { clear = true }
@@ -19,12 +31,11 @@ local function layout()
 
         -- lower-right
         vim.cmd("rightbelow split")
-        vim.cmd([[terminal $SHELL -c "git log --all --oneline --graph"]])
+        run_in_terminal(show_log())
 
         -- upper-right
         vim.cmd("wincmd k")
-        local shell_cmd = "if git diff --cached --quiet; then git show @; else git diff --cached; fi"
-        vim.cmd("terminal $SHELL -c " .. '"' .. shell_cmd .. '"')
+        run_in_terminal(show_cache())
 
         -- left
         vim.cmd("wincmd h")
@@ -34,7 +45,7 @@ local function layout()
     local function double()
         -- right
         vim.cmd("rightbelow vsplit")
-        vim.cmd([[terminal $SHELL -c "git log --all --patch --graph"]])
+        run_in_terminal(show_log())
 
         -- left
         vim.cmd("wincmd h")
