@@ -40,10 +40,37 @@ local function bind()
     )
 end
 
+local function python(conf)
+    -- REF:
+    --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
+
+    local on = { enabled = true }
+    local off = { enabled = false }
+    local c = {}
+
+    -- checker & linter
+    c["mccabe"] = on
+    -- https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
+    c["flake8"] = { enabled = true, maxLineLength = 88, ignore = { "E203" } }
+    c["pylint"] = off
+    c["pyflakes"] = off
+    c["pycodestyle"] = off
+    c["pydocstyle"] = off
+
+    -- formater
+    c["black"] = on
+    c["autopep8"] = off
+    c["yapf"] = off
+
+    conf.pylsp.setup({
+        settings = { pylsp = { plugins = c } }
+    })
+end
+
 local function lang()
     local conf = require("lspconfig")
 
-    conf.pylsp.setup({})
+    python(conf)
     conf.clangd.setup({})
     conf.tsserver.setup({})
 
