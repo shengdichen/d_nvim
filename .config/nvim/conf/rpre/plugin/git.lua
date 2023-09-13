@@ -18,11 +18,7 @@ local function show_cache_smart()
     return cmd
 end
 
-local function commit()
-    local gid = vim.api.nvim_create_augroup(
-        "GitComposeLayout", { clear = true }
-    )
-
+local function commit(gid)
     local function triple()
         vim.cmd("rightbelow vsplit")
 
@@ -60,11 +56,7 @@ local function commit()
     )
 end
 
-local function rebase()
-    local gid = vim.api.nvim_create_augroup(
-        "GitRebaseLayout", { clear = true }
-    )
-
+local function rebase(gid)
     local function double()
         -- right
         vim.cmd("rightbelow vsplit")
@@ -81,7 +73,11 @@ local function rebase()
 end
 
 local function main()
-    commit()
-    rebase()
+    local gid = vim.api.nvim_create_augroup(
+        "GitLayout", { clear = true }
+    )
+
+    commit(gid)
+    rebase(gid)
 end
 main()
