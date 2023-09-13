@@ -18,7 +18,7 @@ local function show_cache_smart()
     return cmd
 end
 
-local function triple()
+local function layout_triple()
     vim.cmd("rightbelow vsplit")
 
     -- lower-right
@@ -34,7 +34,7 @@ local function triple()
     vim.cmd("startinsert")
 end
 
-local function double(start_insert)
+local function layout_double(start_insert)
     local function f()
         -- right
         vim.cmd("rightbelow vsplit")
@@ -49,31 +49,28 @@ local function double(start_insert)
     return f
 end
 
-local function commit(gid)
-    vim.api.nvim_create_autocmd(
-        { "VimEnter" },
-        { pattern = { "COMMIT_EDITMSG" }, group = gid, callback = triple }
-    )
-
-    vim.api.nvim_create_autocmd(
-        { "VimEnter" },
-        { pattern = { "TAG_EDITMSG", "MERGE_MSG" }, group = gid, callback = double(true) }
-    )
-end
-
-local function rebase(gid)
-    vim.api.nvim_create_autocmd(
-        { "VimEnter" },
-        { pattern = { "git-rebase-todo" }, group = gid, callback = double(false) }
-    )
-end
-
-local function main()
+local function create()
     local gid = vim.api.nvim_create_augroup(
         "GitLayout", { clear = true }
     )
 
-    commit(gid)
-    rebase(gid)
+    vim.api.nvim_create_autocmd(
+        { "VimEnter" },
+        { pattern = { "COMMIT_EDITMSG" }, group = gid, callback = layout_triple }
+    )
+
+    vim.api.nvim_create_autocmd(
+        { "VimEnter" },
+        { pattern = { "TAG_EDITMSG", "MERGE_MSG" }, group = gid, callback = layout_double(true) }
+    )
+
+    vim.api.nvim_create_autocmd(
+        { "VimEnter" },
+        { pattern = { "git-rebase-todo" }, group = gid, callback = layout_double(false) }
+    )
+end
+
+local function main()
+    create(gid)
 end
 main()
