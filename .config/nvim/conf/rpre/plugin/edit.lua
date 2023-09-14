@@ -23,7 +23,7 @@ end
 
 local function trim_spaces()
     local function trim(trailing)
-        local function f()
+        return function()
             local pos = vim.api.nvim_win_get_cursor(0)
             if trailing then
                 vim.cmd([[%s/\s\+$//e]])
@@ -32,12 +32,6 @@ local function trim_spaces()
             end
             vim.api.nvim_win_set_cursor(0, pos)
         end
-        return f
-    end
-
-    local function remove_leading()
-        local pos = vim.api.nvim_win_get_cursor(0)
-        vim.api.nvim_win_set_cursor(0, pos)
     end
 
     vim.api.nvim_create_autocmd({ "BufWritePre" }, {

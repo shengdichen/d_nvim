@@ -34,7 +34,7 @@ local function layout_triple()
 end
 
 local function layout_double(start_insert)
-    local function f()
+    return function()
         -- right
         vim.cmd("rightbelow vsplit")
         run_in_terminal(show_log())
@@ -45,7 +45,6 @@ local function layout_double(start_insert)
             vim.cmd("startinsert")
         end
     end
-    return f
 end
 
 local function create()

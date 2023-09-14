@@ -39,14 +39,12 @@ local function show_if_modified()
 end
 
 local function show(redraw)
-    local function f()
+    return function()
         vim.opt.laststatus = 2
         if redraw then
             vim.cmd("redrawstatus")
         end
     end
-
-    return f
 end
 
 local function make_autocmds()
