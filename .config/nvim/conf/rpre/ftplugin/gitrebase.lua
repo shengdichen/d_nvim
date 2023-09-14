@@ -32,12 +32,9 @@ local function inspect_commit()
     vim.api.nvim_win_set_cursor(0, pos)
 end
 
-local function currently_inspecting()
-    return vim.fn.tabpagewinnr(vim.fn.tabpagenr(), "$") > 2
-end
-
 local function stop_inspection()
-    if currently_inspecting() then
+    local inspecting = vim.fn.tabpagewinnr(vim.fn.tabpagenr(), "$") > 2
+    if inspecting then
         vim.cmd("wincmd l")
         vim.cmd("quit")
         vim.cmd("wincmd h")
