@@ -31,8 +31,8 @@ local function start_inspection()
 end
 
 local function stop_inspection()
-    local inspecting = vim.fn.tabpagewinnr(vim.fn.tabpagenr(), "$") > 2
-    if inspecting then
+    local n_splits_active = vim.fn.tabpagewinnr(vim.fn.tabpagenr(), "$")
+    if n_splits_active > 2 then
         vim.cmd("wincmd l")
         vim.cmd("quit")
         vim.cmd("wincmd h")
