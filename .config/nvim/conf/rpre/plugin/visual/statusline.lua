@@ -5,6 +5,7 @@ local function assemble()
         conf = conf .. "%.37F"
 
         conf = conf .. "  "
+
         conf = conf ..
             "%{" ..
             '&filetype!=""' ..
@@ -13,7 +14,6 @@ local function assemble()
             ":" ..
             '"?type"' ..       -- non-type
             "}"
-
         conf = conf ..
             "%{" ..
             "&readonly==0" ..
