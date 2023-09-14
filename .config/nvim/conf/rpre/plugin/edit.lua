@@ -1,4 +1,6 @@
 local function format()
+    vim.opt.backspace = { "indent", "eol", "start" }
+
     vim.opt.textwidth = 79
 
     vim.opt.autoindent = true

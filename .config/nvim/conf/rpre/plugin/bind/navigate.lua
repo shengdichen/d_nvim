@@ -1,3 +1,6 @@
+-- NOTE:
+--  1. find name for keys from |:h key-notation|
+
 local modes = { "n", "v" }
 
 local function move_as_seen()
