@@ -4,14 +4,14 @@ local function assemble()
     local function left()
         conf = conf .. "%.37F"
 
-        conf = conf .. "  ~"
+        conf = conf .. "  "
         conf = conf ..
             "%{" ..
             '&filetype!=""' ..
             "?" ..
-            "&filetype" ..
+            '">".&filetype' ..
             ":" ..
-            '"voidType"' ..
+            '"?type"' ..
             "}"
 
         conf = conf ..
