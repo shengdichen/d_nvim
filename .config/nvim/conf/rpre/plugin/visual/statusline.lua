@@ -58,12 +58,10 @@ local function make_autocmds()
         { "FileWritePost", "BufWritePost", "CmdlineLeave" },
         { pattern = { "*" }, group = gid, callback = hide }
     )
-
     vim.api.nvim_create_autocmd(
         { "InsertLeave", "CmdLineLeave", "TextChanged", "TextChangedI", "TextChangedP" },
         { pattern = { "*" }, group = gid, callback = show_if_modified }
     )
-
     vim.api.nvim_create_autocmd(
         { "InsertEnter" },
         { pattern = { "*" }, group = gid, callback = show(false) }
@@ -74,7 +72,7 @@ local function make_autocmds()
     )
 end
 
-local function statusline()
+local function general()
     vim.opt.laststatus = 0 -- hide by default
 
     vim.opt.ruler = false  -- use our own cursor-coordinate display instead
@@ -87,8 +85,7 @@ end
 
 local function main()
     assemble()
-
     make_autocmds()
-    statusline()
+    general()
 end
 main()
