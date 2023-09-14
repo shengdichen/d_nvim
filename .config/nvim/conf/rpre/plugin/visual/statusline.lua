@@ -33,7 +33,7 @@ local function assemble()
     end
 
     local function separator()
-        conf = conf .. [[%=]]
+        conf = conf .. "%="
     end
 
     local function right()
