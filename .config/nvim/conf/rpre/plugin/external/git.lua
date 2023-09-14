@@ -41,7 +41,7 @@ local function layout_double(start_insert)
 
         -- left
         vim.cmd("wincmd h")
-        if startinsert then
+        if start_insert then
             vim.cmd("startinsert")
         end
     end
