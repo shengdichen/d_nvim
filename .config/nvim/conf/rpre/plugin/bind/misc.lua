@@ -1,4 +1,4 @@
-local function set_leader()
+local function leader()
     vim.g.mapleader = " " -- |space| as leader-key
 end
 
@@ -8,9 +8,8 @@ local function edit()
     vim.keymap.set("n", "<S-CR>", 'o<Esc>0"_D') -- |"_| := blackhole-buffer
 end
 
-
 local function main()
-    set_leader()
+    leader()
     edit()
 end
 main()
