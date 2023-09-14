@@ -2,19 +2,34 @@ local function visual()
     vim.opt_local.laststatus = 2
 end
 
-local function get_current_word()
+local function get_current_commit()
+    vim.cmd("normal 0W") -- move to second column, where commit-hash starts
+
     -- |:help expand()|
     return vim.fn.expand("<cword>")
 end
 
-local function inspect_commit()
-    cmd = "git show " .. get_current_word()
+local function split_and_show(commit)
+    cmd = "git show " .. commit
 
     vim.cmd("wincmd l | split")
-    vim.cmd("terminal $SHELL -c " .. '"' .. cmd .. '"')
+    vim.cmd(
+        "terminal $SHELL -c " ..
+        '"' ..
+        "git show " .. commit ..
+        '"'
+    )
+    vim.cmd("stopinsert") -- counter auto-insert in terminal-mode
 
     vim.cmd("wincmd h")
-    vim.cmd("stopinsert")
+end
+
+local function inspect_commit()
+    local pos = vim.api.nvim_win_get_cursor(0)
+
+    split_and_show(get_current_commit())
+
+    vim.api.nvim_win_set_cursor(0, pos)
 end
 
 local function bind()
