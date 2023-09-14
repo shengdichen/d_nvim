@@ -21,22 +21,28 @@ local function format()
     vim.opt.shiftround = true
 end
 
-local function remove_redundant_spaces()
-    local function remove_trailing()
-        local pos = vim.api.nvim_win_get_cursor(0)
-        vim.cmd([[%s/\s\+$//e]])
-        vim.api.nvim_win_set_cursor(0, pos)
+local function trim_spaces()
+    local function trim(trailing)
+        local function f()
+            local pos = vim.api.nvim_win_get_cursor(0)
+            if trailing then
+                vim.cmd([[%s/\s\+$//e]])
+            else
+                vim.cmd([[%s/^\s\+//e]])
+            end
+            vim.api.nvim_win_set_cursor(0, pos)
+        end
+        return f
     end
 
     local function remove_leading()
         local pos = vim.api.nvim_win_get_cursor(0)
-        vim.cmd([[%s/^\s\+//e]])
         vim.api.nvim_win_set_cursor(0, pos)
     end
 
     vim.api.nvim_create_autocmd({ "BufWritePre" }, {
         pattern = { "*" },
-        callback = remove_trailing,
+        callback = trim(true),
     })
 end
 
@@ -54,7 +60,7 @@ end
 local function main()
     filetype()
     format()
-    remove_redundant_spaces()
+    trim_spaces()
     cmd()
 end
 main()
