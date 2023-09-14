@@ -24,7 +24,7 @@ local function split_and_show(commit)
     vim.cmd("wincmd h")
 end
 
-local function inspect_commit()
+local function start_inspection()
     local pos = vim.api.nvim_win_get_cursor(0)
 
     split_and_show(get_current_commit())
@@ -44,7 +44,7 @@ end
 local function bind()
     vim.keymap.set("c", "wq", "w <bar> qa", { buffer = 0 })
 
-    vim.keymap.set("n", "<Enter>", inspect_commit, { buffer = 0 })
+    vim.keymap.set("n", "<Enter>", start_inspection, { buffer = 0 })
     vim.keymap.set("n", "Q", stop_inspection, { buffer = 0 })
 end
 
