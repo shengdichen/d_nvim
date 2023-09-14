@@ -1,6 +1,8 @@
 -- NOTE:
 --  1. find name for keys from |:h key-notation|
 
+local _unbind = require("bind")["unbind"]
+
 local modes = { "n", "v" }
 
 local function move_as_seen()
@@ -21,15 +23,15 @@ local function move_as_seen()
 end
 
 local function unbind()
-    vim.keymap.set(modes, "<Up>", "")
-    vim.keymap.set(modes, "<Down>", "")
-    vim.keymap.set(modes, "<PageUp>", "")
-    vim.keymap.set(modes, "<PageUp>", "")
+    _unbind(modes, "<Up>")
+    _unbind(modes, "<Down>")
+    _unbind(modes, "<PageUp>")
+    _unbind(modes, "<PageUp>")
 end
 
 local function insert()
-    vim.keymap.set("i", "<PageUp>", "")
-    vim.keymap.set("i", "<PageDown>", "")
+    _unbind("i", "<PageUp>")
+    _unbind("i", "<PageDown>")
 
     vim.keymap.set("i", "<C-h>", "<Left>")
     vim.keymap.set("i", "<C-j>", "<Down>")
