@@ -37,7 +37,14 @@ local function assemble()
     end
 
     local function right()
-        conf = conf .. [[%{&modified==""?"":"!Pending!  "}]]
+        conf = conf ..
+            "%{" ..
+            '&modified==""' ..
+            "?" ..
+            '""' ..            -- not-modified
+            ":" ..
+            '"!Pending!  "' .. -- modified
+            "}"
         conf = conf .. "(%02c, %03l/%03L)"
     end
 
