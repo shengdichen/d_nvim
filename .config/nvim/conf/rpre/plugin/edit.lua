@@ -1,3 +1,10 @@
+local function filetype()
+    -- :h :filetype-overview
+    vim.cmd("filetype plugin indent on")
+    -- :h :syn-qstart
+    vim.cmd("syntax on")
+end
+
 local function format()
     vim.opt.backspace = { "indent", "eol", "start" }
 
@@ -45,6 +52,7 @@ local function cmd()
 end
 
 local function main()
+    filetype()
     format()
     remove_redundant_spaces()
     cmd()

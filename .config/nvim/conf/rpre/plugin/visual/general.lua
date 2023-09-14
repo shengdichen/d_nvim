@@ -1,10 +1,3 @@
-local function filetype()
-    -- :h :filetype-overview
-    vim.cmd("filetype plugin indent on")
-    -- :h :syn-qstart
-    vim.cmd("syntax on")
-end
-
 local function colorscheme()
     -- use RGB color if available
     vim.opt.termguicolors = true
@@ -12,7 +5,7 @@ local function colorscheme()
     vim.cmd("colorscheme shrakula")
 end
 
-local function visual()
+local function general()
     vim.opt.number = true         -- show line-number...
     vim.opt.relativenumber = true -- ...relative to current
 
@@ -20,9 +13,6 @@ local function visual()
     --  1. 3 digits for line-number (will increase if insufficient)
     --  2. right-most character always left blank
     vim.opt.numberwidth = 4
-
-    -- highlight the line that the cursor is currently on
-    vim.opt.cursorline = true
 
     -- number of top-/bottom-most lines kept visible when scrolling
     vim.opt.scrolloff = 2
@@ -40,6 +30,9 @@ local function cursor()
     }
     vim.opt.guicursor = table.concat(styles, ",")
 
+    -- highlight the line that the cursor is currently on
+    vim.opt.cursorline = true
+
     local function restore_cursor()
         -- steady, beam-shaped
         vim.opt.guicursor = "a:ver100-blinkon0"
@@ -51,10 +44,8 @@ local function cursor()
 end
 
 local function main()
-    filetype()
-
     colorscheme()
-    visual()
+    general()
     cursor()
 end
 main()
