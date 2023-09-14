@@ -6,23 +6,23 @@ local function format()
     vim.opt.autoindent = true
 
     vim.opt.expandtab = true -- spaces instead of tabs
-    vim.opt.smarttab = true
-    vim.opt.shiftround = true
-
     vim.opt.tabstop = 4
     vim.opt.softtabstop = 4
     vim.opt.shiftwidth = 4
+
+    vim.opt.smarttab = true
+    vim.opt.shiftround = true
 end
 
 local function remove_redundant_spaces()
     local function remove_trailing()
-        pos = vim.api.nvim_win_get_cursor(0)
+        local pos = vim.api.nvim_win_get_cursor(0)
         vim.cmd([[%s/\s\+$//e]])
         vim.api.nvim_win_set_cursor(0, pos)
     end
 
     local function remove_leading()
-        pos = vim.api.nvim_win_get_cursor(0)
+        local pos = vim.api.nvim_win_get_cursor(0)
         vim.cmd([[%s/^\s\+//e]])
         vim.api.nvim_win_set_cursor(0, pos)
     end
