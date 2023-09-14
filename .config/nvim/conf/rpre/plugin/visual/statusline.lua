@@ -5,9 +5,31 @@ local function assemble()
         conf = conf .. "%.37F"
 
         conf = conf .. "  ~"
-        conf = conf .. [[%{&filetype!=""?&filetype:"voidType"}]]
+        conf = conf ..
+            "%{" ..
+            '&filetype!=""' ..
+            "?" ..
+            "&filetype" ..
+            ":" ..
+            '"voidType"' ..
+            "}"
 
-        conf = conf .. [[%{&readonly==0?&modifiable!=0?"":"|!W":&modifiable!=0?"|RO":"|RO!W"}]]
+        conf = conf ..
+            "%{" ..
+            "&readonly==0" ..
+            "?" ..
+            "&modifiable!=0" ..
+            "?" ..
+            '""' ..
+            ":" ..
+            '"|!W"' ..
+            ":" ..
+            "&modifiable!=0" ..
+            "?" ..
+            '"|RO"' ..
+            ":" ..
+            '"|RO!W"' ..
+            "}"
     end
 
     local function separator()
