@@ -9,9 +9,9 @@ local function assemble()
             "%{" ..
             '&filetype!=""' ..
             "?" ..
-            '">".&filetype' ..
+            '">".&filetype' .. -- recognized
             ":" ..
-            '"?type"' ..
+            '"?type"' ..       -- non-type
             "}"
 
         conf = conf ..
@@ -20,15 +20,15 @@ local function assemble()
             "?" ..
             "&modifiable!=0" ..
             "?" ..
-            '""' ..
+            '""' ..    -- RO & modifiable
             ":" ..
-            '"|!W"' ..
+            '"|!W"' .. -- not-RO & not-modifiable
             ":" ..
             "&modifiable!=0" ..
             "?" ..
-            '"|RO"' ..
+            '"|RO"' ..   -- RO & modifiable
             ":" ..
-            '"|RO!W"' ..
+            '"|RO!W"' .. -- RO & not-modifiable
             "}"
     end
 
