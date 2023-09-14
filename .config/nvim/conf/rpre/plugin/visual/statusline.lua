@@ -4,18 +4,47 @@ local function assemble()
     local function left()
         conf = conf .. "%.37F"
 
-        conf = conf .. "  ~"
-        conf = conf .. [[%{&filetype!=""?&filetype:"voidType"}]]
+        conf = conf .. "  "
 
-        conf = conf .. [[%{&readonly==0?&modifiable!=0?"":"|!W":&modifiable!=0?"|RO":"|RO!W"}]]
+        conf = conf ..
+            "%{" ..
+            '&filetype!=""' ..
+            "?" ..
+            '">".&filetype' .. -- recognized
+            ":" ..
+            '"?type"' ..       -- non-type
+            "}"
+        conf = conf ..
+            "%{" ..
+            "&readonly==0" ..
+            "?" ..
+            "&modifiable!=0" ..
+            "?" ..
+            '""' ..    -- RO & modifiable
+            ":" ..
+            '"|!W"' .. -- not-RO & not-modifiable
+            ":" ..
+            "&modifiable!=0" ..
+            "?" ..
+            '"|RO"' ..   -- RO & modifiable
+            ":" ..
+            '"|RO!W"' .. -- RO & not-modifiable
+            "}"
     end
 
     local function separator()
-        conf = conf .. [[%=]]
+        conf = conf .. "%="
     end
 
     local function right()
-        conf = conf .. [[%{&modified==""?"":"!Pending!  "}]]
+        conf = conf ..
+            "%{" ..
+            '&modified==""' ..
+            "?" ..
+            '""' ..            -- not-modified
+            ":" ..
+            '"!Pending!  "' .. -- modified
+            "}"
         conf = conf .. "(%02c, %03l/%03L)"
     end
 
@@ -58,12 +87,10 @@ local function make_autocmds()
         { "FileWritePost", "BufWritePost", "CmdlineLeave" },
         { pattern = { "*" }, group = gid, callback = hide }
     )
-
     vim.api.nvim_create_autocmd(
         { "InsertLeave", "CmdLineLeave", "TextChanged", "TextChangedI", "TextChangedP" },
         { pattern = { "*" }, group = gid, callback = show_if_modified }
     )
-
     vim.api.nvim_create_autocmd(
         { "InsertEnter" },
         { pattern = { "*" }, group = gid, callback = show(false) }
@@ -74,7 +101,7 @@ local function make_autocmds()
     )
 end
 
-local function statusline()
+local function general()
     vim.opt.laststatus = 0 -- hide by default
 
     vim.opt.ruler = false  -- use our own cursor-coordinate display instead
@@ -87,8 +114,7 @@ end
 
 local function main()
     assemble()
-
     make_autocmds()
-    statusline()
+    general()
 end
 main()
