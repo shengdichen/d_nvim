@@ -10,8 +10,6 @@ local function get_current_commit()
 end
 
 local function split_and_show(commit)
-    cmd = "git show " .. commit
-
     vim.cmd("wincmd l | split")
     vim.cmd(
         "terminal $SHELL -c " ..
