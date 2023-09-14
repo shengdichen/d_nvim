@@ -32,10 +32,17 @@ local function inspect_commit()
     vim.api.nvim_win_set_cursor(0, pos)
 end
 
+local function stop_inspection()
+    vim.cmd("wincmd l")
+    vim.cmd("quit")
+    vim.cmd("wincmd h")
+end
+
 local function bind()
     vim.keymap.set("c", "wq", "w <bar> qa", { buffer = 0 })
 
     vim.keymap.set("n", "<Enter>", inspect_commit, { buffer = 0 })
+    vim.keymap.set("n", "Q", stop_inspection, { buffer = 0 })
 end
 
 local function main()
