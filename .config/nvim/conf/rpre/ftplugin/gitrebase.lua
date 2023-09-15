@@ -1,5 +1,5 @@
 local function visual()
-    vim.opt_local.laststatus = 2
+    require("internal")["statusline"](2)
 end
 
 local function get_current_commit()
@@ -11,11 +11,8 @@ end
 
 local function split_and_show(commit)
     vim.cmd("wincmd l | split")
-    vim.cmd(
-        "terminal $SHELL -c " ..
-        '"' ..
-        "git show " .. commit ..
-        '"'
+    require("internal")["run_in_terminal"](
+        require("git")["show"](commit)
     )
     vim.cmd("stopinsert") -- counter auto-insert in terminal-mode
 
@@ -46,8 +43,23 @@ local function bind()
     vim.keymap.set("n", "Q", stop_inspection, { buffer = 0 })
 end
 
+local function autocmd()
+    local g                      = require("git")
+    local augroup, layout_double = g["augroup"], g["layout_double"]
+
+    vim.api.nvim_create_autocmd(
+        { "VimEnter" },
+        {
+            group = augroup,
+            pattern = { "git-rebase-todo" },
+            callback = layout_double(false)
+        }
+    )
+end
+
 local function main()
     visual()
     bind()
+    autocmd()
 end
 main()
