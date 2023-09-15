@@ -109,14 +109,14 @@ local function syntax(mapping, palette)
         map_each(
             mapping,
             { "Constant", "String", "Character", "Number", "Boolean", "Float" },
-            { bg = "none", fg = palette["orange"] }
+            { bg = "none", fg = palette["cyan"] }
         )
         map_each(mapping, { "Identifier" }, { bg = "none", fg = "fg" })
 
         map_each(
             mapping,
             { "Statement", "Conditional", "Repeat", "Label", "Operator", "Keyword", "Exception" },
-            { bg = "none", fg = palette["cyan"] }
+            { bg = "none", fg = palette["magenta"] }
         )
 
         map_each(
@@ -128,7 +128,7 @@ local function syntax(mapping, palette)
         map_each(
             mapping,
             { "Type", "StorageClass", "Structure", "TypeDef" },
-            { bg = "none", fg = palette["magenta"] }
+            { bg = "none", fg = palette["green"] }
         )
 
         map_each(
