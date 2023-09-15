@@ -11,7 +11,9 @@ end
 
 local function split_and_show(commit)
     vim.cmd("wincmd l | split")
-    require("cmd")["run_in_terminal"]("git show " .. commit)
+    require("cmd")["run_in_terminal"](
+        require("git")["show"](commit)
+    )
     vim.cmd("stopinsert") -- counter auto-insert in terminal-mode
 
     vim.cmd("wincmd h")
