@@ -1,6 +1,4 @@
-local function run_in_terminal(cmd)
-    vim.cmd("terminal $SHELL -c " .. '"' .. cmd .. '"')
-end
+local run_in_terminal = require("cmd")["run_in_terminal"]
 
 local function show_log()
     return "git log --all --patch --graph"
