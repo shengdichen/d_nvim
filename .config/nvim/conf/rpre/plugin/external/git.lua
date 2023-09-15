@@ -65,6 +65,6 @@ local function create()
 end
 
 local function main()
-    create(gid)
+    create()
 end
 main()
