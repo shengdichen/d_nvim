@@ -1,8 +1,7 @@
 local function visual()
     require("visual")["statusline"](2)
 
-    vim.opt_local.spell = true
-    vim.opt_local.spelllang = "en"
+    require("cmd")["spell"](true, { "en" })()
 end
 
 local function bind()
