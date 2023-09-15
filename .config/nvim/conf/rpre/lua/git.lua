@@ -2,8 +2,15 @@ local run_in_terminal = require("cmd")["run_in_terminal"]
 
 local augroup = "GitLayout"
 
-local function show_log()
-    return "git log --all --patch --graph"
+local function show_log(show_patch)
+    return function()
+        base = "git log --all --graph"
+        if show_patch then
+            return base .. " --patch"
+        else
+            return base .. " --no-patch"
+        end
+    end
 end
 
 local function show(commit)
@@ -33,7 +40,7 @@ local function layout_triple()
 
     -- lower-right
     vim.cmd("rightbelow split")
-    run_in_terminal(show_log())
+    run_in_terminal(show_log(false)())
 
     -- upper-right
     vim.cmd("wincmd k")
@@ -48,7 +55,7 @@ local function layout_double(start_insert)
     return function()
         -- right
         vim.cmd("rightbelow vsplit")
-        run_in_terminal(show_log())
+        run_in_terminal(show_log(true)())
 
         -- left
         vim.cmd("wincmd h")
