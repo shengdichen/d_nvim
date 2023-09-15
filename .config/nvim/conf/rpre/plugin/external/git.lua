@@ -1,19 +1,7 @@
 local run_in_terminal = require("cmd")["run_in_terminal"]
 
-local function show_log()
-    return "git log --all --patch --graph"
-end
-
-local function show_cache_smart()
-    -- show currently staged if existent, otherwise inspect HEAD
-    return "if " ..
-        "git diff --cached --quiet" ..
-        "; then " ..
-        "git show @" ..
-        "; else " ..
-        "git diff --cached" ..
-        "; fi"
-end
+local show_log = require("git")["show_log"]
+local show_cache_smart = require("git")["show_cache_smart"]
 
 local function layout_triple()
     vim.cmd("rightbelow vsplit")
