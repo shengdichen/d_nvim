@@ -1,7 +1,7 @@
 local function visual()
-    require("visual")["statusline"](2)
+    require("internal")["statusline"](2)
 
-    require("cmd")["spell"](true, { "en" })()
+    require("internal")["spell"](true, { "en" })()
 end
 
 local function bind()

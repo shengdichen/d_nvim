@@ -1,4 +1,4 @@
-local run_in_terminal = require("cmd")["run_in_terminal"]
+local run_in_terminal = require("internal")["run_in_terminal"]
 
 local augroup = "GitLayout"
 

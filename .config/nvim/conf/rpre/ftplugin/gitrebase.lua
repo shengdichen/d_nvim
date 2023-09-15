@@ -1,5 +1,5 @@
 local function visual()
-    require("visual")["statusline"](2)
+    require("internal")["statusline"](2)
 end
 
 local function get_current_commit()
@@ -11,7 +11,7 @@ end
 
 local function split_and_show(commit)
     vim.cmd("wincmd l | split")
-    require("cmd")["run_in_terminal"](
+    require("internal")["run_in_terminal"](
         require("git")["show"](commit)
     )
     vim.cmd("stopinsert") -- counter auto-insert in terminal-mode

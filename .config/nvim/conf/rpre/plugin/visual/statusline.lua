@@ -55,21 +55,21 @@ local function assemble()
 end
 
 local function hide()
-    require("visual")["statusline"](0)
+    require("internal")["statusline"](0)
     vim.cmd("redraw")
 end
 
 local function show_if_modified()
     if vim.api.nvim_buf_get_option(0, "modified") then
-        require("visual")["statusline"](2)
+        require("internal")["statusline"](2)
     else
-        require("visual")["statusline"](0)
+        require("internal")["statusline"](0)
     end
 end
 
 local function show(redraw)
     return function()
-        require("visual")["statusline"](2)
+        require("internal")["statusline"](2)
         if redraw then
             vim.cmd("redrawstatus")
         end
@@ -100,7 +100,7 @@ local function make_autocmds()
 end
 
 local function general()
-    require("visual")["statusline"](0)
+    require("internal")["statusline"](0)
 
     vim.opt.ruler = false  -- use our own cursor-coordinate display instead
 

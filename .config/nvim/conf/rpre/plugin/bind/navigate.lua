@@ -1,7 +1,7 @@
 -- NOTE:
 --  1. find name for keys from |:h key-notation|
 
-local _unbind         = require("bind")["unbind"]
+local _unbind         = require("internal")["unbind"]
 local mode_nv, mode_i = { "n", "v" }, { "i" }
 
 local function move_as_seen()

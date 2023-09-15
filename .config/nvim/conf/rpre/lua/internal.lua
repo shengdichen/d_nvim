@@ -1,3 +1,7 @@
+local function unbind(mode, lhs, args)
+    vim.keymap.set(mode, lhs, "", args)
+end
+
 local function run_in_terminal(cmd)
     vim.cmd("terminal $SHELL -c " .. '"' .. cmd .. '"')
 end
@@ -20,10 +24,17 @@ local function spell(enable, langs)
     end
 end
 
+local function statusline(level)
+    vim.opt_local.laststatus = level
+end
+
 local function main()
     local d = {}
+
+    d["unbind"] = unbind
     d["run_in_terminal"] = run_in_terminal
     d["spell"] = spell
+    d["statusline"] = statusline
 
     return d
 end
