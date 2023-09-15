@@ -22,12 +22,12 @@ local function make_color_normal(palette)
 end
 
 local function make_color_bright(palette)
-    palette["red_bright"] = "#ff6e6e"
-    palette["green_bright"] = "#69ff94"
-    palette["yellow_bright"] = "#ffffa5"
-    palette["blue_bright"] = "#d6acff"
-    palette["magenta_bright"] = "#ff92df"
-    palette["cyan_bright"] = "#a4ffff"
+    palette["red_bright"] = "#ff2f2f"
+    palette["green_bright"] = "#2fff2f"
+    palette["yellow_bright"] = "#ffff2f"
+    palette["blue_bright"] = "#2f2fff"
+    palette["magenta_bright"] = "#ff2fff"
+    palette["cyan_bright"] = "#2fffff"
 end
 
 local function main()
