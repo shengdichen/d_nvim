@@ -1,5 +1,5 @@
 local function visual()
-    vim.opt_local.laststatus = 2 -- show full status-line
+    require("visual")["statusline"](2)
 
     vim.opt_local.spell = true
     vim.opt_local.spelllang = "en"

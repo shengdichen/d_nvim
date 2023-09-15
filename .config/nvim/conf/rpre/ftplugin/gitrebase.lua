@@ -1,5 +1,5 @@
 local function visual()
-    vim.opt_local.laststatus = 2
+    require("visual")["statusline"](2)
 end
 
 local function get_current_commit()
