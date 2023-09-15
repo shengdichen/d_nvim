@@ -43,8 +43,23 @@ local function bind()
     vim.keymap.set("n", "Q", stop_inspection, { buffer = 0 })
 end
 
+local function autocmd()
+    local g                      = require("git")
+    local augroup, layout_double = g["augroup"], g["layout_double"]
+
+    vim.api.nvim_create_autocmd(
+        { "VimEnter" },
+        {
+            group = augroup,
+            pattern = { "git-rebase-todo" },
+            callback = layout_double(false)
+        }
+    )
+end
+
 local function main()
     visual()
     bind()
+    autocmd()
 end
 main()
