@@ -51,11 +51,11 @@ local function layout_triple()
     vim.cmd("startinsert")
 end
 
-local function layout_double(start_insert)
+local function layout_double(start_insert, show_patch)
     return function()
         -- right
         vim.cmd("rightbelow vsplit")
-        run_in_terminal(show_log(true)())
+        run_in_terminal(show_log(show_patch)())
 
         -- left
         vim.cmd("wincmd h")

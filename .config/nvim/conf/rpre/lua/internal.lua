@@ -18,7 +18,7 @@ local function spell(enable, langs)
             langs = table.concat(langs, ",")
         end
         if not langs then
-            t = "en"
+            langs = "en"
         end
         vim.opt_local.spelllang = langs
     end
