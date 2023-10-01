@@ -26,7 +26,7 @@ local function autocmd()
         {
             group = augroup,
             pattern = { "TAG_EDITMSG" },
-            callback = layout_double(true)
+            callback = layout_double(true, true)
         }
     )
     vim.api.nvim_create_autocmd(
@@ -34,7 +34,7 @@ local function autocmd()
         {
             group = augroup,
             pattern = { "MERGE_MSG" },
-            callback = layout_double(false)
+            callback = layout_double(false, true)
         }
     )
 end

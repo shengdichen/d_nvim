@@ -52,7 +52,7 @@ local function autocmd()
         {
             group = augroup,
             pattern = { "git-rebase-todo" },
-            callback = layout_double(false)
+            callback = layout_double(false, false)
         }
     )
 end
