@@ -13,7 +13,7 @@ local function make_color_normal(palette)
 
     -- secondary
     palette["yellow"] = "#efd767"
-    palette["cyan"] = "#7fd7e3"
+    palette["cyan"] = "#7fd7f3"
     palette["magenta"] = "#ef77c7"
 
     -- tertiary
