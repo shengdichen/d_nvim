@@ -149,7 +149,7 @@ local function syntax(mapping, palette)
 
         mapping["DiagnosticError"] = { bg = "none", fg = palette["red"] }
         mapping["DiagnosticWarn"] = { bg = "none", fg = palette["yellow"] }
-        mapping["DiagnosticInfo"] = { bg = "none", fg = palette["white"] }
+        mapping["DiagnosticInfo"] = { bg = "none", fg = palette["grey_bright"] }
         mapping["DiagnosticHint"] = { bg = "none", fg = palette["grey_bright"] }
         mapping["DiagnosticOk"] = { bg = "none", fg = palette["grey_dark"] }
     end
