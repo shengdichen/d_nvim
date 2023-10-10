@@ -2,8 +2,6 @@ local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
     local function make_binds(args)
-        vim.bo[args.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
-
         local opts = { buffer = args.buf }
 
         vim.keymap.set(
