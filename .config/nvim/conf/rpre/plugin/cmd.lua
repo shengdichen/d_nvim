@@ -30,13 +30,27 @@ local function search()
 end
 
 local function split_to_tmux()
+    local function quote(str, use_double)
+        local q
+        if use_double then
+            q = '"'
+        else
+            q = "'"
+        end
+        return q .. str .. q
+    end
+
     local function f()
         local n_splits_active = vim.fn.tabpagewinnr(vim.fn.tabpagenr(), "$")
         if n_splits_active > 1 then
             local pos = vim.api.nvim_win_get_cursor(0)
-            local cmd_set_cursor = "'" .. "call cursor(" .. pos[1] .. ", " .. pos[2] .. ")" .. "'"
-            local curr_file = "'" .. vim.api.nvim_buf_get_name(0) .. "'"
-            local cmd_nvim = '"' .. "nvim -c " .. cmd_set_cursor .. " -- " .. curr_file .. '"'
+            local cmd_nvim = quote(
+                "nvim -c " ..
+                quote("call cursor(" .. pos[1] .. ", " .. pos[2] .. ")", false) ..
+                " -- " ..
+                quote(vim.api.nvim_buf_get_name(0), false),
+                true
+            )
 
             vim.api.nvim_buf_delete(0, {})
             os.execute(table.concat(
