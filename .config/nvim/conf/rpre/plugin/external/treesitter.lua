@@ -13,7 +13,10 @@ end
 
 local function setup()
     local conf = {
-        highlight = { enable = true },
+        highlight = {
+            enable = true,
+            additional_vim_regex_highlighting = false, -- use treesitter only
+        },
     }
     c.setup(conf)
 end
