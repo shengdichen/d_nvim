@@ -38,7 +38,7 @@ local function bind()
     )
 end
 
-local function python(conf)
+local function server_pyls()
     -- REF:
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
 
@@ -60,27 +60,28 @@ local function python(conf)
     c["autopep8"] = off
     c["yapf"] = off
 
-    conf.pylsp.setup({
-        settings = { pylsp = { plugins = c } }
-    })
+    return { settings = { pylsp = { plugins = c } } }
 end
 
-local function lang()
+local function servers_default()
+    return { "clangd", "tsserver", "lua_ls", "bashls", "sqlls", "vimls" }
+end
+
+local function setup()
     local conf = require("lspconfig")
+    local cap = require("cmp_nvim_lsp").default_capabilities()
 
-    python(conf)
-    conf.clangd.setup({})
-    conf.tsserver.setup({})
+    local c_python = server_pyls()
+    c_python["capabilities"] = cap
+    conf["pylsp"].setup(c_python)
 
-    conf.lua_ls.setup({})
-    conf.bashls.setup({})
-
-    conf.sqlls.setup({})
-    conf.vimls.setup({})
+    for _, lang in ipairs(servers_default()) do
+        conf[lang].setup({ capabilities = cap })
+    end
 end
 
 local function main()
     bind()
-    lang()
+    setup()
 end
 main()
