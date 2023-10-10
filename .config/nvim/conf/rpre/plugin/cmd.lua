@@ -46,13 +46,14 @@ local function split_to_tmux()
             local pos = vim.api.nvim_win_get_cursor(0)
             local cmd_nvim = quote(
                 "nvim -c " ..
+                -- (re)set cursor position
                 quote("call cursor(" .. pos[1] .. ", " .. pos[2] .. ")", false) ..
                 " -- " ..
                 quote(vim.api.nvim_buf_get_name(0), false),
                 true
             )
 
-            vim.api.nvim_buf_delete(0, {})
+            vim.api.nvim_buf_delete(0, {}) -- will otherwise complain about swap
             os.execute(table.concat(
                 { "tmux", "split-window", cmd_nvim }, " "
             ))
