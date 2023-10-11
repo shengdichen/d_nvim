@@ -4,11 +4,10 @@ local augroup = "GitLayout"
 
 local function show_log(show_patch)
     return function()
-        base = "git log --all --graph"
         if show_patch then
-            return base .. " --patch"
+            return "git lg"
         else
-            return base .. " --no-patch"
+            return "git alo"
         end
     end
 end
@@ -17,17 +16,17 @@ local function show(commit)
     if not commit then
         commit = "@"
     end
-    return "git show " .. commit
+    return "git so " .. commit
 end
 
 local function show_staged()
-    return "git diff --cached"
+    return "git dc"
 end
 
 local function show_cache_smart()
     -- show currently staged if existent, otherwise inspect HEAD
     return "if " ..
-        "git diff --cached --quiet" ..
+        show_staged() .. " --quiet" ..
         "; then " ..
         show("") ..
         "; else " ..
