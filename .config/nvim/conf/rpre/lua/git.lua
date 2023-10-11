@@ -26,7 +26,7 @@ end
 local function show_cache_smart()
     -- show currently staged if existent, otherwise inspect HEAD
     return "if " ..
-        "git dc --quiet" ..
+        show_staged() .. " --quiet" ..
         "; then " ..
         show("") ..
         "; else " ..
