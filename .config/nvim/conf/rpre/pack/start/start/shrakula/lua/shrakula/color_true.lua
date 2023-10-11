@@ -167,7 +167,7 @@ local function syntax(mapping, palette)
         -- REF:
         --  |:help treesitter-highlight-groups|
 
-        return 0
+        mapping["@constructor"] = { link = "Type" }
     end
 
     internal()
