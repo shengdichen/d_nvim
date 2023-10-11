@@ -133,9 +133,11 @@ local function syntax(mapping, palette)
 
         map_each(
             mapping,
-            { "Special", "Specialchar", "Tag", "Delimtiter", "SpecialComment", "Debug" },
+            { "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
             { bg = "none", fg = palette["yellow"] }
         )
+
+        mapping["Delimiter"] = { bg = "none", fg = palette["grey_bright"] }
 
         mapping["Underlined"] = { bg = "none", fg = "fg", underline = true }
         mapping["Ignore"] = { bg = "none", fg = palette["grey_dark"] }
