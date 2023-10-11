@@ -109,7 +109,7 @@ local function syntax(mapping, palette)
         map_each(
             mapping,
             { "Constant", "String", "Character", "Number", "Boolean", "Float" },
-            { bg = "none", fg = palette["cyan"] }
+            { bg = "none", fg = palette["green"] }
         )
         map_each(mapping, { "Identifier" }, { bg = "none", fg = "fg" })
 
@@ -128,7 +128,7 @@ local function syntax(mapping, palette)
         map_each(
             mapping,
             { "Type", "StorageClass", "Structure", "TypeDef" },
-            { bg = "none", fg = palette["green"] }
+            { bg = "none", fg = palette["cyan"] }
         )
 
         map_each(
