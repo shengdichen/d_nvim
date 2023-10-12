@@ -168,6 +168,11 @@ local function syntax(mapping, palette)
         --  |:help treesitter-highlight-groups|
 
         mapping["@constructor"] = { link = "Type" }
+        map_each(
+            mapping,
+            { "@field", "@property" },
+            { bg = "none", fg = palette["blue"] }
+        )
     end
 
     internal()
