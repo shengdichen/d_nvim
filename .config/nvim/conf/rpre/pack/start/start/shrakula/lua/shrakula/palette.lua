@@ -9,7 +9,7 @@ local function make_color_normal(palette)
     -- primary
     palette["red"] = "#ef1757"
     palette["green"] = "#3fbf4f"
-    palette["blue"] = "3f1ff7"
+    palette["blue"] = "#1f97df"
 
     -- secondary
     palette["yellow"] = "#efd767"

@@ -109,7 +109,7 @@ local function syntax(mapping, palette)
         map_each(
             mapping,
             { "Constant", "String", "Character", "Number", "Boolean", "Float" },
-            { bg = "none", fg = palette["cyan"] }
+            { bg = "none", fg = palette["green"] }
         )
         map_each(mapping, { "Identifier" }, { bg = "none", fg = "fg" })
 
@@ -128,14 +128,16 @@ local function syntax(mapping, palette)
         map_each(
             mapping,
             { "Type", "StorageClass", "Structure", "TypeDef" },
-            { bg = "none", fg = palette["green"] }
+            { bg = "none", fg = palette["cyan"] }
         )
 
         map_each(
             mapping,
-            { "Special", "Specialchar", "Tag", "Delimtiter", "SpecialComment", "Debug" },
+            { "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
             { bg = "none", fg = palette["yellow"] }
         )
+
+        mapping["Delimiter"] = { bg = "none", fg = palette["grey_bright"] }
 
         mapping["Underlined"] = { bg = "none", fg = "fg", underline = true }
         mapping["Ignore"] = { bg = "none", fg = palette["grey_dark"] }
@@ -165,7 +167,12 @@ local function syntax(mapping, palette)
         -- REF:
         --  |:help treesitter-highlight-groups|
 
-        return 0
+        mapping["@constructor"] = { link = "Type" }
+        map_each(
+            mapping,
+            { "@field", "@property" },
+            { bg = "none", fg = palette["blue"] }
+        )
     end
 
     internal()
