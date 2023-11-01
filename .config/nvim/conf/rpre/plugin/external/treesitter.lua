@@ -3,7 +3,7 @@ local c = require("nvim-treesitter.configs")
 local function install()
     local conf = {
         ensure_installed = {
-            "python", "lua", "java", "c", "cpp",
+            "python", "lua", "haskell", "java", "c", "cpp",
             "vimdoc", -- builtin help-pages
             "typescript", "bash", "ruby",
         },

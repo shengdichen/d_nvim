@@ -64,7 +64,11 @@ local function server_pyls()
 end
 
 local function servers_default()
-    return { "clangd", "tsserver", "lua_ls", "bashls", "sqlls", "vimls" }
+    return {
+        "lua_ls", "hls", "clangd",
+        "vimls",
+        "tsserver", "bashls", "sqlls"
+    }
 end
 
 local function setup()
