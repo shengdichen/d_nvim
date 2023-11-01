@@ -34,7 +34,7 @@ local function autocmd()
         {
             group = augroup,
             pattern = { "MERGE_MSG" },
-            callback = layout_double(false, true)
+            callback = layout_double(false, false)
         }
     )
 end
