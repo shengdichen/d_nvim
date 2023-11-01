@@ -72,6 +72,10 @@ local function servers_default()
 end
 
 local function setup()
+    -- REF:
+    --  https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+    --  https://github.com/hrsh7th/nvim-cmp#recommended-configuration
+
     local conf = require("lspconfig")
     local cap = require("cmp_nvim_lsp").default_capabilities()
 

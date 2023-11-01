@@ -1,6 +1,9 @@
 local c = require("nvim-treesitter.configs")
 
 local function install()
+    -- REF:
+    --  https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
+
     local conf = {
         ensure_installed = {
             "python", "lua", "haskell", "java", "c", "cpp",
