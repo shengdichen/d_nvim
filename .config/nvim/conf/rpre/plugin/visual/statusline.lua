@@ -43,7 +43,7 @@ local function assemble()
             "?" ..
             '""' ..            -- not-modified
             ":" ..
-            '"!Pending!  "' .. -- modified
+            '"!*!  "' .. -- modified
             "}"
         conf = conf .. "(%02c, %03l/%03L)"
     end
