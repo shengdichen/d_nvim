@@ -6,6 +6,11 @@ local function snippet()
     c["snippet"] = {
         expand = function(args) luasnip.lsp_expand(args.body) end
     }
+
+    -- use rafamadriz/friendly-snippets as source
+    -- REF:
+    --  https://github.com/L3MON4D3/LuaSnip#add-snippets
+    require("luasnip.loaders.from_vscode").lazy_load()
 end
 
 local function source()
