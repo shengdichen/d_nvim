@@ -46,6 +46,17 @@ local function server_pyls()
     local off = { enabled = false }
     local c = {}
 
+    -- REF:
+    --  https://github.com/python-lsp/python-lsp-server/blob/develop/docs/autoimport.md
+    c["rope_autoimport"] = {
+        completions = off, -- only seems to slow down completion
+        code_actions = on
+    }
+
+    -- REF:
+    --  https://github.com/python-lsp/pylsp-mypy#configuration
+    c["pylsp-mypy"] = on
+
     -- checker & linter
     c["mccabe"] = on
     -- https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
@@ -57,6 +68,7 @@ local function server_pyls()
 
     -- formater
     c["black"] = on
+    c["isort"] = on
     c["autopep8"] = off
     c["yapf"] = off
 
@@ -65,6 +77,7 @@ end
 
 local function servers_default()
     return {
+        -- "ruff_lsp", -- https://github.com/python-lsp/python-lsp-ruff#configuration
         "lua_ls", "hls", "clangd",
         "vimls",
         "tsserver", "bashls", "sqlls"
