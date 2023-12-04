@@ -98,11 +98,26 @@ local function server_pyls()
     }
 end
 
+local function server_tsserver(cap)
+    local c = {}
+    c["capabilities"] = cap
+
+    -- disable tsserver's formatting (use none_ls as configured below)
+    c["on_attach"] = function(client, _)
+        -- REF:
+        --  https://neovim.discourse.group/t/how-to-config-multiple-lsp-for-document-hover/3093
+        --  https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#serverCapabilities
+        client.server_capabilities.documentFormattingProvider = false
+    end
+
+    return c
+end
+
 local function servers_default()
     return {
         "lua_ls", "hls", "clangd",
         "vimls",
-        "tsserver", "bashls", "sqlls"
+        "bashls", "sqlls",
     }
 end
 
@@ -117,6 +132,8 @@ local function setup()
     local c_python = server_pyls()
     c_python["capabilities"] = cap
     conf["pylsp"].setup(c_python)
+
+    conf["tsserver"].setup(server_tsserver(cap))
 
     for _, lang in ipairs(servers_default()) do
         conf[lang].setup({ capabilities = cap })
