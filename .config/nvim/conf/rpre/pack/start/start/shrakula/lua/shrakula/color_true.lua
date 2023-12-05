@@ -10,7 +10,6 @@ end
 
 local function common(mapping, palette)
     local function general()
-        mapping["NormalFloat"] = { bg = "none", fg = palette["white"] }
         mapping["Comment"] = { bg = "none", fg = palette["grey_bright"] }
         mapping["MatchParen"] = { bg = "none", fg = palette["cyan"], underline = true }
         mapping["EndOfBuffer"] = { bg = "none", fg = palette["black"] }            -- tilde at EOF
@@ -20,6 +19,10 @@ local function common(mapping, palette)
 
         mapping["Visual"] = { bg = palette["grey_bright"], fg = palette["black"] }
         mapping["VisualNOS"] = { bg = palette["grey_dark"], fg = "none" }
+
+        -- notably used for diagnostics, e.g., lsp
+        mapping["NormalFloat"] = { bg = palette["grey_dark"], fg = palette["white"] }
+        mapping["FloatBorder"] = { bg = "red", fg = palette["grey_bright"] }
     end
 
     local function cursor()
@@ -88,8 +91,6 @@ local function common(mapping, palette)
         mapping["SpecialKey"] = { bg = "none", fg = palette["grey_bright"] }
         mapping["NonText"] = { bg = "none", fg = palette["grey_bright"] }
         mapping["Conceal"] = { bg = "none", fg = palette["grey_bright"] }
-
-        mapping["FloatBorder"] = { bg = "none", fg = palette["grey_bright"] }
     end
 
     general()
@@ -154,6 +155,39 @@ local function syntax(mapping, palette)
         mapping["DiagnosticInfo"] = { bg = "none", fg = palette["grey_bright"] }
         mapping["DiagnosticHint"] = { bg = "none", fg = palette["grey_bright"] }
         mapping["DiagnosticOk"] = { bg = "none", fg = palette["grey_dark"] }
+
+        -- Note
+        --  1. *Sign* := gutter
+        --  2. *Underline* := portion of code inducing the diagnostic
+        --  3. *VirtualText* := inline message
+        --  4. *Floating* := detail message
+        mapping["DiagnosticSignError"] = { bg = "none", fg = palette["red"], reverse = true }
+
+        -- simulate |Comment|
+        map_each(
+            mapping,
+            {
+                "DiagnosticVirtualTextError",
+                "DiagnosticVirtualTextWarn",
+                "DiagnosticVirtualTextInfo",
+                "DiagnosticVirtualTextHint",
+                "DiagnosticVirtualTextOk"
+            },
+            { fg = palette["grey_bright"] }
+        )
+
+        -- blend in with |NormalFloat|
+        map_each(
+            mapping,
+            {
+                "DiagnosticFloatingError",
+                "DiagnosticFloatingWarn",
+                "DiagnosticFloatingInfo",
+                "DiagnosticFloatingHint",
+                "DiagnosticFloatingOk"
+            },
+            { bg = palette["grey_dark"], fg = palette["white"] }
+        )
     end
 
     local function lsp()
