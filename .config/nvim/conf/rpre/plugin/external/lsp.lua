@@ -1,6 +1,11 @@
 local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
+    vim.keymap.set("n", "<Leader>p", vim.diagnostic.open_float)
+    vim.keymap.set("n", "<Leader>P", vim.diagnostic.setloclist)
+    vim.keymap.set("n", "<Leader>k", vim.diagnostic.goto_prev)
+    vim.keymap.set("n", "<Leader>j", vim.diagnostic.goto_next)
+
     local function make_binds(args)
         local opts = { buffer = args.buf }
 
@@ -15,8 +20,8 @@ local function bind()
 
         vim.keymap.set("n", "<Leader>R", vim.lsp.buf.references, opts)
 
-        vim.keymap.set("n", "<Leader>d", vim.lsp.buf.declaration, opts)
-        vim.keymap.set("n", "<Leader>D", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "<Leader>d", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "<Leader>D", vim.lsp.buf.declaration, opts)
         vim.keymap.set("n", "<Leader><C-D>", vim.lsp.buf.type_definition, opts)
 
         vim.keymap.set("n", "<Leader>h", vim.lsp.buf.hover, opts)
