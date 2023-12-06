@@ -5,6 +5,14 @@ local function colorscheme()
     vim.cmd("colorscheme shrakula")
 end
 
+local function signcolumn()
+    -- REF:
+    --  https://github.com/neovim/neovim/issues/990
+
+    -- set to |number| if sign(s) shall take over line-number
+    vim.opt.signcolumn = "auto:5"
+end
+
 local function ibl()
     require("ibl").setup(
         {
@@ -59,6 +67,7 @@ end
 
 local function main()
     colorscheme()
+    signcolumn()
     ibl()
     general()
     cursor()
