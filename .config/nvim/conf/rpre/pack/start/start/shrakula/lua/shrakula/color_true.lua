@@ -28,7 +28,7 @@ local function common(mapping, palette)
     local function cursor()
         mapping["Cursor"] = { bg = "none", fg = "none", reverse = true }
         mapping["CursorLine"] = { bg = palette["grey_dark"], fg = "none" }
-        mapping["QuickFixLine"] = { bg = palette["yellow"], fg = palette["black"] }
+        mapping["QuickFixLine"] = { bg = palette["grey_bright"], fg = palette["black"] }
 
         mapping["CursorLineNr"] = { bg = "none", fg = "fg", bold = true }    -- current
         mapping["LineNr"] = { bg = "none", fg = palette["grey_bright"] }     -- non-current

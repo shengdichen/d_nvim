@@ -1,6 +1,9 @@
 local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
+    -- quit quickfix
+    vim.keymap.set("n", "<C-q>", function() vim.cmd("cclose") end)
+
     vim.keymap.set("n", "<Leader>p", vim.diagnostic.open_float)
     vim.keymap.set("n", "<Leader>P", vim.diagnostic.setloclist)
     vim.keymap.set("n", "<Leader>k", vim.diagnostic.goto_prev)
