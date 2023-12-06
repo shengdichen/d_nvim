@@ -109,8 +109,28 @@ local function setup()
     end
 end
 
+local function border()
+    local weight = "single"
+
+    -- REF:
+    --  :help lsp-handlers
+    --  https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+        vim.lsp.handlers.hover, { border = weight }
+    )
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+        vim.lsp.handlers.signature_help, { border = weight }
+    )
+
+    -- REF:
+    vim.diagnostic.config(
+        { float = { border = weight } }
+    )
+end
+
 local function main()
     bind()
     setup()
+    border()
 end
 main()
