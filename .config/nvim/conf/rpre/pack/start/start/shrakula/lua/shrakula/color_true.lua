@@ -21,8 +21,8 @@ local function common(mapping, palette)
         mapping["VisualNOS"] = { bg = palette["grey_dark"], fg = "none" }
 
         -- notably used for diagnostics, e.g., lsp
-        mapping["NormalFloat"] = { bg = palette["grey_dark"], fg = palette["white"] }
-        mapping["FloatBorder"] = { bg = "red", fg = palette["grey_bright"] }
+        mapping["NormalFloat"] = { fg = palette["white"] }
+        mapping["FloatBorder"] = { fg = palette["grey_bright"] }
     end
 
     local function cursor()
@@ -186,7 +186,7 @@ local function syntax(mapping, palette)
                 "DiagnosticFloatingHint",
                 "DiagnosticFloatingOk"
             },
-            { bg = palette["grey_dark"], fg = palette["white"] }
+            { fg = palette["white"] }
         )
     end
 
