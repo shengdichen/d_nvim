@@ -16,6 +16,16 @@ local function gitsigns()
             },
             attach_to_untracked = false, -- do NOT activate if file untracked
 
+            preview_config      = {
+                border = "single",
+                style = "minimal",
+                relative = "cursor",
+                row = 1,
+                col = 1
+            },
+
+            -- REF:
+            --  https://github.com/lewis6991/gitsigns.nvim#keymaps
             on_attach           = function(bufnr)
                 local gs = package.loaded.gitsigns
 
@@ -30,10 +40,15 @@ local function gitsigns()
                         "n",
                         key,
                         function()
+                            local auto_preview = { preview = true }
                             if vim.wo.diff then return key end
                             vim.schedule(
                                 function()
-                                    if positive_dir then gs.next_hunk() else gs.prev_hunk() end
+                                    if positive_dir then
+                                        gs.next_hunk(auto_preview)
+                                    else
+                                        gs.prev_hunk(auto_preview)
+                                    end
                                 end
                             )
                             return "<Ignore>"
