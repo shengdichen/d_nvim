@@ -226,7 +226,13 @@ local function filetype(mapping, palette)
         mapping["debugBreakpoint"] = { bg = palette["red"], fg = "fg" }
     end
 
+    local function gitsigns()
+        mapping["GitSignsChange"] = { fg = palette["white"] }
+        mapping["GitSignsChangedelete"] = { fg = palette["white"], underline = true }
+    end
+
     debug()
+    gitsigns()
 end
 
 local function main()
