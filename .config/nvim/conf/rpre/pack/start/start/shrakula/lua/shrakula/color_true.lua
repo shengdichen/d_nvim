@@ -209,10 +209,15 @@ local function syntax(mapping, palette)
         )
     end
 
+    local function ibl()
+        vim.api.nvim_set_hl(0, "IblIndent", { fg = palette["grey_darker"] })
+    end
+
     internal()
     diagnostic()
     lsp()
     treesitter()
+    ibl()
 end
 
 local function filetype(mapping, palette)

@@ -5,6 +5,16 @@ local function colorscheme()
     vim.cmd("colorscheme shrakula")
 end
 
+local function ibl()
+    require("ibl").setup(
+        {
+            indent = { char = "┆" },
+            scope = { enabled = false },
+            viewport_buffer = { min = 10, max = 50 }
+        }
+    )
+end
+
 local function general()
     vim.opt.number = true         -- show line-number...
     vim.opt.relativenumber = true -- ...relative to current
@@ -45,6 +55,7 @@ end
 
 local function main()
     colorscheme()
+    ibl()
     general()
     cursor()
 end
