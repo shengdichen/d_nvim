@@ -163,6 +163,19 @@ local function syntax(mapping, palette)
         --  4. *Floating* := detail message
         mapping["DiagnosticSignError"] = { bg = "none", fg = palette["red"], reverse = true }
 
+        -- simulate |Normal|
+        map_each(
+            mapping,
+            {
+                "DiagnosticSignError",
+                "DiagnosticSignWarn",
+                "DiagnosticSignInfo",
+                "DiagnosticSignHint",
+                "DiagnosticSignOk"
+            },
+            { fg = palette["white"] }
+        )
+
         -- simulate |Comment|
         map_each(
             mapping,

@@ -157,11 +157,13 @@ local function diagnostic()
         local d_str = "DiagnosticSign"
         local type_sign = { Error = "E ", Warn = "w ", Hint = "n ", Info = "i " }
         for type, sign in pairs(type_sign) do
+            local hl_group = d_str .. type
             vim.fn.sign_define(
-                d_str .. type,
+            -- slight trickery: name the sign as the hl-group itself
+                hl_group,
                 {
                     text = sign,
-                    texthl = "Normal", -- highlight of the sign itself
+                    texthl = hl_group, -- link to hl-group
                 }
             )
         end
