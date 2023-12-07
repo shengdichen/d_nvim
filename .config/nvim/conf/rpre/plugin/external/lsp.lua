@@ -1,9 +1,12 @@
 local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
-    local function make_binds(args)
-        vim.bo[args.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+    vim.keymap.set("n", "<Leader>p", vim.diagnostic.open_float)
+    vim.keymap.set("n", "<Leader>P", vim.diagnostic.setloclist)
+    vim.keymap.set("n", "<Leader>k", vim.diagnostic.goto_prev)
+    vim.keymap.set("n", "<Leader>j", vim.diagnostic.goto_next)
 
+    local function make_binds(args)
         local opts = { buffer = args.buf }
 
         vim.keymap.set(
@@ -17,8 +20,8 @@ local function bind()
 
         vim.keymap.set("n", "<Leader>R", vim.lsp.buf.references, opts)
 
-        vim.keymap.set("n", "<Leader>d", vim.lsp.buf.declaration, opts)
-        vim.keymap.set("n", "<Leader>D", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "<Leader>d", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "<Leader>D", vim.lsp.buf.declaration, opts)
         vim.keymap.set("n", "<Leader><C-D>", vim.lsp.buf.type_definition, opts)
 
         vim.keymap.set("n", "<Leader>h", vim.lsp.buf.hover, opts)
@@ -40,13 +43,24 @@ local function bind()
     )
 end
 
-local function python(conf)
+local function server_pyls()
     -- REF:
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
 
     local on = { enabled = true }
     local off = { enabled = false }
     local c = {}
+
+    -- REF:
+    --  https://github.com/python-lsp/python-lsp-server/blob/develop/docs/autoimport.md
+    c["rope_autoimport"] = {
+        completions = off, -- only seems to slow down completion
+        code_actions = on
+    }
+
+    -- REF:
+    --  https://github.com/python-lsp/pylsp-mypy#configuration
+    c["pylsp-mypy"] = on
 
     -- checker & linter
     c["mccabe"] = on
@@ -59,30 +73,41 @@ local function python(conf)
 
     -- formater
     c["black"] = on
+    c["isort"] = on
     c["autopep8"] = off
     c["yapf"] = off
 
-    conf.pylsp.setup({
-        settings = { pylsp = { plugins = c } }
-    })
+    return { settings = { pylsp = { plugins = c } } }
 end
 
-local function lang()
+local function servers_default()
+    return {
+        -- "ruff_lsp", -- https://github.com/python-lsp/python-lsp-ruff#configuration
+        "lua_ls", "hls", "clangd",
+        "vimls",
+        "tsserver", "bashls", "sqlls"
+    }
+end
+
+local function setup()
+    -- REF:
+    --  https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
+    --  https://github.com/hrsh7th/nvim-cmp#recommended-configuration
+
     local conf = require("lspconfig")
+    local cap = require("cmp_nvim_lsp").default_capabilities()
 
-    python(conf)
-    conf.clangd.setup({})
-    conf.tsserver.setup({})
+    local c_python = server_pyls()
+    c_python["capabilities"] = cap
+    conf["pylsp"].setup(c_python)
 
-    conf.lua_ls.setup({})
-    conf.bashls.setup({})
-
-    conf.sqlls.setup({})
-    conf.vimls.setup({})
+    for _, lang in ipairs(servers_default()) do
+        conf[lang].setup({ capabilities = cap })
+    end
 end
 
 local function main()
     bind()
-    lang()
+    setup()
 end
 main()
