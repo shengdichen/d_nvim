@@ -8,11 +8,11 @@ local function gitsigns()
     require('gitsigns').setup(
         {
             signs               = {
-                add          = { text = '+' },
-                topdelete    = { text = '-' },
-                delete       = { text = '-' },
-                change       = { text = '/' },
-                changedelete = { text = '|' },
+                add          = { text = "+" },
+                delete       = { text = "-" },
+                topdelete    = { text = "-" },
+                change       = { text = "|" },
+                changedelete = { text = "|" },
             },
             attach_to_untracked = false, -- do NOT activate if file untracked
 

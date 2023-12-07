@@ -227,8 +227,18 @@ local function filetype(mapping, palette)
     end
 
     local function gitsigns()
-        mapping["GitSignsChange"] = { fg = palette["white"] }
-        mapping["GitSignsChangedelete"] = { fg = palette["white"], underline = true }
+        map_each(
+            mapping,
+            {
+                "GitSignsAdd",
+                "GitSignsDelete",
+                "GitSignsTopdelete",
+                "GitSignsChange",
+                "GitSignsChangedelete",
+                "GitSignsUntracked",
+            },
+            { fg = palette["grey_bright"] }
+        )
     end
 
     debug()
