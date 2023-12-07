@@ -5,6 +5,24 @@ local function colorscheme()
     vim.cmd("colorscheme shrakula")
 end
 
+local function signcolumn()
+    -- REF:
+    --  https://github.com/neovim/neovim/issues/990
+
+    -- set to |number| if sign(s) shall take over line-number
+    vim.opt.signcolumn = "auto:5"
+end
+
+local function ibl()
+    require("ibl").setup(
+        {
+            indent = { char = "┆" },
+            scope = { enabled = false },
+            viewport_buffer = { min = 10, max = 50 }
+        }
+    )
+end
+
 local function general()
     vim.opt.number = true         -- show line-number...
     vim.opt.relativenumber = true -- ...relative to current
@@ -20,6 +38,10 @@ local function general()
     vim.opt.visualbell = true
 
     vim.opt.foldmethod = "indent"
+    -- NOTE:
+    --  1. just enough for one indent-level in a (class-)method
+    --  2. use |vim.opt.foldenable = false| for full expansion
+    vim.opt.foldlevel = 3
 end
 
 local function cursor()
@@ -45,6 +67,8 @@ end
 
 local function main()
     colorscheme()
+    signcolumn()
+    ibl()
     general()
     cursor()
 end

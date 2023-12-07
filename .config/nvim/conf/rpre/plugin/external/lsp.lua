@@ -1,6 +1,9 @@
 local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
+    -- quit quickfix
+    vim.keymap.set("n", "<C-q>", function() vim.cmd("cclose") end)
+
     vim.keymap.set("n", "<Leader>p", vim.diagnostic.open_float)
     vim.keymap.set("n", "<Leader>P", vim.diagnostic.setloclist)
     vim.keymap.set("n", "<Leader>k", vim.diagnostic.goto_prev)
@@ -106,8 +109,74 @@ local function setup()
     end
 end
 
+local function border()
+    local weight = "single"
+
+    -- REF:
+    --  :help lsp-handlers
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+        vim.lsp.handlers.hover, { border = weight }
+    )
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+        vim.lsp.handlers.signature_help, { border = weight }
+    )
+end
+
+local function diagnostic()
+    -- REF:
+    --  https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization
+
+    local function general()
+        local c = {}
+
+        c["virtual_text"] = {
+            severity = vim.diagnostic.severity.ERROR, -- only for error(s)
+            spacing = 0,
+            prefix = "",
+            format = function(d)
+                -- REF:
+                --  h: diagnostic-structure
+                return "<<" .. d.source .. " [" .. d.code .. "]"
+            end,
+        }
+        c["float"] = {
+            border = "single",
+            source = true,
+        }
+        c["signs"] = {
+            severity = { min = vim.diagnostic.severity.INFO },
+            priority = 2,
+        }
+        c["underline"] = false
+        c["severity_sort"] = true
+
+        vim.diagnostic.config(c)
+    end
+
+    local function gutter_sign()
+        local d_str = "DiagnosticSign"
+        local type_sign = { Error = "E ", Warn = "w ", Hint = "n ", Info = "i " }
+        for type, sign in pairs(type_sign) do
+            local hl_group = d_str .. type
+            vim.fn.sign_define(
+            -- slight trickery: name the sign as the hl-group itself
+                hl_group,
+                {
+                    text = sign,
+                    texthl = hl_group, -- link to hl-group
+                }
+            )
+        end
+    end
+
+    general()
+    gutter_sign()
+end
+
 local function main()
     bind()
     setup()
+    border()
+    diagnostic()
 end
 main()

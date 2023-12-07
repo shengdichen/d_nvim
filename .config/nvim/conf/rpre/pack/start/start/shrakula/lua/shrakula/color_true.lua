@@ -21,14 +21,14 @@ local function common(mapping, palette)
         mapping["VisualNOS"] = { bg = palette["grey_dark"], fg = "none" }
 
         -- notably used for diagnostics, e.g., lsp
-        mapping["NormalFloat"] = { bg = palette["grey_dark"], fg = palette["white"] }
-        mapping["FloatBorder"] = { bg = "red", fg = palette["grey_bright"] }
+        mapping["NormalFloat"] = { fg = palette["white"] }
+        mapping["FloatBorder"] = { fg = palette["grey_bright"] }
     end
 
     local function cursor()
         mapping["Cursor"] = { bg = "none", fg = "none", reverse = true }
         mapping["CursorLine"] = { bg = palette["grey_dark"], fg = "none" }
-        mapping["QuickFixLine"] = { bg = palette["yellow"], fg = palette["black"] }
+        mapping["QuickFixLine"] = { bg = palette["grey_bright"], fg = palette["black"] }
 
         mapping["CursorLineNr"] = { bg = "none", fg = "fg", bold = true }    -- current
         mapping["LineNr"] = { bg = "none", fg = palette["grey_bright"] }     -- non-current
@@ -163,6 +163,19 @@ local function syntax(mapping, palette)
         --  4. *Floating* := detail message
         mapping["DiagnosticSignError"] = { bg = "none", fg = palette["red"], reverse = true }
 
+        -- simulate |Normal|
+        map_each(
+            mapping,
+            {
+                "DiagnosticSignError",
+                "DiagnosticSignWarn",
+                "DiagnosticSignInfo",
+                "DiagnosticSignHint",
+                "DiagnosticSignOk"
+            },
+            { fg = palette["white"] }
+        )
+
         -- simulate |Comment|
         map_each(
             mapping,
@@ -186,7 +199,7 @@ local function syntax(mapping, palette)
                 "DiagnosticFloatingHint",
                 "DiagnosticFloatingOk"
             },
-            { bg = palette["grey_dark"], fg = palette["white"] }
+            { fg = palette["white"] }
         )
     end
 
@@ -209,10 +222,15 @@ local function syntax(mapping, palette)
         )
     end
 
+    local function ibl()
+        vim.api.nvim_set_hl(0, "IblIndent", { fg = palette["grey_darker"] })
+    end
+
     internal()
     diagnostic()
     lsp()
     treesitter()
+    ibl()
 end
 
 local function filetype(mapping, palette)
@@ -221,7 +239,23 @@ local function filetype(mapping, palette)
         mapping["debugBreakpoint"] = { bg = palette["red"], fg = "fg" }
     end
 
+    local function gitsigns()
+        map_each(
+            mapping,
+            {
+                "GitSignsAdd",
+                "GitSignsDelete",
+                "GitSignsTopdelete",
+                "GitSignsChange",
+                "GitSignsChangedelete",
+                "GitSignsUntracked",
+            },
+            { fg = palette["grey_bright"] }
+        )
+    end
+
     debug()
+    gitsigns()
 end
 
 local function main()
