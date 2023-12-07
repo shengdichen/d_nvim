@@ -7,6 +7,7 @@ end
 local function gitsigns()
     require('gitsigns').setup(
         {
+            sign_priority       = 1, -- lowest possible priority (always leftmost)
             signs               = {
                 add          = { text = "+" },
                 delete       = { text = "-" },
@@ -34,6 +35,9 @@ local function gitsigns()
                     opts.buffer = bufnr
                     vim.keymap.set(mode, l, r, opts)
                 end
+
+                -- do not detach/attach, just toggle (gutter-)sign
+                map("n", "<leader>gq", gs.toggle_signs)
 
                 local function jump(key, positive_dir)
                     map(
