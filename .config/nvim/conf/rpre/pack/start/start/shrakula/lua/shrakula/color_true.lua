@@ -163,7 +163,6 @@ local function syntax(mapping, palette)
         --  4. *Floating* := detail message
         mapping["DiagnosticSignError"] = { bg = "none", fg = palette["red"], reverse = true }
 
-        -- simulate |Normal|
         map_each(
             mapping,
             {
@@ -173,10 +172,9 @@ local function syntax(mapping, palette)
                 "DiagnosticSignHint",
                 "DiagnosticSignOk"
             },
-            { fg = palette["white"] }
+            { link = "Normal" }
         )
 
-        -- simulate |Comment|
         map_each(
             mapping,
             {
@@ -186,10 +184,9 @@ local function syntax(mapping, palette)
                 "DiagnosticVirtualTextHint",
                 "DiagnosticVirtualTextOk"
             },
-            { fg = palette["grey_bright"] }
+            { link = "Comment" }
         )
 
-        -- blend in with |NormalFloat|
         map_each(
             mapping,
             {
@@ -199,7 +196,7 @@ local function syntax(mapping, palette)
                 "DiagnosticFloatingHint",
                 "DiagnosticFloatingOk"
             },
-            { fg = palette["white"] }
+            { link = "NormalFloat" }
         )
     end
 
@@ -250,7 +247,7 @@ local function filetype(mapping, palette)
                 "GitSignsChangedelete",
                 "GitSignsUntracked",
             },
-            { fg = palette["grey_bright"] }
+            { link = "Comment" }
         )
     end
 
