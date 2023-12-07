@@ -114,23 +114,67 @@ local function border()
 
     -- REF:
     --  :help lsp-handlers
-    --  https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
         vim.lsp.handlers.hover, { border = weight }
     )
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
         vim.lsp.handlers.signature_help, { border = weight }
     )
+end
 
+local function diagnostic()
     -- REF:
-    vim.diagnostic.config(
-        { float = { border = weight } }
-    )
+    --  https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization
+
+    local function general()
+        local c = {}
+
+        c["virtual_text"] = {
+            severity = vim.diagnostic.severity.ERROR, -- only for error(s)
+            spacing = 0,
+            prefix = "",
+            format = function(d)
+                -- REF:
+                --  h: diagnostic-structure
+                return "<<" .. d.source .. " [" .. d.code .. "]"
+            end,
+        }
+        c["float"] = {
+            border = "single",
+            source = true,
+        }
+        c["signs"] = {
+            severity = { min = vim.diagnostic.severity.INFO },
+            priority = 2,
+        }
+        c["underline"] = false
+        c["severity_sort"] = true
+
+        vim.diagnostic.config(c)
+    end
+
+    local function gutter_sign()
+        local d_str = "DiagnosticSign"
+        local type_sign = { Error = "E ", Warn = "w ", Hint = "n ", Info = "i " }
+        for type, sign in pairs(type_sign) do
+            vim.fn.sign_define(
+                d_str .. type,
+                {
+                    text = sign,
+                    texthl = "Normal", -- highlight of the sign itself
+                }
+            )
+        end
+    end
+
+    general()
+    gutter_sign()
 end
 
 local function main()
     bind()
     setup()
     border()
+    diagnostic()
 end
 main()
