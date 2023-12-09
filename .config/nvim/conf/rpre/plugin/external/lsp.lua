@@ -136,7 +136,11 @@ local function diagnostic()
             format = function(d)
                 -- REF:
                 --  h: diagnostic-structure
-                return "<<" .. d.source .. " [" .. d.code .. "]"
+                local msg = "<<" .. d.source
+                if d.code then
+                    return msg .. " [" .. d.code .. "]"
+                end
+                return msg
             end,
         }
         c["float"] = {
