@@ -1,3 +1,7 @@
+local function neodev()
+    require("neodev").setup()
+end
+
 local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
@@ -184,6 +188,7 @@ local function diagnostic()
 end
 
 local function main()
+    neodev()
     bind()
     setup()
     border()
