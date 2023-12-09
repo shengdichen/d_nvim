@@ -187,11 +187,49 @@ local function diagnostic()
     gutter_sign()
 end
 
+local function none_ls()
+    -- REF:
+    --  https://github.com/nvimtools/none-ls.nvim/blob/main/doc/BUILTINS.md
+    --  https://github.com/nvimtools/none-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md
+
+    local null_ls = require("null-ls")
+    local sources = {}
+
+    local function prose()
+        local raws = {
+            "text",
+            "markdown", "rst",
+        }
+        local extras = { "mail", "tex", unpack(raws) }
+
+        -- ltrs does NOT handle tex-keywords
+        for _, s in ipairs({
+            null_ls.builtins.diagnostics.ltrs,
+            null_ls.builtins.code_actions.ltrs,
+        }) do
+            table.insert(sources, s.with({ filetypes = raws }))
+        end
+
+        for _, s in ipairs({
+            null_ls.builtins.diagnostics.proselint,
+            null_ls.builtins.code_actions.proselint,
+            null_ls.builtins.diagnostics.alex,
+            null_ls.builtins.diagnostics.write_good,
+        }) do
+            table.insert(sources, s.with({ filetypes = extras }))
+        end
+    end
+
+    prose()
+    null_ls.setup({ sources = sources })
+end
+
 local function main()
     neodev()
     bind()
     setup()
     border()
     diagnostic()
+    none_ls()
 end
 main()
