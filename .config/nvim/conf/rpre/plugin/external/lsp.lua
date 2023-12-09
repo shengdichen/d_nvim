@@ -220,7 +220,29 @@ local function none_ls()
         end
     end
 
+    local function shell()
+        -- NOTE:
+        --  use bash-language-server (with shellcheck) for linting
+
+        table.insert(sources, null_ls.builtins.formatting.shfmt.with(
+            {
+                extra_args = {
+                    "-i", "4", -- 4 spaces (not tabs)
+                    "-ci"      -- indent case(s) of switch
+                }
+            }
+        ))
+
+        -- fallback if shfmt unavailable
+        table.insert(sources, null_ls.builtins.formatting.beautysh.with(
+            { disabled_filetypes = { "sh", "bash" } }
+        ))
+
+        table.insert(sources, null_ls.builtins.diagnostics.zsh)
+    end
+
     prose()
+    shell()
     null_ls.setup({ sources = sources })
 end
 
