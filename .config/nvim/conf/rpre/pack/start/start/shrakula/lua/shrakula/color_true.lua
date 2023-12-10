@@ -21,12 +21,12 @@ local function common(mapping, palette)
         mapping["VisualNOS"] = { bg = palette["grey_dark"], fg = "none" }
 
         -- notably used for diagnostics, e.g., lsp
-        mapping["NormalFloat"] = { fg = palette["white"] }
-        mapping["FloatBorder"] = { fg = palette["grey_bright"] }
+        mapping["NormalFloat"] = { link = "Normal" }
+        mapping["FloatBorder"] = { link = "Comment" }
     end
 
     local function cursor()
-        mapping["Cursor"] = { fg = "none", reverse = true }
+        mapping["Cursor"] = { reverse = true }
         mapping["CursorLine"] = { bg = palette["grey_dark"], fg = "none" }
         mapping["QuickFixLine"] = { bg = palette["grey_bright"], fg = palette["black"] }
 
@@ -38,12 +38,12 @@ local function common(mapping, palette)
     end
 
     local function line_horizontal()
-        mapping["StatusLine"] = { fg = "fg" }                     -- current
-        mapping["StatusLineNC"] = { fg = palette["grey_bright"] } -- non-current
+        mapping["StatusLine"] = { link = "Normal" }    -- current
+        mapping["StatusLineNC"] = { link = "Comment" } -- non-current
 
-        mapping["Folded"] = { fg = palette["grey_bright"] }
-        mapping["FoldColumn"] = { fg = palette["grey_bright"] }
-        mapping["TabLine"] = { fg = palette["grey_bright"] } -- non-current
+        mapping["Folded"] = { link = "Comment" }
+        mapping["FoldColumn"] = { link = "Comment" }
+        mapping["TabLine"] = { link = "Comment" } -- non-current
         mapping["TabLineFill"] = { fg = "none" }
     end
 
