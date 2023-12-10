@@ -5,20 +5,28 @@ local function map_each(mapping, groups, color)
 end
 
 local function normal(palette)
-    return { bg = "none", fg = palette["white"] }
+    return { bg = "NONE", fg = palette["white"] }
 end
 
 local function common(mapping, palette)
+    -- REF:
+    --  :h guifg
+    -- NOTE:
+    --  a.  passthrough, i.e., use deduction from syntax/treesitter
+    --  ->  do NOT specify OR "NONE"
+    --  b.  any fixed color (e.g., if we want to ignore hl-deduction)
+    --  ->  specify explicitly (if same as |Normal|, consider using "fg")
+
     local function general()
         mapping["Comment"] = { fg = palette["grey_bright"] }
         mapping["MatchParen"] = { fg = palette["cyan"], underline = true }
-        mapping["EndOfBuffer"] = { fg = palette["black"] }                         -- tilde at EOF
+        mapping["EndOfBuffer"] = { fg = palette["black"] }                      -- tilde at EOF
 
-        mapping["IncSearch"] = { bg = palette["white"], fg = palette["black"] }    -- current match
-        mapping["Search"] = { bg = palette["grey_bright"], fg = palette["white"] } -- other matches
+        mapping["IncSearch"] = { bg = palette["white"], fg = palette["black"] } -- current match
+        mapping["Search"] = { bg = palette["grey_bright"], fg = "fg" }          -- other matches
 
         mapping["Visual"] = { bg = palette["grey_bright"], fg = palette["black"] }
-        mapping["VisualNOS"] = { bg = palette["grey_dark"], fg = "none" }
+        mapping["VisualNOS"] = { bg = palette["grey_dark"], fg = "fg" }
 
         -- notably used for diagnostics, e.g., lsp
         mapping["NormalFloat"] = { link = "Normal" }
@@ -26,15 +34,15 @@ local function common(mapping, palette)
     end
 
     local function cursor()
-        mapping["Cursor"] = { reverse = true }
-        mapping["CursorLine"] = { bg = palette["grey_dark"], fg = "none" }
+        mapping["Cursor"] = { reverse = true }                -- the single point of the cursor
+        mapping["CursorLine"] = { bg = palette["grey_dark"] } -- the entire line that the cursor is on
         mapping["QuickFixLine"] = { bg = palette["grey_bright"], fg = palette["black"] }
 
-        mapping["CursorLineNr"] = { link = "Normal" }       -- current
-        mapping["LineNr"] = { fg = palette["grey_bright"] } -- non-current
+        mapping["CursorLineNr"] = { link = "Normal" } -- current
+        mapping["LineNr"] = { link = "Comment" }      -- non-current
 
-        mapping["CursorColumn"] = { fg = "fg", reverse = true } -- horizontal indicator for |cursorcolumn|
-        mapping["ColorColumn"] = { bg = palette["grey_dark"], fg = "none" }
+        mapping["CursorColumn"] = { reverse = true }  -- horizontal indicator for |cursorcolumn|
+        mapping["ColorColumn"] = { bg = palette["grey_dark"] }
     end
 
     local function line_horizontal()
@@ -44,7 +52,7 @@ local function common(mapping, palette)
         mapping["Folded"] = { link = "Comment" }
         mapping["FoldColumn"] = { link = "Comment" }
         mapping["TabLine"] = { link = "Comment" } -- non-current
-        mapping["TabLineFill"] = { fg = "none" }
+        mapping["TabLineFill"] = { link = "Normal" }
     end
 
     local function cmd()
@@ -52,15 +60,15 @@ local function common(mapping, palette)
         mapping["ErrorMsg"] = { fg = palette["red"] }
         mapping["Question"] = { fg = palette["purple"] }
 
-        mapping["WildMenu"] = { fg = palette["grey_bright"] }
+        mapping["WildMenu"] = { link = "Comment" }
         mapping["Title"] = { fg = palette["cyan"] }
 
-        mapping["PmenuSel"] = { bg = palette["white"], fg = palette["black"] }  -- selected
-        mapping["Pmenu"] = { bg = palette["grey_dark"], fg = palette["white"] } -- non-selected
-        mapping["PmenuSbar"] = { fg = palette["grey_dark"] }                    -- scrollbar
-        mapping["PmenuThumb"] = { fg = palette["grey_bright"] }                 -- none
+        mapping["PmenuSel"] = { bg = palette["white"], fg = palette["black"] } -- selected
+        mapping["Pmenu"] = { bg = palette["grey_dark"] }                       -- non-selected
+        mapping["PmenuSbar"] = { fg = palette["grey_dark"] }                   -- scrollbar
+        mapping["PmenuThumb"] = { link = "Comment" }                           -- none
 
-        mapping["Terminal"] = { fg = "none" }                                   -- cursor in builtin terminal
+        mapping["Terminal"] = { fg = "NONE" }                                  -- cursor in builtin terminal
     end
 
     local function diff()
@@ -82,15 +90,16 @@ local function common(mapping, palette)
     end
 
     local function misc()
-        mapping["SignColumn"] = { bg = "none" }
+        -- sign-column(s) for rows without sign(s)
+        mapping["SignColumn"] = { link = "Normal" }
 
         mapping["Directory"] = { fg = palette["cyan"] }
 
-        mapping["VertSplit"] = { fg = palette["grey_bright"] }
+        mapping["VertSplit"] = { link = "Comment" }
 
-        mapping["SpecialKey"] = { fg = palette["grey_bright"] }
-        mapping["NonText"] = { fg = palette["grey_bright"] }
-        mapping["Conceal"] = { fg = palette["grey_bright"] }
+        mapping["SpecialKey"] = { link = "Comment" }
+        mapping["NonText"] = { link = "Comment" }
+        mapping["Conceal"] = { link = "Comment" }
     end
 
     general()
@@ -112,7 +121,7 @@ local function syntax(mapping, palette)
             { "Constant", "String", "Character", "Number", "Boolean", "Float" },
             { fg = palette["green"] }
         )
-        map_each(mapping, { "Identifier" }, { fg = "fg" })
+        map_each(mapping, { "Identifier" }, { link = "Normal" })
 
         map_each(
             mapping,
@@ -138,12 +147,12 @@ local function syntax(mapping, palette)
             { fg = palette["yellow"] }
         )
 
-        mapping["Delimiter"] = { fg = palette["grey_bright"] }
+        mapping["Delimiter"] = { link = "Comment" }
 
         mapping["Underlined"] = { fg = "fg", underline = true }
         mapping["Ignore"] = { fg = palette["grey_dark"] }
         mapping["Error"] = { fg = palette["red"] }
-        mapping["Todo"] = { fg = "fg", reverse = true }
+        mapping["Todo"] = { reverse = true }
     end
 
     local function diagnostic()
@@ -152,8 +161,8 @@ local function syntax(mapping, palette)
 
         mapping["DiagnosticError"] = { fg = palette["red"] }
         mapping["DiagnosticWarn"] = { fg = palette["yellow"] }
-        mapping["DiagnosticInfo"] = { fg = palette["grey_bright"] }
-        mapping["DiagnosticHint"] = { fg = palette["grey_bright"] }
+        mapping["DiagnosticInfo"] = { link = "Comment" }
+        mapping["DiagnosticHint"] = { link = "Comment" }
         mapping["DiagnosticOk"] = { fg = palette["grey_dark"] }
 
         -- Note
@@ -161,8 +170,6 @@ local function syntax(mapping, palette)
         --  2. *Underline* := portion of code inducing the diagnostic
         --  3. *VirtualText* := inline message
         --  4. *Floating* := detail message
-        mapping["DiagnosticSignError"] = { fg = palette["red"], reverse = true }
-
         map_each(
             mapping,
             {
