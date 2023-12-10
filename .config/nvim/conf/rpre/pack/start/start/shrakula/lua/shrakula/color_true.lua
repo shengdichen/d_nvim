@@ -30,8 +30,8 @@ local function common(mapping, palette)
         mapping["CursorLine"] = { bg = palette["grey_dark"], fg = "none" }
         mapping["QuickFixLine"] = { bg = palette["grey_bright"], fg = palette["black"] }
 
-        mapping["CursorLineNr"] = { fg = "fg", bold = true }    -- current
-        mapping["LineNr"] = { fg = palette["grey_bright"] }     -- non-current
+        mapping["CursorLineNr"] = { link = "Normal" }       -- current
+        mapping["LineNr"] = { fg = palette["grey_bright"] } -- non-current
 
         mapping["CursorColumn"] = { fg = "fg", reverse = true } -- horizontal indicator for |cursorcolumn|
         mapping["ColorColumn"] = { bg = palette["grey_dark"], fg = "none" }
