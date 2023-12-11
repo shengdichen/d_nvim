@@ -21,6 +21,13 @@ local function move_as_seen()
     vim.keymap.set(mode_nv, "L", "g_")
 end
 
+local function scroll_autocenter()
+    for _, k in ipairs({ "u", "d", "b", "f" }) do
+        local key = "<C-" .. k .. ">"
+        vim.keymap.set(mode_nv, key, key .. "zz")
+    end
+end
+
 local function unbind()
     _unbind(mode_nv, "<Up>")
     _unbind(mode_nv, "<Down>")
@@ -46,6 +53,7 @@ end
 
 local function main()
     move_as_seen()
+    scroll_autocenter()
     unbind()
     insert()
 end
