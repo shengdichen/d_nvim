@@ -57,8 +57,10 @@ local function server_pyls()
     -- REF:
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/docs/autoimport.md
     c["rope_autoimport"] = {
-        completions = off, -- only seems to slow down completion
-        code_actions = on
+        -- NOTE: (massive) slowdown/timeout with |completions| on
+        --  https://github.com/python-lsp/python-lsp-server/issues/374
+        completions = off,
+        code_actions = on,
     }
 
     -- REF:
@@ -69,6 +71,8 @@ local function server_pyls()
     c["mccabe"] = on
     -- https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
     c["flake8"] = { enabled = true, maxLineLength = 88, ignore = { "E203" } }
+    -- https://github.com/python-lsp/python-lsp-ruff#configuration
+    c["ruff"] = off -- use (separate) ruff_lsp instead
     c["pylint"] = off
     c["pyflakes"] = off
     c["pycodestyle"] = off
@@ -80,12 +84,18 @@ local function server_pyls()
     c["autopep8"] = off
     c["yapf"] = off
 
-    return { settings = { pylsp = { plugins = c } } }
+    return {
+        cmd = {
+            "pylsp",
+            "--log-file",
+            os.getenv("HOME") .. "/.local/state/nvim/pylsp.log",
+        },
+        settings = { pylsp = { plugins = c } },
+    }
 end
 
 local function servers_default()
     return {
-        -- "ruff_lsp", -- https://github.com/python-lsp/python-lsp-ruff#configuration
         "lua_ls", "hls", "clangd",
         "vimls",
         "tsserver", "bashls", "sqlls"
