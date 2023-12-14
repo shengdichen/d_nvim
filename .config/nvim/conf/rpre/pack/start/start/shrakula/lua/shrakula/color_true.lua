@@ -232,7 +232,7 @@ local function syntax(mapping, palette)
     end
 
     local function ibl()
-        vim.api.nvim_set_hl(0, "IblIndent", { fg = palette["grey_darker"] })
+        mapping["IblIndent"] = { fg = palette.grey_darker }
     end
 
     internal()
