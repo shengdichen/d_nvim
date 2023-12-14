@@ -220,6 +220,43 @@ local function none_ls()
         end
     end
 
+    local function js()
+        for _, s in ipairs({
+            null_ls.builtins.code_actions.eslint_d,
+            null_ls.builtins.diagnostics.eslint_d,
+
+            null_ls.builtins.formatting.standardjs,
+            null_ls.builtins.formatting.standardts,
+
+            -- NOTE: alternative for |standardjs|
+            --  null_ls.builtins.formatting.prettier_standard
+            -- REF:
+            --  https://standardjs.com/awesome#automatic-code-formatters
+            --  https://github.com/sheerun/prettier-standard
+        }) do
+            table.insert(sources, s)
+        end
+
+        local function is_in(v, array)
+            for _, vl in ipairs(array) do
+                if v == vl then return true end
+            end
+            return false
+        end
+
+        local types_prettier = {}
+        local types_to_remove = { "javascript", "javascriptreact", "typescript", "typescriptreact" }
+        for _, t in ipairs(null_ls.builtins.formatting.prettierd.filetypes) do
+            if not is_in(t, types_to_remove) then
+                table.insert(types_prettier, t)
+            end
+        end
+        table.insert(
+            sources,
+            null_ls.builtins.formatting.prettierd.with({ filetypes = types_prettier })
+        )
+    end
+
     local function shell()
         -- NOTE:
         --  use bash-language-server (with shellcheck) for linting
@@ -242,6 +279,7 @@ local function none_ls()
     end
 
     prose()
+    js()
     shell()
     null_ls.setup({ sources = sources })
 end
