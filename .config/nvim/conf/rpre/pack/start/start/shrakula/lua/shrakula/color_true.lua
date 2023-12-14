@@ -226,6 +226,11 @@ local function syntax(mapping, palette)
         )
     end
 
+    local function cmp()
+        -- type of complemention, e.g., function, snippet...
+        mapping["CmpItemKind"] = { link = "Comment" }
+    end
+
     local function ibl()
         vim.api.nvim_set_hl(0, "IblIndent", { fg = palette["grey_darker"] })
     end
@@ -234,6 +239,7 @@ local function syntax(mapping, palette)
     diagnostic()
     lsp()
     treesitter()
+    cmp()
     ibl()
 end
 
