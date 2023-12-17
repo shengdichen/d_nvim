@@ -1,3 +1,7 @@
+local function neodev()
+    require("neodev").setup()
+end
+
 local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
@@ -57,8 +61,10 @@ local function server_pyls()
     -- REF:
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/docs/autoimport.md
     c["rope_autoimport"] = {
-        completions = off, -- only seems to slow down completion
-        code_actions = on
+        -- NOTE: (massive) slowdown/timeout with |completions| on
+        --  https://github.com/python-lsp/python-lsp-server/issues/374
+        completions = off,
+        code_actions = on,
     }
 
     -- REF:
@@ -69,6 +75,8 @@ local function server_pyls()
     c["mccabe"] = on
     -- https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
     c["flake8"] = { enabled = true, maxLineLength = 88, ignore = { "E203" } }
+    -- https://github.com/python-lsp/python-lsp-ruff#configuration
+    c["ruff"] = off -- use (separate) ruff_lsp instead
     c["pylint"] = off
     c["pyflakes"] = off
     c["pycodestyle"] = off
@@ -80,15 +88,36 @@ local function server_pyls()
     c["autopep8"] = off
     c["yapf"] = off
 
-    return { settings = { pylsp = { plugins = c } } }
+    return {
+        cmd = {
+            "pylsp",
+            "--log-file",
+            os.getenv("HOME") .. "/.local/state/nvim/pylsp.log",
+        },
+        settings = { pylsp = { plugins = c } },
+    }
+end
+
+local function server_tsserver(cap)
+    local c = {}
+    c["capabilities"] = cap
+
+    -- disable tsserver's formatting (use none_ls as configured below)
+    c["on_attach"] = function(client, _)
+        -- REF:
+        --  https://neovim.discourse.group/t/how-to-config-multiple-lsp-for-document-hover/3093
+        --  https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#serverCapabilities
+        client.server_capabilities.documentFormattingProvider = false
+    end
+
+    return c
 end
 
 local function servers_default()
     return {
-        -- "ruff_lsp", -- https://github.com/python-lsp/python-lsp-ruff#configuration
         "lua_ls", "hls", "clangd",
         "vimls",
-        "tsserver", "bashls", "sqlls"
+        "bashls", "sqlls",
     }
 end
 
@@ -103,6 +132,8 @@ local function setup()
     local c_python = server_pyls()
     c_python["capabilities"] = cap
     conf["pylsp"].setup(c_python)
+
+    conf["tsserver"].setup(server_tsserver(cap))
 
     for _, lang in ipairs(servers_default()) do
         conf[lang].setup({ capabilities = cap })
@@ -181,10 +212,109 @@ local function diagnostic()
     gutter_sign()
 end
 
+local function none_ls()
+    -- REF:
+    --  https://github.com/nvimtools/none-ls.nvim/blob/main/doc/BUILTINS.md
+    --  https://github.com/nvimtools/none-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md
+
+    local null_ls = require("null-ls")
+    local sources = {}
+
+    local function prose()
+        local raws = {
+            "text",
+            "markdown", "rst",
+        }
+        local extras = { "mail", "tex", unpack(raws) }
+
+        -- ltrs does NOT handle tex-keywords
+        for _, s in ipairs({
+            null_ls.builtins.diagnostics.ltrs,
+            null_ls.builtins.code_actions.ltrs,
+        }) do
+            table.insert(sources, s.with({ filetypes = raws }))
+        end
+
+        for _, s in ipairs({
+            null_ls.builtins.diagnostics.proselint,
+            null_ls.builtins.code_actions.proselint,
+            null_ls.builtins.diagnostics.alex,
+            null_ls.builtins.diagnostics.write_good,
+        }) do
+            table.insert(sources, s.with({ filetypes = extras }))
+        end
+    end
+
+    local function js()
+        for _, s in ipairs({
+            null_ls.builtins.code_actions.eslint_d,
+            null_ls.builtins.diagnostics.eslint_d,
+
+            null_ls.builtins.formatting.standardjs,
+            null_ls.builtins.formatting.standardts,
+
+            -- NOTE: alternative for |standardjs|
+            --  null_ls.builtins.formatting.prettier_standard
+            -- REF:
+            --  https://standardjs.com/awesome#automatic-code-formatters
+            --  https://github.com/sheerun/prettier-standard
+        }) do
+            table.insert(sources, s)
+        end
+
+        local function is_in(v, array)
+            for _, vl in ipairs(array) do
+                if v == vl then return true end
+            end
+            return false
+        end
+
+        local types_prettier = {}
+        local types_to_remove = { "javascript", "javascriptreact", "typescript", "typescriptreact" }
+        for _, t in ipairs(null_ls.builtins.formatting.prettierd.filetypes) do
+            if not is_in(t, types_to_remove) then
+                table.insert(types_prettier, t)
+            end
+        end
+        table.insert(
+            sources,
+            null_ls.builtins.formatting.prettierd.with({ filetypes = types_prettier })
+        )
+    end
+
+    local function shell()
+        -- NOTE:
+        --  use bash-language-server (with shellcheck) for linting
+
+        table.insert(sources, null_ls.builtins.formatting.shfmt.with(
+            {
+                extra_args = {
+                    "-i", "4", -- 4 spaces (not tabs)
+                    "-ci"      -- indent case(s) of switch
+                }
+            }
+        ))
+
+        -- fallback if shfmt unavailable
+        table.insert(sources, null_ls.builtins.formatting.beautysh.with(
+            { disabled_filetypes = { "sh", "bash" } }
+        ))
+
+        table.insert(sources, null_ls.builtins.diagnostics.zsh)
+    end
+
+    prose()
+    js()
+    shell()
+    null_ls.setup({ sources = sources })
+end
+
 local function main()
+    neodev()
     bind()
     setup()
     border()
     diagnostic()
+    none_ls()
 end
 main()
