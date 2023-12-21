@@ -234,6 +234,213 @@ local function snippets_collection()
     }
     luasnip.add_snippets("sh", s_sh)
 
+    local break_formatted = function(idx)
+        n_is(
+            idx,
+            { n_t({ "", "" }) },
+            ""
+        )
+    end
+    local s_python = {
+        spt("definition",
+            {
+                n_t({ "from pathlib import Path" }),
+                line_break(3),
+                n_t({ "class Definition:" }),
+                line_break(1), tab(1), n_t({ "SRC_DIR = Path(__file__).parent" }),
+                line_break(2), tab(1), n_t({ "ROOT_DIR = SRC_DIR.parent" }),
+                line_break(1), tab(1), n_t({ 'TEST_DIR = SRC_DIR.parent / "tests"' }),
+                line_break(2), tab(1), n_t({ 'BIN_DIR = SRC_DIR.parent / "bin"' }),
+                line_break(3),
+                n_t({ "DEFINITION = Definition()" }),
+            }
+        ),
+
+        spt("importlog",
+            {
+                n_t({ "import logging" }),
+                line_break(1),
+                n_t({ "logger = logging.getLogger(__name__)" }),
+            }
+        ),
+        spt("importpath",
+            {
+                n_t({ "from pathlib import Path" }),
+                line_break(1),
+            }
+        ),
+        spt("importnp",
+            {
+                n_t({ "import numpy as np" }),
+                line_break(1),
+            }
+        ),
+        spt("importplt",
+            {
+                n_t({ "import matplotlib.pyplot as plt" }),
+                line_break(1),
+            }
+        ),
+        spt("importsrc",
+            {
+                n_t({ "from src." }), n_i(1, "where?"), n_t({ " import " }), n_i(2, "what?"),
+                line_break(1),
+            }
+        ),
+        spt("importdefinition",
+            {
+                n_t({ "from src.definition import DEFINITION" }),
+                line_break(1),
+            }
+        ),
+
+        spt("cl",
+            {
+                n_t({ "class " }),
+                n_c(1, {
+                    n_sn(nil, { n_i(1, "class?"), n_t("("), n_i(2, "supercl?"), n_t(")") }),
+                    n_i(nil, "class?"),
+                }),
+                n_t({ ":" }),
+                line_break(1),
+                tab(1), n_i(2, "what?"),
+                line_break(2),
+            }
+        ),
+        spt("init",
+            {
+                n_t({ "def __init__(self" }),
+                n_c(1, {
+                    n_sn(nil, { n_t(", "), n_i(1, "args?"), }),
+                    n_i(nil),
+                }),
+                n_t({ "):" }),
+                line_break(1),
+                tab(1), n_i(2, "what?"),
+                line_break(2),
+            }
+        ),
+        spt("super",
+            {
+                n_t({ "super(" }),
+                n_c(1, {
+                    n_i(nil),
+                    n_i(nil, "type?"),
+                }),
+                n_t({ ").__init__(" }),
+                n_c(2, {
+                    n_i(nil, "args?"),
+                    n_i(nil),
+                }),
+                n_t({ ")" }),
+                line_break(2),
+            }
+        ),
+        spt("repr",
+            {
+                n_t({ "def __repr__(self):" }),
+                line_break(1),
+                tab(1), n_i(1, "what?"),
+                line_break(2),
+            }
+        ),
+        spt("fn",
+            {
+                n_c(1, {
+                    { n_t({ "def _" }), n_i(1, "fn?"), },
+                    { n_t({ "def " }),  n_i(1, "fn?"), },
+                }),
+                n_t({ "(self" }),
+                n_c(2, {
+                    n_i(nil),
+                    n_sn(nil, { n_t(", "), n_i(1, "args?"), }),
+                }),
+                n_t({ ")" }),
+                n_c(3, {
+                    n_sn(nil, { n_t(" -> None"), n_i(1), }),
+                    n_sn(nil, { n_t(" -> "), n_i(1, "what?"), }),
+                    n_i(nil),
+                }),
+
+                n_t({ ":" }),
+                line_break(1),
+                tab(1), n_i(4, "what?"),
+                line_break(1),
+            }
+        ),
+
+        spt("testfn",
+            {
+                n_t({ "def test_" }), n_i(1, "fn?"), n_t({ "(self):" }),
+                line_break(1),
+                tab(1), n_i(2, "what?"),
+                line_break(2),
+            }
+        ),
+        spt("testcl",
+            {
+                n_t({ "class Test" }), n_i(1, "class?"), n_t({ ":" }),
+                line_break(1),
+                tab(1), n_i(2, "what?"),
+                line_break(3),
+            }
+        ),
+
+        spt("arg",
+            n_c(1, {
+                { n_i(1, "var?"), n_t(": "), n_i(2, "type?") },
+                { n_i(1, "var?") },
+            })
+        ),
+        spt("tlist",
+            n_c(1, {
+                { n_t({ "list[" }), n_i(1, "type?"), n_t({ "]" }) },
+                n_sn(nil, { n_t("list"), n_i(1), }),
+            })
+        ),
+        spt("tdict",
+            {
+                n_t({ "dict[" }), n_i(1, "key?"), n_t({ ", " }), n_i(2, "val?"), n_t({ "]" }),
+            }
+        ),
+        spt("tmatrix",
+            n_c(1, {
+                n_sn(nil, { n_t("np.ndarray"), n_i(1), }),
+                n_sn(nil, { n_t("torch.Tensor"), n_i(1), }),
+            })
+        ),
+        spt("tret",
+            {
+                n_t(" -> "),
+                n_c(1, {
+                    n_i(nil, "what?"),
+                    n_sn(nil, { n_t("None"), n_i(1), }),
+                })
+            }
+        ),
+
+        spt("__main__",
+            {
+                n_t('if __name__ == "__main__":'),
+                line_break(1),
+                n_c(1, {
+                    n_sn(nil, {
+                        tab(1),
+                        n_t(
+                            'logging.basicConfig(format="%(module)s [%(levelname)s]> %(message)s", level=logging.'
+                        ),
+                        n_i(1, "INFO"),
+                        n_t(")"),
+                        line_break(2),
+                    }),
+                    n_i(nil),
+                }),
+                tab(1), n_i(2, "what?")
+            }
+        ),
+    }
+    luasnip.add_snippets("python", s_python)
+
     local s_mail = {
         spt("dear",
             {
