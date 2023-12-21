@@ -277,20 +277,15 @@ local function source()
     })
 end
 
-local function jump_luasnip(positive_jump)
+local function jump_luasnip(positive_jump, key)
     local j = positive_jump and 1 or -1
+    local movement = positive_jump and "j" or "k"
 
     return function(builtin)
-        if cmp.visible() then
-            if positive_jump then
-                cmp.select_next_item()
-            else
-                cmp.select_prev_item()
-            end
-        elseif luasnip.expandable() or luasnip.jumpable(j) then
+        if luasnip.locally_jumpable(j) then
             luasnip.jump(j)
         else
-            builtin() -- fallback: pass the key through
+            vim.cmd("normal " .. movement)
         end
     end
 end
@@ -308,10 +303,8 @@ end
 local function map()
     local c_map = {}
 
-    c_map["<c-p>"] = cmp.mapping(jump_luasnip(false))
-    c_map["<c-n>"] = cmp.mapping(jump_luasnip(true))
-    c_map["<c-k>"] = cmp.mapping(scroll_doc(false))
-    c_map["<c-j>"] = cmp.mapping(scroll_doc(true))
+    c_map["<Up>"] = cmp.mapping(scroll_doc(false))
+    c_map["<Down>"] = cmp.mapping(scroll_doc(true))
 
     c_map["<c-space>"] = cmp.mapping.complete()
     c_map["<cr>"] = cmp.mapping.confirm({
@@ -322,13 +315,33 @@ local function map()
 
     vim.keymap.set(
         { "i", "s" },
-        "<c-r>",
-        function()
-            if luasnip.choice_active() then
-                luasnip.change_choice(1)
-            end
-        end,
+        "<c-k>",
+        jump_luasnip(false),
         { silent = true }
+    )
+    vim.keymap.set(
+        { "i", "s" },
+        "<c-j>",
+        jump_luasnip(true),
+        { silent = true }
+    )
+
+    local function scroll_choice(positive_dir)
+        return function(_)
+            if luasnip.choice_active() then
+                luasnip.change_choice(positive_dir and 1 or -1)
+            end
+        end
+    end
+    vim.keymap.set(
+        { "i", "s" },
+        "<c-r>",
+        scroll_choice(false)
+    )
+    vim.keymap.set(
+        { "i", "s" },
+        "<c-t>",
+        scroll_choice(true)
     )
 
     c["mapping"] = cmp.mapping.preset.insert(c_map)
