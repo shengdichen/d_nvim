@@ -233,6 +233,30 @@ local function snippets_collection()
 
     }
     luasnip.add_snippets("sh", s_sh)
+
+    local s_mail = {
+        spt("dear",
+            {
+                n_t({ "Dear " }), n_i(1, "who?"), n_t({ ":" }),
+                line_break(2),
+                n_i(0, "what?"),
+            }
+        ),
+        spt("dear_sir",
+            { n_t({ "Dear Sir or Madam:" }), line_break(2), }
+        ),
+        spt("dear_mishra",
+            { n_t({ "Dear Sir or Madam:" }), line_break(2), }
+        ),
+
+        spt("thank_mail",
+            { n_t({ "Thank you for your E-Mail. " }), }
+        ),
+        spt("thank_fast", {
+            n_t({ "Thank you for the swift response. " })
+        }),
+    }
+    luasnip.add_snippets("mail", s_mail)
 end
 
 local function snippet()
