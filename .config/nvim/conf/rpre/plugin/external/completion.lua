@@ -27,6 +27,28 @@ local function snippets_collection()
     local n_r = luasnip.restore_node
 
     local s_sh = {
+        spt("scriptpath",
+            {
+                n_t({ 'SCRIPT_PATH="$(realpath "$(dirname "${0}")")"' }),
+                line_break(1),
+            }
+        ),
+        spt("scriptname",
+            {
+                n_t({ 'SCRIPT_NAME="$(basename "${0}")"' }),
+                line_break(1),
+            }
+        ),
+        spt("stowname",
+            {
+                n_c(1, {
+                    n_t({ '"$(basename "${SCRIPT_PATH}")"' }),
+                    n_t({ 'STOW_NAME="$(basename "${SCRIPT_PATH}")"' }),
+                }),
+                line_break(1),
+            }
+        ),
+
         spt("var",
             n_c(1, {
                 { n_t({ '"${' }), n_i(1, "var?"), n_t({ '}"' }), },
@@ -79,6 +101,12 @@ local function snippets_collection()
                 n_t({ "}" }),
                 line_break(1),
             }
+        ),
+        spt("fnret",
+            n_c(1, {
+                { n_t({ '"$(' }), n_i(1, "var?"), n_t({ ')"' }), },
+                { n_t({ "$(" }),  n_i(1, "var?"), n_t({ ")" }), },
+            })
         ),
         spt("sub",
             {
