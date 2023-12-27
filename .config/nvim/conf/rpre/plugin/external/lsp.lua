@@ -73,8 +73,18 @@ local function server_pyls()
 
     -- checker & linter
     c["mccabe"] = on
-    -- https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
-    c["flake8"] = { enabled = true, maxLineLength = 88, ignore = { "E203" } }
+    -- REF:
+    --  https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
+    -- NOTE:
+    --  1. must specify this even if global flake8-config exists
+    c["flake8"] = {
+        enabled = true,
+        maxLineLength = 88,
+        ignore = {
+            "E203", -- spaces around |:|
+            "W503", -- binary-operator (e.g., +) at start-of-line
+        }
+    }
     -- https://github.com/python-lsp/python-lsp-ruff#configuration
     c["ruff"] = off -- use (separate) ruff_lsp instead
     c["pylint"] = off
