@@ -63,9 +63,14 @@ local function server_pyls()
     c["rope_autoimport"] = {
         -- NOTE: (massive) slowdown/timeout with |completions| on
         --  https://github.com/python-lsp/python-lsp-server/issues/374
-        completions = off,
-        code_actions = on,
+        enabled = false,
+
+        -- potential settings
+        --  completions = off,
+        --  code_actions = on,
+        --  memory = true,
     }
+    c["rope_completion"] = off
 
     -- REF:
     --  https://github.com/python-lsp/pylsp-mypy#configuration
