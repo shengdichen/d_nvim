@@ -50,13 +50,15 @@ local function bind()
     )
 end
 
-local function server_pyls()
+local function server_pylsp(cap)
     -- REF:
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
 
+    local c = {}
+    c["capabilities"] = cap
+
     local on = { enabled = true }
     local off = { enabled = false }
-    local c = {}
 
     -- REF:
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/docs/autoimport.md
@@ -144,10 +146,7 @@ local function setup()
     local conf = require("lspconfig")
     local cap = require("cmp_nvim_lsp").default_capabilities()
 
-    local c_python = server_pyls()
-    c_python["capabilities"] = cap
-    conf["pylsp"].setup(c_python)
-
+    conf["pylsp"].setup(server_pylsp(cap))
     conf["tsserver"].setup(server_tsserver(cap))
 
     for _, lang in ipairs(servers_default()) do
