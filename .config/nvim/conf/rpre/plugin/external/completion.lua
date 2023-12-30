@@ -26,6 +26,10 @@ local function snippets_collection()
     local n_d = luasnip.dynamic_node
     local n_r = luasnip.restore_node
 
+    local n_ct = function(msg)
+        return n_sn(nil, { n_t(msg), n_i(1), })
+    end
+
     local s_sh = {
         spt("scriptpath",
             {
@@ -42,10 +46,14 @@ local function snippets_collection()
         spt("stowname",
             {
                 n_c(1, {
-                    n_t({ '"$(basename "${SCRIPT_PATH}")"' }),
-                    n_t({ 'STOW_NAME="$(basename "${SCRIPT_PATH}")"' }),
+                    n_sn(nil, {
+                        n_t({ 'STOW_NAME="$(basename "${SCRIPT_PATH}")"' }),
+                        line_break(2),
+                        n_i(1),
+                    }),
+                    n_ct('"$(basename "${SCRIPT_PATH}")"'),
+                    n_ct('$(basename "${SCRIPT_PATH}")'),
                 }),
-                line_break(1),
             }
         ),
 
@@ -57,38 +65,38 @@ local function snippets_collection()
         ),
         spt("v#",
             n_c(1, {
-                { n_t({ '"${#}"' }) },
-                { n_t({ "${#}" }) },
+                n_ct('"${#}"'),
+                n_ct("${#}"),
             })
         ),
         spt("v1",
             n_c(1, {
-                { n_t({ '"${1}"' }) },
-                { n_t({ "${1}" }) },
+                n_ct('"${1}"'),
+                n_ct("${1}"),
             })
         ),
         spt("v2",
             n_c(1, {
-                { n_t({ '"${2}"' }) },
-                { n_t({ "${2}" }) },
+                n_ct('"${2}"'),
+                n_ct("${2}"),
             })
         ),
         spt("v3",
             n_c(1, {
-                { n_t({ '"${3}"' }) },
-                { n_t({ "${3}" }) },
+                n_ct('"${3}"'),
+                n_ct("${3}"),
             })
         ),
         spt("v@",
             n_c(1, {
-                { n_t({ '"${@}"' }) },
-                { n_t({ "${@}" }) },
+                n_ct('"${@}"'),
+                n_ct("${@}"),
             })
         ),
         spt("v*",
             n_c(1, {
-                { n_t({ '"${*}"' }) },
-                { n_t({ "${*}" }) },
+                n_ct('"${*}"'),
+                n_ct("${*}"),
             })
         ),
 
@@ -385,7 +393,7 @@ local function snippets_collection()
                 }),
                 n_t({ ")" }),
                 n_c(3, {
-                    n_sn(nil, { n_t(" -> None"), n_i(1), }),
+                    n_ct(" -> None"),
                     n_sn(nil, { n_t(" -> "), n_i(1, "what?"), }),
                     n_i(nil),
                 }),
@@ -423,7 +431,7 @@ local function snippets_collection()
         spt("tlist",
             n_c(1, {
                 { n_t({ "list[" }), n_i(1, "type?"), n_t({ "]" }) },
-                n_sn(nil, { n_t("list"), n_i(1), }),
+                n_ct("list"),
             })
         ),
         spt("tdict",
@@ -433,8 +441,8 @@ local function snippets_collection()
         ),
         spt("tmatrix",
             n_c(1, {
-                n_sn(nil, { n_t("np.ndarray"), n_i(1), }),
-                n_sn(nil, { n_t("torch.Tensor"), n_i(1), }),
+                n_ct("np.ndarray"),
+                n_ct("torch.Tensor"),
             })
         ),
         spt("tret",
@@ -442,7 +450,7 @@ local function snippets_collection()
                 n_t(" -> "),
                 n_c(1, {
                     n_i(nil, "what?"),
-                    n_sn(nil, { n_t("None"), n_i(1), }),
+                    n_ct("None"),
                 })
             }
         ),
