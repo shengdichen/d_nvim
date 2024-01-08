@@ -15,10 +15,6 @@ local function move_as_seen()
 
     vim.keymap.set(mode_nv, "0", "g0")
     vim.keymap.set(mode_nv, "$", "g$")
-
-    -- true beginning/end of lines, ignoring all leading/trailing spaces
-    vim.keymap.set(mode_nv, "H", "g^")
-    vim.keymap.set(mode_nv, "L", "g_")
 end
 
 local function scroll_autocenter()
