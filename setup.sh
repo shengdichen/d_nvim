@@ -34,6 +34,7 @@ __plugin() {
         __clone "lewis6991" "gitsigns.nvim"
         __clone "lukas-reineke" "indent-blankline.nvim"
         __clone "folke" "neodev.nvim"
+        __clone "j-hui" "fidget.nvim"
 
         # REF:
         #   https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#transformations

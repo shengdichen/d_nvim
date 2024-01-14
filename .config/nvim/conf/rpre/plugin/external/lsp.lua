@@ -2,6 +2,101 @@ local function neodev()
     require("neodev").setup()
 end
 
+local function fidget()
+    -- NOTE:
+    --  1. jargon
+    --  ->  group := lsp-server
+    --  ->  annote/annotation := actual lsp-item
+    --  2. item construction:
+    --  |render_message|->|format_message| |space| |format_annote|
+
+    local function progress_format_message(msg)
+        local res = ">"
+        if msg.message then
+            res = msg.message .. res
+        end
+        return res
+    end
+
+    -- further format message from progress_format_message()
+    local function render_message(message, count)
+        if count == 1 then
+            return message
+        else
+            return string.format("%d%s", count, message)
+        end
+    end
+
+    -- lsp-item
+    local function progress_format_annotation(msg)
+        if msg.title then
+            return "[" .. msg.title .. "]"
+        else
+            return "[]"
+        end
+    end
+
+    -- lsp-server
+    local function progress_format_group(group)
+        return "// " .. tostring(group)
+    end
+
+    local c = {
+        progress = {
+            poll_rate = 0.25,
+            ignore_done_already = true,
+
+            display = {
+                -- items completed
+                done_ttl = 2,
+                done_icon = "",
+                done_style = "Comment",
+
+                -- items in progress
+                progress_ttl = math.huge, -- do NOT auto-hide
+                progress_icon = "...",
+                progress_style = "Normal",
+
+                icon_style = "Normal", -- icons of done&progress
+
+                format_group_name = progress_format_group,
+                group_style = "Comment",
+
+                format_message = progress_format_message,
+                format_annote = progress_format_annotation,
+            },
+        },
+
+        notification = {
+            poll_rate = 1,
+            history_size = 37,
+
+            view = {
+                stack_upwards = false,
+                icon_separator = "", -- specify separator directly in |*_icon|
+
+                group_separator = "|",
+                group_separator_hl = "Comment",
+
+                render_message = render_message,
+            },
+
+            window = {
+                normal_hl = "Comment",
+                winblend = 0, -- fully transparent
+                border = "single",
+                border_hl = "Comment",
+
+                y_padding = 1,
+                x_padding = 2,
+                align = "top",
+            },
+        },
+    }
+
+    require("fidget").setup(c)
+end
+
 local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
@@ -50,22 +145,29 @@ local function bind()
     )
 end
 
-local function server_pyls()
+local function server_pylsp(cap)
     -- REF:
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
 
+    local c = {}
+    c["capabilities"] = cap
+
     local on = { enabled = true }
     local off = { enabled = false }
-    local c = {}
 
     -- REF:
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/docs/autoimport.md
     c["rope_autoimport"] = {
         -- NOTE: (massive) slowdown/timeout with |completions| on
         --  https://github.com/python-lsp/python-lsp-server/issues/374
-        completions = off,
-        code_actions = on,
+        enabled = false,
+
+        -- potential settings
+        --  completions = off,
+        --  code_actions = on,
+        --  memory = true,
     }
+    c["rope_completion"] = off
 
     -- REF:
     --  https://github.com/python-lsp/pylsp-mypy#configuration
@@ -73,8 +175,18 @@ local function server_pyls()
 
     -- checker & linter
     c["mccabe"] = on
-    -- https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
-    c["flake8"] = { enabled = true, maxLineLength = 88, ignore = { "E203" } }
+    -- REF:
+    --  https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
+    -- NOTE:
+    --  1. must specify this even if global flake8-config exists
+    c["flake8"] = {
+        enabled = true,
+        maxLineLength = 88,
+        ignore = {
+            "E203", -- spaces around |:|
+            "W503", -- binary-operator (e.g., +) at start-of-line
+        }
+    }
     -- https://github.com/python-lsp/python-lsp-ruff#configuration
     c["ruff"] = off -- use (separate) ruff_lsp instead
     c["pylint"] = off
@@ -129,10 +241,7 @@ local function setup()
     local conf = require("lspconfig")
     local cap = require("cmp_nvim_lsp").default_capabilities()
 
-    local c_python = server_pyls()
-    c_python["capabilities"] = cap
-    conf["pylsp"].setup(c_python)
-
+    conf["pylsp"].setup(server_pylsp(cap))
     conf["tsserver"].setup(server_tsserver(cap))
 
     for _, lang in ipairs(servers_default()) do
@@ -311,6 +420,7 @@ end
 
 local function main()
     neodev()
+    fidget()
     bind()
     setup()
     border()
