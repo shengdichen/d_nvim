@@ -404,6 +404,15 @@ local function snippets_collection()
                 line_break(1),
             }
         ),
+        spt("prop",
+            {
+                n_t("@property"),
+                line_break(1),
+                n_t("def "), n_i(1, "fn?"), n_t("(self) -> "), n_i(3, "type?"), n_t(":"),
+                line_break(1), tab(1), n_t("return self._"), n_i(2, "what?"),
+                line_break(1),
+            }
+        ),
 
         spt("testfn",
             {
@@ -419,6 +428,14 @@ local function snippets_collection()
                 line_break(1),
                 tab(1), n_i(2, "what?"),
                 line_break(3),
+            }
+        ),
+        spt("testraise",
+            {
+                n_t({ "with pytest.raises(" }), n_i(1, "except?"), n_t({ ")" }),
+                line_break(1),
+                tab(1), n_i(2, "what?"),
+                line_break(1),
             }
         ),
 
