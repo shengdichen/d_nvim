@@ -5,13 +5,14 @@ local function install()
     --  https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
 
     local conf = {
-        ensure_installed = {
-            "python", "lua",
-            "typescript", "javascript",
-            "haskell", "java", "c", "cpp",
-            "vimdoc", -- builtin help-pages
-            "bash", "ruby",
-        },
+        -- ensure_installed = {
+        --     "python", "lua",
+        --     "typescript", "javascript",
+        --     "haskell", "java", "c", "cpp",
+        --     "vimdoc", -- builtin help-pages
+        --     "bash", "ruby",
+        -- },
+        ensure_installed = "all"
     }
     c.setup(conf)
 end
