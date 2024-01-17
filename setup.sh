@@ -8,7 +8,7 @@ __clone() {
 
     if [ ! -d "${2}" ]; then
         # cater for failed cloning (bad permission, wrong address...)
-        if ! git clone "${_link}"; then
+        if ! git clone --depth 3 "${_link}"; then
             echo "Cloning [${_link}] failed, exiting"
             exit 3
         fi
