@@ -37,7 +37,11 @@ local function general()
 
     vim.opt.visualbell = true
 
-    vim.opt.foldmethod = "indent"
+    -- REF:
+    --  https://github.com/nvim-treesitter/nvim-treesitter?tab=readme-ov-file#folding
+    vim.opt.foldmethod = "expr"
+    vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
     -- NOTE:
     --  1. just enough for one indent-level in a (class-)method
     --  2. use |vim.opt.foldenable = false| for full expansion
