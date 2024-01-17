@@ -30,7 +30,8 @@ __plugin() {
             # REF:
             #   https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#transformations
             cd "./LuaSnip" || exit 3
-            if [ ! -e "./lua/luasnip-jsregexp.lua" ] || [ ! -e "./deps/luasnip-jsregexp.so" ]; then
+            if [ ! -e "./lua/luasnip-jsregexp.lua" ] ||
+                [ ! -e "./deps/luasnip-jsregexp.so" ]; then
                 make install_jsregexp
             fi
         )
