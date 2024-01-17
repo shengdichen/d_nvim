@@ -18,6 +18,13 @@ __clone() {
 __plugin() {
     (
         cd "./.config/nvim/conf/rpre/pack/start/start" || exit 3
+
+        __clone "tpope" "vim-surround"
+        __clone "vifm" "vifm.vim"
+
+        __clone "neovim" "nvim-lspconfig"
+        __clone "nvim-treesitter" "nvim-treesitter"
+
         __clone "hrsh7th" "nvim-cmp"
         # cmp integration with neovim's (builtin) lsp
         __clone "hrsh7th" "cmp-nvim-lsp"

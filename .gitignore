@@ -1,2 +1,4 @@
+**/pack/*/start/
+
 # optional (external) packages
 **/pack/*/opt/
