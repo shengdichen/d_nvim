@@ -317,6 +317,18 @@ local function snippets_collection()
                 line_break(1),
             }
         ),
+        spt("importcallable",
+            {
+                n_t({ "from collections.abc import Callable" }),
+                line_break(1),
+            }
+        ),
+        spt("importiterable",
+            {
+                n_t({ "from collections.abc import Iterable" }),
+                line_break(1),
+            }
+        ),
         spt("importsrc",
             {
                 n_t({ "from src." }), n_i(1, "where?"), n_t({ " import " }), n_i(2, "what?"),
@@ -404,6 +416,27 @@ local function snippets_collection()
                 line_break(1),
             }
         ),
+
+        spt("fnstatic",
+            {
+                n_t("@staticmethod"),
+                line_break(1),
+                n_t("def "), n_i(1, "fn?"), n_t("("), n_i(2, "args?"), n_t(") -> "), n_i(3, "type?"), n_t(":"),
+                line_break(1),
+                tab(1), n_i(4, "what?"),
+                line_break(1),
+            }
+        ),
+        spt("fnclass",
+            {
+                n_t("@classmethod"),
+                line_break(1),
+                n_t("def "), n_i(1, "fn?"), n_t("(cls, "), n_i(2, "args?"), n_t(") -> "), n_i(3, "type?"), n_t(":"),
+                line_break(1),
+                tab(1), n_i(4, "what?"),
+                line_break(1),
+            }
+        ),
         spt("prop",
             {
                 n_t("@property"),
@@ -451,10 +484,25 @@ local function snippets_collection()
                 n_ct("list"),
             })
         ),
+        spt("ttuple",
+            n_c(1, {
+                { n_t({ "tuple[" }), n_i(1, "types?"), n_t({ "]" }) },
+                n_ct("tuple"),
+            })
+        ),
         spt("tdict",
             {
                 n_t({ "dict[" }), n_i(1, "key?"), n_t({ ", " }), n_i(2, "val?"), n_t({ "]" }),
             }
+        ),
+        spt("tgenerator",
+            { n_t({ "Generator[" }), n_i(1, "type?"), n_t({ ", None, None]" }) }
+        ),
+        spt("tdataset",
+            { n_t({ "torch.utils.data.dataset.TensorDataset" }) }
+        ),
+        spt("tcallable",
+            { n_t({ "Callable[[" }), n_i(1, "args?"), n_t({ "], " }), n_i(2, "ret?"), n_t({ "]" }) }
         ),
         spt("tmatrix",
             n_c(1, {
