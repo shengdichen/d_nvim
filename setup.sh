@@ -16,40 +16,63 @@ __clone() {
 }
 
 __plugin() {
-    (
-        cd "./.config/nvim/conf/rpre/pack/start/start" || exit 3
+    __lsp() {
+        __clone "neovim" "nvim-lspconfig"
+        __clone "nvimtools" "none-ls.nvim"
+
+        __clone "folke" "neodev.nvim"
+        __clone "j-hui" "fidget.nvim"
+    }
+
+    __snippet() {
+        __clone "L3MON4D3" "LuaSnip"
+        (
+            # REF:
+            #   https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#transformations
+            cd "./LuaSnip" || exit 3
+            if [ ! -e "./lua/luasnip-jsregexp.lua" ] || [ ! -e "./deps/luasnip-jsregexp.so" ]; then
+                make install_jsregexp
+            fi
+        )
+
+        # snippets collection
+        __clone "rafamadriz" "friendly-snippets"
+    }
+
+    __completion() {
+        __clone "hrsh7th" "nvim-cmp"
+
+        # integration with neovim's (builtin) lsp
+        __clone "hrsh7th" "cmp-nvim-lsp"
+
+        # integration with luasnip
+        __clone "saadparwaiz1" "cmp_luasnip"
+    }
+
+    __syntax() {
+        __clone "nvim-treesitter" "nvim-treesitter"
+        __clone "lukas-reineke" "indent-blankline.nvim"
+    }
+
+    __misc() {
+        __clone "nvim-lua" "plenary.nvim"
+        __clone "lewis6991" "gitsigns.nvim"
 
         __clone "tpope" "vim-surround"
         __clone "vifm" "vifm.vim"
+    }
 
-        __clone "neovim" "nvim-lspconfig"
-        __clone "nvim-treesitter" "nvim-treesitter"
+    (
+        cd "./.config/nvim/conf/rpre/pack/start/start" || exit 3
 
-        __clone "hrsh7th" "nvim-cmp"
-        # cmp integration with neovim's (builtin) lsp
-        __clone "hrsh7th" "cmp-nvim-lsp"
+        __lsp
+        __snippet
+        __completion
+        __syntax
+        __misc
 
-        __clone "L3MON4D3" "LuaSnip"
-        # cmp integration with luasnip
-        __clone "saadparwaiz1" "cmp_luasnip"
-        # snippets collection
-        __clone "rafamadriz" "friendly-snippets"
-
-        __clone "nvim-lua" "plenary.nvim"
-        __clone "nvimtools" "none-ls.nvim"
-
-        __clone "lewis6991" "gitsigns.nvim"
-        __clone "lukas-reineke" "indent-blankline.nvim"
-        __clone "folke" "neodev.nvim"
-        __clone "j-hui" "fidget.nvim"
-
-        # REF:
-        #   https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#transformations
-        cd "./LuaSnip" || exit 3
-        if [ ! -e "./lua/luasnip-jsregexp.lua" ] || [ ! -e "./deps/luasnip-jsregexp.so" ]; then
-            make install_jsregexp
-        fi
     )
+    unset -f __lsp __snippet __completion __syntax __misc
 }
 
 __stow() {
