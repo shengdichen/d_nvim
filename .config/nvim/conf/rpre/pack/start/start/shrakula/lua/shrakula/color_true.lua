@@ -219,6 +219,10 @@ local function syntax(mapping, palette)
         --  |:help treesitter-highlight-groups|
 
         mapping["@constructor"] = { link = "Type" }
+
+        mapping["@text.uri"] = { underline = true }
+        mapping["@string.special.url"] = { link = "@text.uri" }
+
         map_each(
             mapping,
             { "@field", "@property" },
