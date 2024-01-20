@@ -506,7 +506,12 @@ local function snippets_collection()
             { n_t({ "Dear Sir or Madam:" }), line_break(2), }
         ),
         spt("dear_mishra",
-            { n_t({ "Dear Sir or Madam:" }), line_break(2), }
+            {
+                n_t({ "Dear Prof. Mishra:" }),
+                line_break(2),
+                n_t({ "Thanks for your mail!" }),
+                line_break(2),
+            }
         ),
 
         spt("thank_mail",
