@@ -211,6 +211,8 @@ local function syntax(mapping, palette)
         -- REF:
         --  |:help treesitter-highlight-groups|
 
+        mapping["@keyword.import"] = { link = "@include" }
+
         mapping["@constructor"] = { link = "Type" }
 
         mapping["@text.uri"] = { underline = true }
