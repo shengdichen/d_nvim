@@ -139,9 +139,23 @@ local function bind()
         )
     end
 
+    local function no_highlight(args)
+        -- REF
+        --  |h: vim.lsp.semantic_tokens.start()|
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        client.server_capabilities.semanticTokensProvider = nil
+    end
+
     vim.api.nvim_create_autocmd(
         { "LspAttach" },
-        { pattern = { "*" }, group = gid, callback = make_binds }
+        {
+            pattern = { "*" },
+            group = gid,
+            callback = function(args)
+                make_binds(args)
+                no_highlight(args)
+            end
+        }
     )
 end
 
@@ -150,8 +164,6 @@ local function server_pylsp(cap)
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
 
     local c = {}
-    c["capabilities"] = cap
-
     local on = { enabled = true }
     local off = { enabled = false }
 
@@ -201,6 +213,7 @@ local function server_pylsp(cap)
     c["yapf"] = off
 
     return {
+        capabilities = cap,
         cmd = {
             "pylsp",
             "--log-file",

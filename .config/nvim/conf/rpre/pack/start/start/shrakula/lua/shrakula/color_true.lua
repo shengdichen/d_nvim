@@ -207,23 +207,46 @@ local function syntax(mapping, palette)
         )
     end
 
-    local function lsp()
-        -- REF:
-        --  |:help lsp-semantic-highlight|
-
-        return 0
-    end
-
     local function treesitter()
         -- REF:
         --  |:help treesitter-highlight-groups|
 
+        mapping["@keyword.import"] = { link = "@include" }
+
         mapping["@constructor"] = { link = "Type" }
+
+        mapping["@text.uri"] = { underline = true }
+        mapping["@string.special.url"] = { link = "@text.uri" }
+
         map_each(
             mapping,
-            { "@field", "@property" },
+            { "@field", "@property", "@variable.member" },
             { fg = palette["blue"] }
         )
+    end
+
+    local function lsp()
+        -- REF:
+        --  |:help lsp-semantic-highlight|
+
+        mapping["@lsp.type.namespace"] = { link = "@namespace" }
+        mapping["@lsp.type.interface"] = { link = "@structure" }
+        mapping["@lsp.type.struct"] = { link = "@structure" }
+        mapping["@lsp.type.class"] = { link = "@structure" }
+        mapping["@lsp.type.enum"] = { link = "@structure" }
+        mapping["@lsp.type.enumMember"] = { link = "@constant" }
+
+        mapping["@lsp.type.type"] = { link = "@type" }
+        mapping["@lsp.type.typeParameter"] = { link = "@type.definition" }
+
+        mapping["@lsp.type.function"] = { link = "@function" }
+        mapping["@lsp.type.method"] = { link = "@method" }
+        mapping["@lsp.type.decorator"] = { link = "@method" }
+        mapping["@lsp.type.parameter"] = { link = "@parameter" }
+
+        mapping["@lsp.type.variable"] = { link = "@variable" }
+        mapping["@lsp.type.property"] = { link = "@property" }
+        mapping["@lsp.type.macro"] = { link = "@macro" }
     end
 
     local function cmp()
