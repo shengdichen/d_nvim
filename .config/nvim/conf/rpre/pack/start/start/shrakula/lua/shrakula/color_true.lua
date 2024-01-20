@@ -218,7 +218,7 @@ local function syntax(mapping, palette)
 
         map_each(
             mapping,
-            { "@field", "@property" },
+            { "@field", "@property", "@variable.member" },
             { fg = palette["blue"] }
         )
     end
