@@ -150,8 +150,6 @@ local function server_pylsp(cap)
     --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
 
     local c = {}
-    c["capabilities"] = cap
-
     local on = { enabled = true }
     local off = { enabled = false }
 
@@ -201,6 +199,7 @@ local function server_pylsp(cap)
     c["yapf"] = off
 
     return {
+        capabilities = cap,
         cmd = {
             "pylsp",
             "--log-file",
