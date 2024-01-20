@@ -44,6 +44,7 @@ local function cmd()
     vim.opt.mouse = "" -- disable mouse completely
 
     vim.opt.undolevels = 1000
+    vim.opt.swapfile = false
 
     vim.opt.clipboard:append("unnamedplus") -- use system clipboard
 
