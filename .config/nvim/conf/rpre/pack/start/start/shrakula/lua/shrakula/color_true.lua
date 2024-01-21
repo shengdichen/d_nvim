@@ -152,7 +152,7 @@ local function syntax(mapping, palette)
         mapping["Underlined"] = { fg = "fg", underline = true }
         mapping["Ignore"] = { fg = palette["grey_dark"] }
         mapping["Error"] = { fg = palette["red"] }
-        mapping["Todo"] = { reverse = true }
+        mapping["Todo"] = { bg = palette["grey_bright"], fg = palette["black"] }
     end
 
     local function diagnostic()
@@ -217,6 +217,12 @@ local function syntax(mapping, palette)
 
         mapping["@text.uri"] = { underline = true }
         mapping["@string.special.url"] = { link = "@text.uri" }
+
+        map_each(
+            mapping,
+            { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
+            { link = "Todo" }
+        )
 
         map_each(
             mapping,
