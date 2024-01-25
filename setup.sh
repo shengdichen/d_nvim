@@ -123,7 +123,7 @@ main() {
     __stow
 
     unset SCRIPT_PATH
-    unset -f __clone __plugin __stow
+    unset -f __install __clone __update __plugin __stow
 }
 main "${@}"
 unset -f main
