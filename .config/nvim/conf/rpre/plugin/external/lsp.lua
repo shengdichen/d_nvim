@@ -201,7 +201,7 @@ local function server_pylsp(cap)
     }
     -- https://github.com/python-lsp/python-lsp-ruff#configuration
     c["ruff"] = off -- use (separate) ruff_lsp instead
-    c["pylint"] = off
+    c["pylint"] = on
     c["pyflakes"] = off
     c["pycodestyle"] = off
     c["pydocstyle"] = off
