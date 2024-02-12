@@ -105,7 +105,7 @@ __plugin() {
 }
 
 __update_treesitter() {
-    nvim -c "TSUpdateSync | q"
+    nvim -c "set nomore | TSUpdateSync | q"
 }
 
 __stow() {
