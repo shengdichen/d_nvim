@@ -105,6 +105,9 @@ __plugin() {
 }
 
 __update_treesitter() {
+    # NOTE:
+    #   1. must use the sync variant
+    #   2. no-more to prevent more-prompt
     nvim -c "set nomore | TSUpdateSync | q"
 }
 
