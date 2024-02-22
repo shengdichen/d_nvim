@@ -259,6 +259,35 @@ local function snippets_collection()
                 n_i(0)
             }
         ),
+        spt("whilecase",
+            {
+                n_t('while [ "${#}" -gt 0 ]; do'), line_break(1),
+                tab(1), n_t('case "${1}" in'), line_break(1),
+
+                tab(2), n_t('"--'), n_i(1, "opt1?"), n_t('")'), line_break(1),
+                tab(3), n_i(2, "var?"), n_t('="${2}"'), line_break(1),
+                tab(3), n_t("shift && shift"), line_break(1),
+                tab(3), n_t(";;"), line_break(1),
+
+                tab(2), n_t('"--'), n_i(3, "opt2?"), n_t('")'), line_break(1),
+                tab(3), n_t("shift"), line_break(1),
+                tab(3), n_i(4, "var?"), n_t('="${1}"'), line_break(1),
+                tab(3), n_t('shift'), line_break(1),
+                tab(3), n_t(";;"), line_break(1),
+
+                tab(2), n_t('"--")'), line_break(1),
+                tab(3), n_t("shift && break"), line_break(1),
+                tab(3), n_t(";;"), line_break(1),
+
+                tab(2), n_t("*)"), line_break(1),
+                tab(3), n_i(5, "exit 3"), line_break(1),
+                tab(3), n_t(";;"), line_break(1),
+
+                tab(1), n_t("esac"), line_break(1),
+                n_t("done"), line_break(1),
+                n_i(0)
+            }
+        ),
 
         spt("shebang",
             {
