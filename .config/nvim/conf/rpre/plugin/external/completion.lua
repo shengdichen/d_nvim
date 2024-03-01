@@ -346,6 +346,12 @@ local function snippets_collection()
                 line_break(1),
             }
         ),
+        spt("importmpl",
+            {
+                n_t({ "import matplotlib as mpl" }),
+                line_break(1),
+            }
+        ),
         spt("importcallable",
             {
                 n_t({ "from collections.abc import Callable" }),
@@ -538,6 +544,12 @@ local function snippets_collection()
                 n_ct("np.ndarray"),
                 n_ct("torch.Tensor"),
             })
+        ),
+        spt("tfigure",
+            { n_t({ "mpl.figure.Figure" }) }
+        ),
+        spt("taxes",
+            { n_t({ "mpl.axes.Axes" }) }
         ),
         spt("tret",
             {
