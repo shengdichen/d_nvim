@@ -312,17 +312,14 @@ local function diagnostic()
 
     local function gutter_sign()
         local d_str = "Diagnostic"
-        local type_sign = { Error = "E ", Warn = "w ", Hint = "n ", Info = "i " }
-        for type, sign in pairs(type_sign) do
+        local type_sign = { "Error", "Warn", "Hint", "Info" }
+        for __, type in ipairs(type_sign) do
             local hl_sign = d_str .. "Sign" .. type
-            local hl_linenumber = "" -- will fallback to default-hl of line-number
-            if type == "Error" or type == "Warn" then
-                hl_linenumber = d_str .. type
-            end
+            local hl_linenumber = d_str .. type
             vim.fn.sign_define(
-                hl_sign, -- slight trickery: name the sign as the hl-group itself
+                hl_sign,       -- slight trickery: name the sign as the hl-group itself
                 {
-                    text = sign,
+                    text = "", -- do NOT show any text in gutter
                     texthl = hl_sign,
                     numhl = hl_linenumber,
                 }

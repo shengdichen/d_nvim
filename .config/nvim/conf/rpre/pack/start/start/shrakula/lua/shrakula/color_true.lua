@@ -159,11 +159,11 @@ local function syntax(mapping, palette)
         -- REF
         --  |:help diagnostic-highlights|
 
-        mapping["DiagnosticError"] = { fg = palette["red"] }
-        mapping["DiagnosticWarn"] = { fg = palette["yellow"] }
-        mapping["DiagnosticInfo"] = { link = "Comment" }
-        mapping["DiagnosticHint"] = { link = "Comment" }
-        mapping["DiagnosticOk"] = { fg = palette["grey_dark"] }
+        mapping["DiagnosticError"] = { fg = palette["red"], underline = true }
+        mapping["DiagnosticWarn"] = { fg = palette["yellow"], underline = true }
+        mapping["DiagnosticInfo"] = { underline = true }
+        mapping["DiagnosticHint"] = { underline = true }
+        mapping["DiagnosticOk"] = { underline = true }
 
         -- Note
         --  1. *Sign* := gutter
