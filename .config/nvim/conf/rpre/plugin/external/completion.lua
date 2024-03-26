@@ -217,6 +217,47 @@ local function snippets_collection()
             { n_t({ "[ " }), n_i(1, "var?"), n_t({ " -le " }), n_i(2, "value"), n_t({ " ]" }), }
         ),
 
+        -- REF:
+        --  https://www.shellcheck.net/wiki/SC2044
+        spt("forfind",
+            {
+                n_t("find "), n_i(1, "where?"),
+                n_t(" -maxdepth "), n_i(2, "depth?"),
+                n_t(" -type "), n_i(3, "type?"),
+                n_t(' ! -name "$(printf "*\\n*")"'),
+                n_t(" |"),
+                line_break(1),
+
+                tab(1), n_t('while IFS="" read -r _path; do'), line_break(1),
+                tab(2), n_t('printf "> [%s]\\n" "${_path}"'), line_break(1),
+                tab(2), n_i(4, "what?"), line_break(1),
+                tab(1), n_t("done"), line_break(1),
+
+                n_i(0)
+            }
+        ),
+        spt("forfindtmp",
+            {
+                n_t('local _tmp="./_tmp"'), line_break(1),
+                n_t('mkdir "${_tmp}"'), line_break(1),
+
+                n_t("find "), n_i(1, "where?"),
+                n_t(" -maxdepth "), n_i(2, "depth?"),
+                n_t(" -type "), n_i(3, "type?"),
+                n_t(' ! -name "$(printf "*\\n*")"'),
+                n_t(' >"${_tmp}"'),
+                line_break(1),
+
+                n_t('while IFS="" read -r _path; do'), line_break(1),
+                tab(1), n_t('printf "> [%s]\\n" "${_path}"'), line_break(1),
+                tab(1), n_i(4, "what?"), line_break(1),
+                n_t('done <"${_tmp}"'), line_break(1),
+
+                n_t('rm "${_tmp}"'), line_break(1),
+                n_i(0)
+            }
+        ),
+
         spt("while",
             {
                 n_t("while "), n_i(1, "test?"), n_t("; do"),
