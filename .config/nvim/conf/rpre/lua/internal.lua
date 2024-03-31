@@ -38,4 +38,33 @@ MODULE.statusline = function(level)
     vim.opt_local.laststatus = level
 end
 
+---@return string[]
+MODULE.buffers_open = function()
+    local buffers = {}
+
+    ---@diagnostic disable-next-line: param-type-mismatch
+    for buf_n = 1, vim.fn.bufnr("$") do
+        if vim.fn.buflisted(buf_n) == 1 then
+            table.insert(buffers, vim.fn.bufname(buf_n))
+        end
+    end
+    return buffers
+end
+
+---@return string
+MODULE.buffer_current = function()
+    ---@diagnostic disable-next-line: param-type-mismatch
+    return vim.fn.bufname("%")
+end
+
+---@param opts {absolute: boolean}
+---@return string
+MODULE.cwd = function(opts)
+    local c = vim.fn.getcwd()
+    if opts.absolute then
+        return vim.fn.fnamemodify(c, ":p")
+    end
+    return c
+end
+
 return MODULE
