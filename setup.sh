@@ -89,6 +89,7 @@ __plugin() {
 
         __install "${_update}" "tpope" "vim-surround"
         __install "${_update}" "vifm" "vifm.vim"
+        __install "${_update}" "nvim-telescope" "telescope.nvim"
     }
 
     (
