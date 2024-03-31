@@ -1,6 +1,11 @@
+local util = require("internal")
+
 local function unbind_help()
-    -- conflicts with |K| (for navigation)
-    vim.api.nvim_del_augroup_by_name("VifmHelpAutoCmds")
+    local gr = "VifmHelpAutoCmds"
+    if util.augroup.has_name(gr) then
+        -- conflicts with |K| (for navigation)
+        vim.api.nvim_del_augroup_by_name(gr)
+    end
 end
 
 local function main()
