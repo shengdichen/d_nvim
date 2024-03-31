@@ -211,6 +211,12 @@ local function syntax(mapping, palette)
         -- REF:
         --  |:help treesitter-highlight-groups|
 
+        map_each(
+            mapping,
+            { "@keyword.luadoc", "@keyword.return.luadoc" },
+            { link = "Comment" }
+        )
+
         mapping["@keyword.import"] = { link = "@include" }
 
         mapping["@constructor"] = { link = "Type" }
