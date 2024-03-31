@@ -1,3 +1,5 @@
+local util = require("util")
+
 local MODULE = {}
 
 ---@param mode string|table
@@ -65,6 +67,29 @@ MODULE.cwd = function(opts)
         return vim.fn.fnamemodify(c, ":p")
     end
     return c
+end
+
+MODULE.augroup = {}
+
+---@return string[]
+MODULE.augroup.names = function()
+    local gnames = {}
+    for _, ginfo in ipairs(vim.api.nvim_get_autocmds({})) do
+        local gname = ginfo.group_name
+        if not util.has_value(gnames, gname) then
+            table.insert(gnames, gname)
+        end
+    end
+    return gnames
+end
+
+---@param name string
+---@return boolean
+MODULE.augroup.has_name = function(name)
+    if util.has_value(MODULE.augroup.names(), name) then
+        return true
+    end
+    return false
 end
 
 return MODULE
