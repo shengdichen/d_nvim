@@ -12,4 +12,14 @@ MODULE.has_value = function(tab, val)
     return false
 end
 
+---@param this table
+---@param that table
+---@return table
+MODULE.update = function(this, that)
+    for k, v in pairs(that) do
+        this[k] = v
+    end
+    return this
+end
+
 return MODULE

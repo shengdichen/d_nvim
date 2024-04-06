@@ -1,3 +1,30 @@
+local function conf()
+    local c = {}
+
+    c.defaults = {
+        -- REF:
+        --  https://en.wikipedia.org/wiki/Box-drawing_character
+        borderchars = { " ", "│", " ", "│", "┌", "┐", "┘", "└" },
+
+        results_title = false,
+        prompt_title = false,
+
+        selection_caret = "", -- the current line in picker
+        multi_icon = "",      -- all selected lines in picker
+        entry_prefix = "",    -- all other lines in picker
+    }
+
+    require("telescope").setup(c)
+end
+
+local function live_grep(opts)
+    -- disable title by default
+    local c = require("util").update({ prompt_title = false }, opts)
+    return function()
+        require("telescope.builtin").live_grep(c)
+    end
+end
+
 local function bind()
     local builtin = require("telescope.builtin")
 
@@ -8,16 +35,13 @@ local function bind()
         vim.keymap.set(
             "n",
             "ff",
-            function()
-                builtin.live_grep({ search_dirs = require("internal").buffers_open() })
-            end
+            live_grep({ search_dirs = require("internal").buffers_open() })
         )
         -- all under cwd
         vim.keymap.set(
             "n",
-            "fd", function()
-                builtin.live_grep()
-            end
+            "fd",
+            live_grep({})
         )
     end
 
@@ -38,6 +62,7 @@ local function bind()
 end
 
 local function main()
+    conf()
     bind()
 end
 main()
