@@ -299,8 +299,36 @@ local function filetype(mapping, palette)
         )
     end
 
+    local function telescope()
+        mapping["TelescopeBorder"] = { link = "Comment" }
+        mapping["TelescopeTitle"] = { link = "Comment" }
+
+        -- prompt
+        mapping["TelescopePromptPrefix"] = { link = "Comment" }
+        mapping["TelescopePromptCounter"] = { link = "Comment" } -- <num>/<num> on RHS
+
+        -- picker
+        mapping["TelescopeSelectionCaret"] = { link = "Comment" } -- caret
+        mapping["TelescopeSelection"] = { link = "CursorLine" }   -- the current line
+        mapping["TelescopeMatching"] = { link = "IncSearch" }     -- matching part
+        mapping["TelescopeMultiSelection"] = { link = "Visual" }  -- all selected lines
+        map_each(
+            mapping,
+            {
+                "TelescopeResultsNumber",  -- e.g., buffer id
+                "TelescopeResultsComment", -- e.g., buffer type (%a, #h...)
+            },
+            { link = "Comment" }
+        )
+
+        -- preview
+        mapping["TelescopePreviewLine"] = { link = "Visual" }     -- the current line
+        mapping["TelescopePreviewMatch"] = { link = "IncSearch" } -- matching part
+    end
+
     debug()
     gitsigns()
+    telescope()
 end
 
 local function main()
