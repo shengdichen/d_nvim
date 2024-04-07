@@ -1,4 +1,7 @@
 local util_lua = require("util")
+local util_vim = require("internal")
+
+local telescope_builtin = require("telescope.builtin")
 
 local function conf()
     local c = {}
@@ -39,38 +42,32 @@ local function live_grep(opts)
     }
 
     return function()
-        require("telescope.builtin").live_grep(util_lua.update(c, opts))
+        telescope_builtin.live_grep(util_lua.update(c, opts))
     end
 end
 
 local function bind()
-    local builtin = require("telescope.builtin")
-
     local function content()
         -- current buffer
-        vim.keymap.set("n", "f/", builtin.current_buffer_fuzzy_find)
+        vim.keymap.set("n", "f/", telescope_builtin.current_buffer_fuzzy_find)
         -- all open buffers
         vim.keymap.set(
             "n",
             "ff",
-            live_grep({ search_dirs = require("internal").buffers_open() })
+            live_grep({ search_dirs = util_vim.buffers_open() })
         )
         -- all under cwd
-        vim.keymap.set(
-            "n",
-            "fd",
-            live_grep({})
-        )
+        vim.keymap.set("n", "fd", live_grep({}))
     end
 
     local function misc()
-        vim.keymap.set("n", "fb", builtin.buffers)
+        vim.keymap.set("n", "fb", telescope_builtin.buffers)
 
         vim.keymap.set(
             "n",
             "fg",
             function()
-                builtin.find_files({ hidden = true, follow = true })
+                telescope_builtin.find_files({ hidden = true, follow = true })
             end
         )
     end
