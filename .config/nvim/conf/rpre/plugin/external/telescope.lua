@@ -1,6 +1,7 @@
 local util_lua = require("util")
 local util_vim = require("internal")
 
+local telescope = require("telescope")
 local telescope_builtin = require("telescope.builtin")
 
 local function conf()
@@ -32,7 +33,12 @@ local function conf()
         sorting_strategy = "ascending", -- simulate fzf's --reverse
     }
 
-    require("telescope").setup(c)
+    telescope.setup(c)
+
+    local extensions = { "fzf" }
+    for _, ext in ipairs(extensions) do
+        telescope.load_extension(ext)
+    end
 end
 
 local function live_grep(opts)
