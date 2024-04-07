@@ -1,3 +1,5 @@
+local util_lua = require("util")
+
 local function conf()
     local c = {}
 
@@ -18,10 +20,13 @@ local function conf()
 end
 
 local function live_grep(opts)
-    -- disable title by default
-    local c = require("util").update({ prompt_title = false }, opts)
+    local c = {
+        prompt_title = false,
+        preview_title = false, -- hide "Grep Preview" (undocumented)
+    }
+
     return function()
-        require("telescope.builtin").live_grep(c)
+        require("telescope.builtin").live_grep(util_lua.update(c, opts))
     end
 end
 
