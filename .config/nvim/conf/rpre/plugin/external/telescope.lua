@@ -8,12 +8,25 @@ local function conf()
         --  https://en.wikipedia.org/wiki/Box-drawing_character
         borderchars = { " ", "│", " ", "│", "┌", "┐", "┘", "└" },
 
+        -- NOTE:
+        --  setting (global) prompt_title & preview_title here has no effect
         results_title = false,
-        prompt_title = false,
 
-        selection_caret = "", -- the current line in picker
-        multi_icon = "",      -- all selected lines in picker
-        entry_prefix = "",    -- all other lines in picker
+        selection_caret = "",           -- the current line in picker
+        multi_icon = "",                -- all selected lines in picker
+        entry_prefix = "",              -- all other lines in picker
+
+        layout_strategy = "horizontal", -- default layout
+        layout_config = {
+            prompt_position = "top",    -- prompt above picker
+            height = 0.89,
+            width = 0.89,
+
+            horizontal = {
+                preview_width = 0.59 -- proportion of preview (RHS)
+            }
+        },
+        sorting_strategy = "ascending", -- simulate fzf's --reverse
     }
 
     require("telescope").setup(c)
