@@ -41,29 +41,27 @@ local function conf()
     end
 end
 
-local function live_grep(opts)
-    local c = {
+local function bind()
+    local config_quiet = {
         prompt_title = false,
         preview_title = false, -- hide "Grep Preview" (undocumented)
     }
 
-    return function()
-        telescope_builtin.live_grep(util_lua.update(c, opts))
-    end
-end
-
-local function bind()
     local function content()
         -- current buffer
-        vim.keymap.set("n", "f/", telescope_builtin.current_buffer_fuzzy_find)
+        vim.keymap.set("n", "f/", function()
+            telescope_builtin.current_buffer_fuzzy_find(config_quiet)
+        end)
         -- all open buffers
-        vim.keymap.set(
-            "n",
-            "ff",
-            live_grep({ search_dirs = util_vim.buffers_open() })
-        )
+        vim.keymap.set("n", "ff", function()
+            telescope_builtin.live_grep(util_lua.combine({
+                config_quiet, { search_dirs = util_vim.buffers_open() }
+            }))
+        end)
         -- all under cwd
-        vim.keymap.set("n", "fd", live_grep({}))
+        vim.keymap.set("n", "fd", function()
+            telescope_builtin.live_grep(config_quiet)
+        end)
     end
 
     local function misc()
