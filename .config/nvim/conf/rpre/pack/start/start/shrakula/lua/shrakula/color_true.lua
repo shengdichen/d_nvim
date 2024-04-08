@@ -1,14 +1,14 @@
-local function map_each(mapping, groups, color)
+local mapping = {}
+
+---@param groups string[]
+---@param color table<string, string>
+local function map_each(groups, color)
     for _, group in ipairs(groups) do
         mapping[group] = color
     end
 end
 
-local function normal(palette)
-    return { bg = "NONE", fg = palette["white"] }
-end
-
-local function common(mapping, palette)
+local function common(palette)
     -- REF:
     --  :h guifg
     -- NOTE:
@@ -111,38 +111,33 @@ local function common(mapping, palette)
     misc()
 end
 
-local function syntax(mapping, palette)
+local function syntax(palette)
     local function internal()
         -- REF:
         --  |:help group-name|
 
         map_each(
-            mapping,
             { "Constant", "String", "Character", "Number", "Boolean", "Float" },
             { fg = palette["green"] }
         )
-        map_each(mapping, { "Identifier" }, { link = "Normal" })
+        map_each({ "Identifier" }, { link = "Normal" })
 
         map_each(
-            mapping,
             { "Statement", "Conditional", "Repeat", "Label", "Operator", "Keyword", "Exception" },
             { fg = palette["magenta"] }
         )
 
         map_each(
-            mapping,
             { "Function", "PreProc", "Include", "Define", "Macro", "PreCondit" },
             { fg = palette["purple"] }
         )
 
         map_each(
-            mapping,
             { "Type", "StorageClass", "Structure", "TypeDef" },
             { fg = palette["cyan"] }
         )
 
         map_each(
-            mapping,
             { "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
             { fg = palette["yellow"] }
         )
@@ -171,7 +166,6 @@ local function syntax(mapping, palette)
         --  3. *VirtualText* := inline message
         --  4. *Floating* := detail message
         map_each(
-            mapping,
             {
                 "DiagnosticSignError",
                 "DiagnosticSignWarn",
@@ -183,7 +177,6 @@ local function syntax(mapping, palette)
         )
 
         map_each(
-            mapping,
             {
                 "DiagnosticVirtualTextError",
                 "DiagnosticVirtualTextWarn",
@@ -195,7 +188,6 @@ local function syntax(mapping, palette)
         )
 
         map_each(
-            mapping,
             {
                 "DiagnosticFloatingError",
                 "DiagnosticFloatingWarn",
@@ -212,7 +204,6 @@ local function syntax(mapping, palette)
         --  |:help treesitter-highlight-groups|
 
         map_each(
-            mapping,
             { "@keyword.luadoc", "@keyword.return.luadoc" },
             { link = "Comment" }
         )
@@ -225,13 +216,11 @@ local function syntax(mapping, palette)
         mapping["@string.special.url"] = { link = "@text.uri" }
 
         map_each(
-            mapping,
             { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
             { link = "Todo" }
         )
 
         map_each(
-            mapping,
             { "@field", "@property", "@variable.member" },
             { fg = palette["blue"] }
         )
@@ -278,7 +267,7 @@ local function syntax(mapping, palette)
     ibl()
 end
 
-local function filetype(mapping, palette)
+local function filetype(palette)
     local function debug()
         mapping["debugPc"] = { bg = palette["white"], fg = palette["black"] }
         mapping["debugBreakpoint"] = { bg = palette["red"], fg = "fg" }
@@ -286,7 +275,6 @@ local function filetype(mapping, palette)
 
     local function gitsigns()
         map_each(
-            mapping,
             {
                 "GitSignsAdd",
                 "GitSignsDelete",
@@ -313,7 +301,6 @@ local function filetype(mapping, palette)
         mapping["TelescopeMatching"] = { link = "IncSearch" }     -- matching part
         mapping["TelescopeMultiSelection"] = { link = "Visual" }  -- all selected lines
         map_each(
-            mapping,
             {
                 "TelescopeResultsNumber",  -- e.g., buffer id
                 "TelescopeResultsComment", -- e.g., buffer type (%a, #h...)
@@ -334,12 +321,11 @@ end
 local function main()
     local function f(palette)
         -- define "Normal" first to allow shortcuts "fg"&"bg"
-        vim.api.nvim_set_hl(0, "Normal", normal(palette))
+        vim.api.nvim_set_hl(0, "Normal", { bg = "NONE", fg = palette["white"] })
 
-        local mapping = {}
-        common(mapping, palette)
-        syntax(mapping, palette)
-        filetype(mapping, palette)
+        common(palette)
+        syntax(palette)
+        filetype(palette)
         for item, color in pairs(mapping) do
             vim.api.nvim_set_hl(0, item, color)
         end
