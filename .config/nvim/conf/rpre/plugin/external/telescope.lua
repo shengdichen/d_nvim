@@ -65,15 +65,17 @@ local function bind()
     end
 
     local function misc()
-        vim.keymap.set("n", "fb", telescope_builtin.buffers)
+        vim.keymap.set("n", "fb", function()
+            telescope_builtin.buffers({
+                preview_title = false
+            })
+        end)
 
-        vim.keymap.set(
-            "n",
-            "fg",
-            function()
-                telescope_builtin.find_files({ hidden = true, follow = true })
-            end
-        )
+        vim.keymap.set("n", "fg", function()
+            telescope_builtin.find_files({
+                hidden = true, follow = true, preview_title = false
+            })
+        end)
     end
 
     content()
