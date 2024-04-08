@@ -302,8 +302,9 @@ local function filetype(palette)
         mapping["TelescopeMultiSelection"] = { link = "Visual" }  -- all selected lines
         map_each(
             {
-                "TelescopeResultsNumber",  -- e.g., buffer id
-                "TelescopeResultsComment", -- e.g., buffer type (%a, #h...)
+                "TelescopeResultsSpecialComment", -- e.g., line-number when searching current buffer
+                "TelescopeResultsNumber",         -- e.g., buffer id
+                "TelescopeResultsComment",        -- e.g., buffer type (%a, #h...)
             },
             { link = "Comment" }
         )
