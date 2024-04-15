@@ -154,7 +154,7 @@ local function syntax(palette)
         -- REF
         --  |:help diagnostic-highlights|
 
-        local bg = "#433f4b"
+        local bg = "#433f4b" -- slightly brighter than grey-dark
         mapping["DiagnosticError"] = { bg = bg, fg = palette["red"] }
         mapping["DiagnosticWarn"] = { bg = bg, fg = palette["yellow"] }
         map_each(
@@ -262,7 +262,9 @@ local function syntax(palette)
     end
 
     local function ibl()
-        mapping["IblIndent"] = { fg = palette.grey_darker }
+        mapping["IblIndent"] = {
+            fg = "#27232b" -- slightly darker than grey-dark
+        }
     end
 
     internal()
