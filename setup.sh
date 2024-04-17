@@ -47,6 +47,7 @@ __plugin() {
     __lsp() {
         __install "${_update}" "neovim" "nvim-lspconfig"
         __install "${_update}" "nvimtools" "none-ls.nvim"
+        __install "${_update}" "nvimtools" "none-ls-extras.nvim"
 
         __install "${_update}" "folke" "neodev.nvim"
         __install "${_update}" "j-hui" "fidget.nvim"

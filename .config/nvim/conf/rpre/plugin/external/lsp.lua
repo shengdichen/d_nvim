@@ -418,7 +418,7 @@ local function none_ls()
         ))
 
         -- fallback if shfmt unavailable
-        table.insert(sources, null_ls.builtins.formatting.beautysh.with(
+        table.insert(sources, require("none-ls.formatting.beautysh").with(
             { disabled_filetypes = { "sh", "bash" } }
         ))
 
