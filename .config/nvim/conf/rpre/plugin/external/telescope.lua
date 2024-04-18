@@ -33,6 +33,31 @@ local function conf()
         sorting_strategy = "ascending", -- simulate fzf's --reverse
     }
 
+    local function pickers()
+        c.pickers = {}
+        local config_no_preview = { preview_title = false }
+        for _, picker in ipairs({
+            "buffers",
+            "find_files",
+            "quickfix",
+            "lsp_references",
+        }) do
+            c.pickers[picker] = config_no_preview
+        end
+
+        local config_no_preview_no_prompt = {
+            preview_title = false, -- hide "Grep Preview" (undocumented)
+            prompt_title = false,
+        }
+        for _, picker in ipairs({
+            "current_buffer_fuzzy_find",
+            "live_grep",
+        }) do
+            c.pickers[picker] = config_no_preview_no_prompt
+        end
+    end
+
+    pickers()
     telescope.setup(c)
 
     local extensions = { "fzf" }
@@ -49,31 +74,21 @@ local function bind()
 
     local function content()
         -- current buffer
-        vim.keymap.set("n", "f/", function()
-            telescope_builtin.current_buffer_fuzzy_find(config_quiet)
-        end)
+        vim.keymap.set("n", "f/", telescope_builtin.current_buffer_fuzzy_find)
         -- all open buffers
         vim.keymap.set("n", "ff", function()
-            telescope_builtin.live_grep(util_lua.combine({
-                config_quiet, { search_dirs = util_vim.buffers_open() }
-            }))
+            telescope_builtin.live_grep({ search_dirs = util_vim.buffers_open() })
         end)
         -- all under cwd
-        vim.keymap.set("n", "fd", function()
-            telescope_builtin.live_grep(config_quiet)
-        end)
+        vim.keymap.set("n", "fd", telescope_builtin.live_grep)
     end
 
     local function misc()
-        vim.keymap.set("n", "fb", function()
-            telescope_builtin.buffers({
-                preview_title = false
-            })
-        end)
+        vim.keymap.set("n", "fb", telescope_builtin.buffers)
 
         vim.keymap.set("n", "fg", function()
             telescope_builtin.find_files({
-                hidden = true, follow = true, preview_title = false
+                hidden = true, follow = true
             })
         end)
     end
