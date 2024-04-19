@@ -3,6 +3,7 @@ local util_vim = require("internal")
 
 local telescope = require("telescope")
 local telescope_builtin = require("telescope.builtin")
+local telescope_actions = require("telescope.actions")
 
 local function conf()
     local c = {}
@@ -31,6 +32,11 @@ local function conf()
             }
         },
         sorting_strategy = "ascending", -- simulate fzf's --reverse
+        mappings = {
+            i = {
+                ["<C-q>"] = telescope_actions.smart_send_to_qflist
+            }
+        },
     }
 
     local function pickers()
@@ -67,6 +73,8 @@ local function conf()
 end
 
 local function bind()
+    vim.keymap.set("c", ":F", "Telescope ")
+
     local config_quiet = {
         prompt_title = false,
         preview_title = false, -- hide "Grep Preview" (undocumented)
@@ -91,6 +99,9 @@ local function bind()
                 hidden = true, follow = true
             })
         end)
+
+        vim.keymap.set("n", "<Leader>q", telescope_builtin.quickfix)
+        vim.keymap.set("n", "<Leader>Q", telescope_builtin.quickfixhistory)
     end
 
     content()
