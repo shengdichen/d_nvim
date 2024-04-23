@@ -241,6 +241,35 @@ local function server_tsserver(cap)
     return c
 end
 
+local function server_omnisharp(cap)
+    local c = {}
+
+    c["cmd"] = { "dotnet", "/usr/lib/omnisharp/OmniSharp.dll" }
+    c["settings"] = {
+        FormattingOptions = {
+            EnableEditorConfigSupport = true,
+            OrganizeImports = true,
+        },
+        RoslynExtensionsOptions = {
+            -- Enables support for roslyn analyzers, code fixes and rulesets.
+            EnableAnalyzersSupport = true,
+            -- Enables support for showing unimported types and unimported extension
+            -- methods in completion lists. When committed, the appropriate using
+            -- directive will be added at the top of the current file. This option can
+            -- have a negative impact on initial completion responsiveness,
+            -- particularly for the first few completion sessions after opening a
+            -- solution.
+            EnableImportCompletion = true,
+            -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+            -- true
+            AnalyzeOpenDocumentsOnly = true,
+        },
+    }
+    c["capabilities"] = cap
+
+    return c
+end
+
 local function servers_default()
     return {
         "lua_ls", "hls", "clangd",
@@ -259,6 +288,7 @@ local function setup()
 
     conf["pylsp"].setup(server_pylsp(cap))
     conf["tsserver"].setup(server_tsserver(cap))
+    conf["omnisharp"].setup(server_omnisharp(cap))
 
     for _, lang in ipairs(servers_default()) do
         conf[lang].setup({ capabilities = cap })
@@ -404,6 +434,10 @@ local function none_ls()
         )
     end
 
+    local function csharp()
+        table.insert(sources, null_ls.builtins.formatting.csharpier)
+    end
+
     local function shell()
         -- NOTE:
         --  use bash-language-server (with shellcheck) for linting
@@ -427,6 +461,7 @@ local function none_ls()
 
     prose()
     js()
+    csharp()
     shell()
     null_ls.setup({ sources = sources })
 end
