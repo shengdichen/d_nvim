@@ -273,6 +273,7 @@ end
 local function servers_default()
     return {
         "lua_ls", "hls", "clangd",
+        "eslint", "cssls", "html", "jsonls", -- vscode-extracted family
         "vimls",
         "bashls", "sqlls",
         "ltex"
@@ -323,7 +324,7 @@ local function diagnostic()
             format = function(d)
                 -- REF:
                 --  h: diagnostic-structure
-                local msg = "<<" .. d.source
+                local msg = "<<" .. (d.source or " ?") -- e.g. jsonls contains no |source|
                 if d.code then
                     return msg .. " [" .. d.code .. "]"
                 end
