@@ -275,6 +275,7 @@ local function servers_default()
         "lua_ls", "hls", "clangd",
         "vimls",
         "bashls", "sqlls",
+        "ltex"
     }
 end
 
@@ -378,14 +379,6 @@ local function none_ls()
             "markdown", "rst",
         }
         local extras = { "mail", "tex", unpack(raws) }
-
-        -- ltrs does NOT handle tex-keywords
-        for _, s in ipairs({
-            null_ls.builtins.diagnostics.ltrs,
-            null_ls.builtins.code_actions.ltrs,
-        }) do
-            table.insert(sources, s.with({ filetypes = raws }))
-        end
 
         for _, s in ipairs({
             null_ls.builtins.diagnostics.proselint,
