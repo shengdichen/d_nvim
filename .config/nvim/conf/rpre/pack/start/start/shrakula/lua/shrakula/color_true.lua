@@ -1,14 +1,14 @@
-local function map_each(mapping, groups, color)
+local mapping = {}
+
+---@param groups string[]
+---@param color table<string, string>
+local function map_each(groups, color)
     for _, group in ipairs(groups) do
         mapping[group] = color
     end
 end
 
-local function normal(palette)
-    return { bg = "NONE", fg = palette["white"] }
-end
-
-local function common(mapping, palette)
+local function common(palette)
     -- REF:
     --  :h guifg
     -- NOTE:
@@ -111,38 +111,33 @@ local function common(mapping, palette)
     misc()
 end
 
-local function syntax(mapping, palette)
+local function syntax(palette)
     local function internal()
         -- REF:
         --  |:help group-name|
 
         map_each(
-            mapping,
             { "Constant", "String", "Character", "Number", "Boolean", "Float" },
             { fg = palette["green"] }
         )
-        map_each(mapping, { "Identifier" }, { link = "Normal" })
+        map_each({ "Identifier" }, { link = "Normal" })
 
         map_each(
-            mapping,
             { "Statement", "Conditional", "Repeat", "Label", "Operator", "Keyword", "Exception" },
             { fg = palette["magenta"] }
         )
 
         map_each(
-            mapping,
             { "Function", "PreProc", "Include", "Define", "Macro", "PreCondit" },
             { fg = palette["purple"] }
         )
 
         map_each(
-            mapping,
             { "Type", "StorageClass", "Structure", "TypeDef" },
             { fg = palette["cyan"] }
         )
 
         map_each(
-            mapping,
             { "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
             { fg = palette["yellow"] }
         )
@@ -159,11 +154,17 @@ local function syntax(mapping, palette)
         -- REF
         --  |:help diagnostic-highlights|
 
-        mapping["DiagnosticError"] = { fg = palette["red"], underline = true }
-        mapping["DiagnosticWarn"] = { fg = palette["yellow"], underline = true }
-        mapping["DiagnosticInfo"] = { underline = true }
-        mapping["DiagnosticHint"] = { underline = true }
-        mapping["DiagnosticOk"] = { underline = true }
+        local bg = "#433f4b" -- slightly brighter than grey-dark
+        mapping["DiagnosticError"] = { bg = bg, fg = palette["red"] }
+        mapping["DiagnosticWarn"] = { bg = bg, fg = palette["yellow"] }
+        map_each(
+            {
+                "DiagnosticInfo",
+                "DiagnosticHint",
+                "DiagnosticOk"
+            },
+            { bg = bg }
+        )
 
         -- Note
         --  1. *Sign* := gutter
@@ -171,7 +172,6 @@ local function syntax(mapping, palette)
         --  3. *VirtualText* := inline message
         --  4. *Floating* := detail message
         map_each(
-            mapping,
             {
                 "DiagnosticSignError",
                 "DiagnosticSignWarn",
@@ -183,7 +183,6 @@ local function syntax(mapping, palette)
         )
 
         map_each(
-            mapping,
             {
                 "DiagnosticVirtualTextError",
                 "DiagnosticVirtualTextWarn",
@@ -195,7 +194,6 @@ local function syntax(mapping, palette)
         )
 
         map_each(
-            mapping,
             {
                 "DiagnosticFloatingError",
                 "DiagnosticFloatingWarn",
@@ -212,7 +210,6 @@ local function syntax(mapping, palette)
         --  |:help treesitter-highlight-groups|
 
         map_each(
-            mapping,
             { "@keyword.luadoc", "@keyword.return.luadoc" },
             { link = "Comment" }
         )
@@ -225,13 +222,11 @@ local function syntax(mapping, palette)
         mapping["@string.special.url"] = { link = "@text.uri" }
 
         map_each(
-            mapping,
             { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
             { link = "Todo" }
         )
 
         map_each(
-            mapping,
             { "@field", "@property", "@variable.member" },
             { fg = palette["blue"] }
         )
@@ -267,7 +262,9 @@ local function syntax(mapping, palette)
     end
 
     local function ibl()
-        mapping["IblIndent"] = { fg = palette.grey_darker }
+        mapping["IblIndent"] = {
+            fg = "#27232b" -- slightly darker than grey-dark
+        }
     end
 
     internal()
@@ -278,7 +275,7 @@ local function syntax(mapping, palette)
     ibl()
 end
 
-local function filetype(mapping, palette)
+local function filetype(palette)
     local function debug()
         mapping["debugPc"] = { bg = palette["white"], fg = palette["black"] }
         mapping["debugBreakpoint"] = { bg = palette["red"], fg = "fg" }
@@ -286,7 +283,6 @@ local function filetype(mapping, palette)
 
     local function gitsigns()
         map_each(
-            mapping,
             {
                 "GitSignsAdd",
                 "GitSignsDelete",
@@ -299,19 +295,46 @@ local function filetype(mapping, palette)
         )
     end
 
+    local function telescope()
+        mapping["TelescopeBorder"] = { link = "Comment" }
+        mapping["TelescopeTitle"] = { link = "Comment" }
+
+        -- prompt
+        mapping["TelescopePromptPrefix"] = { link = "Comment" }
+        mapping["TelescopePromptCounter"] = { link = "Comment" } -- <num>/<num> on RHS
+
+        -- picker
+        mapping["TelescopeSelectionCaret"] = { link = "Comment" } -- caret
+        mapping["TelescopeSelection"] = { link = "CursorLine" }   -- the current line
+        mapping["TelescopeMatching"] = { link = "IncSearch" }     -- matching part
+        mapping["TelescopeMultiSelection"] = { link = "Visual" }  -- all selected lines
+        map_each(
+            {
+                "TelescopeResultsSpecialComment", -- e.g., line-number when searching current buffer
+                "TelescopeResultsNumber",         -- e.g., buffer id
+                "TelescopeResultsComment",        -- e.g., buffer type (%a, #h...)
+            },
+            { link = "Comment" }
+        )
+
+        -- preview
+        mapping["TelescopePreviewLine"] = { link = "Visual" }     -- the current line
+        mapping["TelescopePreviewMatch"] = { link = "IncSearch" } -- matching part
+    end
+
     debug()
     gitsigns()
+    telescope()
 end
 
 local function main()
     local function f(palette)
         -- define "Normal" first to allow shortcuts "fg"&"bg"
-        vim.api.nvim_set_hl(0, "Normal", normal(palette))
+        vim.api.nvim_set_hl(0, "Normal", { bg = "NONE", fg = palette["white"] })
 
-        local mapping = {}
-        common(mapping, palette)
-        syntax(mapping, palette)
-        filetype(mapping, palette)
+        common(palette)
+        syntax(palette)
+        filetype(palette)
         for item, color in pairs(mapping) do
             vim.api.nvim_set_hl(0, item, color)
         end

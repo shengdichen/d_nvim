@@ -89,6 +89,17 @@ __plugin() {
 
         __install "${_update}" "tpope" "vim-surround"
         __install "${_update}" "vifm" "vifm.vim"
+        __install "${_update}" "nvim-telescope" "telescope.nvim"
+
+        __install "${_update}" "nvim-telescope" "telescope-fzf-native.nvim"
+        (
+            cd "telescope-fzf-native.nvim" || exit 3
+            # REF:
+            #   https://github.com/nvim-telescope/telescope-fzf-native.nvim/blob/main/README.md#installation
+            if [ ! -e "build/libfzf.so" ]; then
+                make
+            fi
+        )
     }
 
     (

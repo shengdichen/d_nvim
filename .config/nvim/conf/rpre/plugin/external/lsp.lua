@@ -110,6 +110,7 @@ local function bind()
 
     local function make_binds(args)
         local opts = { buffer = args.buf }
+        local telescope_builtin = require("telescope.builtin")
 
         vim.keymap.set(
             "n",
@@ -120,9 +121,11 @@ local function bind()
 
         vim.keymap.set({ "n", "v" }, "<Leader>a", vim.lsp.buf.code_action, opts)
 
-        vim.keymap.set("n", "<Leader>R", vim.lsp.buf.references, opts)
+        vim.keymap.set("n", "<Leader>R", require("telescope.builtin").lsp_references, opts)
 
-        vim.keymap.set("n", "<Leader>d", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "<Leader>d", function()
+            telescope_builtin.lsp_definitions({ jump_type = "split" })
+        end, opts)
         vim.keymap.set("n", "<Leader>D", vim.lsp.buf.declaration, opts)
         vim.keymap.set("n", "<Leader><C-D>", vim.lsp.buf.type_definition, opts)
 
