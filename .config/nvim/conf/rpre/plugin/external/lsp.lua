@@ -377,19 +377,35 @@ local function none_ls()
     local sources = {}
 
     local function prose()
-        local raws = {
-            "text",
-            "markdown", "rst",
-        }
-        local extras = { "mail", "tex", unpack(raws) }
-
         for _, s in ipairs({
             null_ls.builtins.diagnostics.proselint,
             null_ls.builtins.code_actions.proselint,
+        }) do
+            table.insert(sources, s.with({
+                filetypes = {
+                    "text", "markdown",
+                    "html", "tex", "mail", "rst",
+                }
+            }))
+        end
+
+        for _, s in ipairs({
+            null_ls.builtins.diagnostics.textlint,
+            null_ls.builtins.formatting.textlint,
+        }) do
+            table.insert(sources, s.with({
+                filetypes = {
+                    "text", "markdown",
+                    "html", "tex" -- extra plugins
+                }
+            }))
+        end
+        -- make up for types unsupported by textlint
+        for _, s in ipairs({
             null_ls.builtins.diagnostics.alex,
             null_ls.builtins.diagnostics.write_good,
         }) do
-            table.insert(sources, s.with({ filetypes = extras }))
+            table.insert(sources, s.with({ filetypes = { "mail", "rst" } }))
         end
     end
 
