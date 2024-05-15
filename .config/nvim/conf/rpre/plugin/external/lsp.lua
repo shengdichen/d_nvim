@@ -168,9 +168,14 @@ local function lang()
     -- REF:
     --  https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     --  https://github.com/hrsh7th/nvim-cmp#recommended-configuration
-
-    local conf = require("lspconfig")
+    local m_lspconfig = require("lspconfig")
     local cap = require("cmp_nvim_lsp").default_capabilities()
+
+    -- REF:
+    --  https://github.com/nvimtools/none-ls.nvim/blob/main/doc/BUILTINS.md
+    --  https://github.com/nvimtools/none-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md
+    local m_nonels = require("null-ls")
+    local sources_nonels = {}
 
     local function python()
         local function ruff()
@@ -184,7 +189,7 @@ local function lang()
                 client.server_capabilities.hoverProvider = false
             end
 
-            conf["ruff_lsp"].setup(c)
+            m_lspconfig["ruff_lsp"].setup(c)
         end
 
         local function pyright()
@@ -204,7 +209,17 @@ local function lang()
                 },
             }
 
-            conf["pyright"].setup(c)
+            m_lspconfig["pyright"].setup(c)
+        end
+
+        local function nonels()
+            for _, s in ipairs({
+                m_nonels.builtins.diagnostics.mypy,
+                m_nonels.builtins.diagnostics.pylint,
+                m_nonels.builtins.formatting.isort,
+            }) do
+                table.insert(sources_nonels, s)
+            end
         end
 
         local function pylsp()
@@ -260,7 +275,7 @@ local function lang()
             c["autopep8"] = off
             c["yapf"] = off
 
-            conf["pylsp"].setup(
+            m_lspconfig["pylsp"].setup(
                 {
                     capabilities = cap,
                     cmd = {
@@ -275,6 +290,7 @@ local function lang()
 
         ruff()
         pyright()
+        nonels()
         pylsp()
     end
 
@@ -305,10 +321,15 @@ local function lang()
             }
             c["capabilities"] = cap
 
-            conf["omnisharp"].setup(c)
+            m_lspconfig["omnisharp"].setup(c)
+        end
+
+        local function csharpier()
+            table.insert(sources_nonels, m_nonels.builtins.formatting.csharpier)
         end
 
         omnisharp()
+        csharpier()
     end
 
     local function js()
@@ -324,30 +345,128 @@ local function lang()
                 client.server_capabilities.documentFormattingProvider = false
             end
 
-            conf["tsserver"].setup(c)
+            m_lspconfig["tsserver"].setup(c)
+        end
+
+        local function nonels(as_server)
+            -- NOTE (deprecated):
+            --  null_ls.builtins.formatting.standardjs,
+            --  null_ls.builtins.formatting.standardts,
+            --  null_ls.builtins.formatting.prettier_standard (alternative for |standardjs|)
+            -- REF:
+            --  https://standardjs.com/awesome#automatic-code-formatters
+            --  https://github.com/sheerun/prettier-standard
+
+            local sources
+            if as_server then
+                sources = {
+                    require("none-ls.code_actions.eslint_d"),
+                    require("none-ls.diagnostics.eslint_d"),
+                    require("none-ls.formatting.eslint_d"),
+                    m_nonels.builtins.formatting.prettierd,
+                }
+            else
+                sources = {
+                    require("none-ls.code_actions.eslint"),
+                    require("none-ls.diagnostics.eslint"),
+                    require("none-ls.formatting.eslint"),
+                    m_nonels.builtins.formatting.prettier,
+                }
+            end
+            for _, s in ipairs(sources) do
+                table.insert(sources_nonels, s)
+            end
         end
 
         tsserver()
+        nonels()
+        m_lspconfig["eslint"].setup({ capabilities = cap })
     end
 
-    local function servers_default()
+    local function shell()
+        local function nonels()
+            -- NOTE:
+            --  use bash-language-server (with shellcheck) for linting
+            table.insert(sources_nonels, m_nonels.builtins.formatting.shfmt.with(
+                {
+                    extra_args = {
+                        "-i", "4", -- 4 spaces (not tabs)
+                        "-ci"      -- indent case(s) of switch
+                    }
+                }
+            ))
+
+            -- fallback if shfmt unavailable
+            table.insert(sources_nonels, require("none-ls.formatting.beautysh").with(
+                { disabled_filetypes = { "sh", "bash" } }
+            ))
+
+            table.insert(sources_nonels, m_nonels.builtins.diagnostics.zsh)
+        end
+
+        nonels()
+        m_lspconfig["bashls"].setup({ capabilities = cap })
+    end
+
+    local function prose()
+        local function nonels()
+            for _, s in ipairs({
+                m_nonels.builtins.diagnostics.proselint,
+                m_nonels.builtins.code_actions.proselint,
+            }) do
+                table.insert(sources_nonels, s.with({
+                    filetypes = {
+                        "text", "markdown",
+                        "html", "tex", "mail", "rst",
+                    }
+                }))
+            end
+
+            for _, s in ipairs({
+                m_nonels.builtins.diagnostics.textlint,
+                m_nonels.builtins.formatting.textlint,
+            }) do
+                table.insert(sources_nonels, s.with({
+                    filetypes = {
+                        "text", "markdown",
+                        "html", "tex" -- extra plugins
+                    }
+                }))
+            end
+            -- make up for types unsupported by textlint
+            for _, s in ipairs({
+                m_nonels.builtins.diagnostics.alex,
+                m_nonels.builtins.diagnostics.write_good,
+            }) do
+                table.insert(sources_nonels, s.with({ filetypes = { "mail", "rst" } }))
+            end
+        end
+
+        nonels()
+        m_lspconfig["ltex"].setup({ capabilities = cap })
+    end
+
+    local function misc()
         for _, lang in ipairs(
             {
                 "lua_ls", "hls", "clangd",
-                "eslint", "cssls", "html", "jsonls", -- vscode-extracted family
+                "cssls", "html", "jsonls", -- vscode-extracted family
                 "vimls",
-                "bashls", "sqlls",
-                "ltex"
+                "sqlls",
             }
         ) do
-            conf[lang].setup({ capabilities = cap })
+            m_lspconfig[lang].setup({ capabilities = cap })
         end
     end
 
     python()
     csharp()
     js()
-    servers_default()
+    shell()
+    prose()
+    misc()
+
+    m_nonels.setup({ sources = sources_nonels })
 end
 
 local function border()
@@ -419,120 +538,6 @@ local function diagnostic()
     gutter_sign()
 end
 
-local function none_ls()
-    -- REF:
-    --  https://github.com/nvimtools/none-ls.nvim/blob/main/doc/BUILTINS.md
-    --  https://github.com/nvimtools/none-ls.nvim/blob/main/doc/BUILTIN_CONFIG.md
-
-    local null_ls = require("null-ls")
-    local sources = {}
-
-    local function prose()
-        for _, s in ipairs({
-            null_ls.builtins.diagnostics.proselint,
-            null_ls.builtins.code_actions.proselint,
-        }) do
-            table.insert(sources, s.with({
-                filetypes = {
-                    "text", "markdown",
-                    "html", "tex", "mail", "rst",
-                }
-            }))
-        end
-
-        for _, s in ipairs({
-            null_ls.builtins.diagnostics.textlint,
-            null_ls.builtins.formatting.textlint,
-        }) do
-            table.insert(sources, s.with({
-                filetypes = {
-                    "text", "markdown",
-                    "html", "tex" -- extra plugins
-                }
-            }))
-        end
-        -- make up for types unsupported by textlint
-        for _, s in ipairs({
-            null_ls.builtins.diagnostics.alex,
-            null_ls.builtins.diagnostics.write_good,
-        }) do
-            table.insert(sources, s.with({ filetypes = { "mail", "rst" } }))
-        end
-    end
-
-    local function python()
-        for _, s in ipairs({
-            null_ls.builtins.diagnostics.mypy,
-            null_ls.builtins.diagnostics.pylint,
-            null_ls.builtins.formatting.isort,
-        }) do
-            table.insert(sources, s)
-        end
-    end
-
-    local function js(as_server)
-        -- NOTE (deprecated):
-        --  null_ls.builtins.formatting.standardjs,
-        --  null_ls.builtins.formatting.standardts,
-        --  null_ls.builtins.formatting.prettier_standard (alternative for |standardjs|)
-        -- REF:
-        --  https://standardjs.com/awesome#automatic-code-formatters
-        --  https://github.com/sheerun/prettier-standard
-
-        local ss
-        if as_server then
-            ss = {
-                require("none-ls.code_actions.eslint_d"),
-                require("none-ls.diagnostics.eslint_d"),
-                require("none-ls.formatting.eslint_d"),
-                null_ls.builtins.formatting.prettierd,
-            }
-        else
-            ss = {
-                require("none-ls.code_actions.eslint"),
-                require("none-ls.diagnostics.eslint"),
-                require("none-ls.formatting.eslint"),
-                null_ls.builtins.formatting.prettier,
-            }
-        end
-        for _, s in ipairs(ss) do
-            table.insert(sources, s)
-        end
-    end
-
-    local function csharp()
-        table.insert(sources, null_ls.builtins.formatting.csharpier)
-    end
-
-    local function shell()
-        -- NOTE:
-        --  use bash-language-server (with shellcheck) for linting
-
-        table.insert(sources, null_ls.builtins.formatting.shfmt.with(
-            {
-                extra_args = {
-                    "-i", "4", -- 4 spaces (not tabs)
-                    "-ci"      -- indent case(s) of switch
-                }
-            }
-        ))
-
-        -- fallback if shfmt unavailable
-        table.insert(sources, require("none-ls.formatting.beautysh").with(
-            { disabled_filetypes = { "sh", "bash" } }
-        ))
-
-        table.insert(sources, null_ls.builtins.diagnostics.zsh)
-    end
-
-    prose()
-    python()
-    js()
-    csharp()
-    shell()
-    null_ls.setup({ sources = sources })
-end
-
 local function main()
     neodev()
     fidget()
@@ -540,6 +545,5 @@ local function main()
     lang()
     border()
     diagnostic()
-    none_ls()
 end
 main()
