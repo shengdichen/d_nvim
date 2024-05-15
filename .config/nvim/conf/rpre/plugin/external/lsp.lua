@@ -455,23 +455,32 @@ local function none_ls()
         end
     end
 
-    local function js()
-        for _, s in ipairs({
-            require("none-ls.code_actions.eslint_d"),
-            require("none-ls.diagnostics.eslint_d"),
-            require("none-ls.formatting.eslint_d"),
+    local function js(as_server)
+        -- NOTE (deprecated):
+        --  null_ls.builtins.formatting.standardjs,
+        --  null_ls.builtins.formatting.standardts,
+        --  null_ls.builtins.formatting.prettier_standard (alternative for |standardjs|)
+        -- REF:
+        --  https://standardjs.com/awesome#automatic-code-formatters
+        --  https://github.com/sheerun/prettier-standard
 
-            null_ls.builtins.formatting.prettier,
-            null_ls.builtins.formatting.prettierd,
-
-            -- NOTE (deprecated):
-            --  null_ls.builtins.formatting.standardjs,
-            --  null_ls.builtins.formatting.standardts,
-            --  null_ls.builtins.formatting.prettier_standard (alternative for |standardjs|)
-            -- REF:
-            --  https://standardjs.com/awesome#automatic-code-formatters
-            --  https://github.com/sheerun/prettier-standard
-        }) do
+        local ss
+        if as_server then
+            ss = {
+                require("none-ls.code_actions.eslint_d"),
+                require("none-ls.diagnostics.eslint_d"),
+                require("none-ls.formatting.eslint_d"),
+                null_ls.builtins.formatting.prettierd,
+            }
+        else
+            ss = {
+                require("none-ls.code_actions.eslint"),
+                require("none-ls.diagnostics.eslint"),
+                require("none-ls.formatting.eslint"),
+                null_ls.builtins.formatting.prettier,
+            }
+        end
+        for _, s in ipairs(ss) do
             table.insert(sources, s)
         end
     end
