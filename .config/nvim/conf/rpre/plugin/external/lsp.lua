@@ -164,159 +164,7 @@ local function bind()
     )
 end
 
-local function server_pylsp(cap)
-    -- REF:
-    --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
-
-    local c = {}
-    local on = { enabled = true }
-    local off = { enabled = false }
-
-    -- REF:
-    --  https://github.com/python-lsp/python-lsp-server/blob/develop/docs/autoimport.md
-    c["rope_autoimport"] = {
-        -- NOTE: (massive) slowdown/timeout with |completions| on
-        --  https://github.com/python-lsp/python-lsp-server/issues/374
-        enabled = false,
-
-        -- potential settings
-        --  completions = off,
-        --  code_actions = on,
-        --  memory = true,
-    }
-    c["rope_completion"] = off
-
-    -- REF:
-    --  https://github.com/python-lsp/pylsp-mypy#configuration
-    c["pylsp-mypy"] = on
-
-    -- checker & linter
-    c["mccabe"] = on
-    -- REF:
-    --  https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
-    -- NOTE:
-    --  1. must specify this even if global flake8-config exists
-    c["flake8"] = {
-        enabled = true,
-        maxLineLength = 88,
-        ignore = {
-            "E203", -- spaces around |:|
-            "W503", -- binary-operator (e.g., +) at start-of-line
-        }
-    }
-    -- https://github.com/python-lsp/python-lsp-ruff#configuration
-    c["ruff"] = off -- use (separate) ruff_lsp instead
-    c["pylint"] = on
-    c["pyflakes"] = off
-    c["pycodestyle"] = off
-    c["pydocstyle"] = off
-
-    -- formater
-    c["black"] = on
-    c["isort"] = on
-    c["autopep8"] = off
-    c["yapf"] = off
-
-    return {
-        capabilities = cap,
-        cmd = {
-            "pylsp",
-            "--log-file",
-            os.getenv("HOME") .. "/.local/state/nvim/pylsp.log",
-        },
-        settings = { pylsp = { plugins = c } },
-    }
-end
-
-local function server_ruff(cap)
-    local c = {}
-    c["capabilities"] = cap
-
-    -- disable hovering (use pyright)
-    c["on_attach"] = function(client, _)
-        -- REF:
-        --  https://github.com/astral-sh/ruff-lsp?tab=readme-ov-file#example-neovim
-        client.server_capabilities.hoverProvider = false
-    end
-
-    return c
-end
-
-local function server_pyright(cap)
-    local c = {}
-    c["capabilities"] = cap
-
-    -- REF:
-    --  https://github.com/astral-sh/ruff-lsp?tab=readme-ov-file#example-neovim
-    c["settings"] = {
-        pyright = {
-            disableOrganizeImports = true, -- use ruff instead
-        },
-        python = {
-            analysis = {
-                ignore = { '*' }, -- use ruff instead
-            },
-        },
-    }
-
-    return c
-end
-
-local function server_tsserver(cap)
-    local c = {}
-    c["capabilities"] = cap
-
-    -- disable tsserver's formatting (use none_ls as configured below)
-    c["on_attach"] = function(client, _)
-        -- REF:
-        --  https://neovim.discourse.group/t/how-to-config-multiple-lsp-for-document-hover/3093
-        --  https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#serverCapabilities
-        client.server_capabilities.documentFormattingProvider = false
-    end
-
-    return c
-end
-
-local function server_omnisharp(cap)
-    local c = {}
-
-    c["cmd"] = { "dotnet", "/usr/lib/omnisharp/OmniSharp.dll" }
-    c["settings"] = {
-        FormattingOptions = {
-            EnableEditorConfigSupport = true,
-            OrganizeImports = true,
-        },
-        RoslynExtensionsOptions = {
-            -- Enables support for roslyn analyzers, code fixes and rulesets.
-            EnableAnalyzersSupport = true,
-            -- Enables support for showing unimported types and unimported extension
-            -- methods in completion lists. When committed, the appropriate using
-            -- directive will be added at the top of the current file. This option can
-            -- have a negative impact on initial completion responsiveness,
-            -- particularly for the first few completion sessions after opening a
-            -- solution.
-            EnableImportCompletion = true,
-            -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
-            -- true
-            AnalyzeOpenDocumentsOnly = true,
-        },
-    }
-    c["capabilities"] = cap
-
-    return c
-end
-
-local function servers_default()
-    return {
-        "lua_ls", "hls", "clangd",
-        "eslint", "cssls", "html", "jsonls", -- vscode-extracted family
-        "vimls",
-        "bashls", "sqlls",
-        "ltex"
-    }
-end
-
-local function setup()
+local function lang()
     -- REF:
     --  https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     --  https://github.com/hrsh7th/nvim-cmp#recommended-configuration
@@ -324,15 +172,182 @@ local function setup()
     local conf = require("lspconfig")
     local cap = require("cmp_nvim_lsp").default_capabilities()
 
-    -- conf["pylsp"].setup(server_pylsp(cap))
-    conf["ruff_lsp"].setup(server_ruff(cap))
-    conf["pyright"].setup(server_pyright(cap))
-    conf["tsserver"].setup(server_tsserver(cap))
-    conf["omnisharp"].setup(server_omnisharp(cap))
+    local function python()
+        local function ruff()
+            local c = {}
+            c["capabilities"] = cap
 
-    for _, lang in ipairs(servers_default()) do
-        conf[lang].setup({ capabilities = cap })
+            -- disable hovering (use pyright)
+            c["on_attach"] = function(client, _)
+                -- REF:
+                --  https://github.com/astral-sh/ruff-lsp?tab=readme-ov-file#example-neovim
+                client.server_capabilities.hoverProvider = false
+            end
+
+            conf["ruff_lsp"].setup(c)
+        end
+
+        local function pyright()
+            local c = {}
+            c["capabilities"] = cap
+
+            -- REF:
+            --  https://github.com/astral-sh/ruff-lsp?tab=readme-ov-file#example-neovim
+            c["settings"] = {
+                pyright = {
+                    disableOrganizeImports = true, -- use ruff instead
+                },
+                python = {
+                    analysis = {
+                        ignore = { '*' }, -- use ruff instead
+                    },
+                },
+            }
+
+            conf["pyright"].setup(c)
+        end
+
+        local function pylsp()
+            -- REF:
+            --  https://github.com/python-lsp/python-lsp-server/blob/develop/CONFIGURATION.md
+
+            local c = {}
+            local on = { enabled = true }
+            local off = { enabled = false }
+
+            -- REF:
+            --  https://github.com/python-lsp/python-lsp-server/blob/develop/docs/autoimport.md
+            c["rope_autoimport"] = {
+                -- NOTE: (massive) slowdown/timeout with |completions| on
+                --  https://github.com/python-lsp/python-lsp-server/issues/374
+                enabled = false,
+
+                -- potential settings
+                --  completions = off,
+                --  code_actions = on,
+                --  memory = true,
+            }
+            c["rope_completion"] = off
+
+            -- REF:
+            --  https://github.com/python-lsp/pylsp-mypy#configuration
+            c["pylsp-mypy"] = on
+
+            -- checker & linter
+            c["mccabe"] = on
+            -- REF:
+            --  https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
+            -- NOTE:
+            --  1. must specify this even if global flake8-config exists
+            c["flake8"] = {
+                enabled = true,
+                maxLineLength = 88,
+                ignore = {
+                    "E203", -- spaces around |:|
+                    "W503", -- binary-operator (e.g., +) at start-of-line
+                }
+            }
+            -- https://github.com/python-lsp/python-lsp-ruff#configuration
+            c["ruff"] = off -- use (separate) ruff_lsp instead
+            c["pylint"] = on
+            c["pyflakes"] = off
+            c["pycodestyle"] = off
+            c["pydocstyle"] = off
+
+            -- formater
+            c["black"] = on
+            c["isort"] = on
+            c["autopep8"] = off
+            c["yapf"] = off
+
+            conf["pylsp"].setup(
+                {
+                    capabilities = cap,
+                    cmd = {
+                        "pylsp",
+                        "--log-file",
+                        os.getenv("HOME") .. "/.local/state/nvim/pylsp.log",
+                    },
+                    settings = { pylsp = { plugins = c } },
+                }
+            )
+        end
+
+        ruff()
+        pyright()
+        pylsp()
     end
+
+    local function csharp()
+        local function omnisharp()
+            local c = {}
+
+            c["cmd"] = { "dotnet", "/usr/lib/omnisharp/OmniSharp.dll" }
+            c["settings"] = {
+                FormattingOptions = {
+                    EnableEditorConfigSupport = true,
+                    OrganizeImports = true,
+                },
+                RoslynExtensionsOptions = {
+                    -- Enables support for roslyn analyzers, code fixes and rulesets.
+                    EnableAnalyzersSupport = true,
+                    -- Enables support for showing unimported types and unimported extension
+                    -- methods in completion lists. When committed, the appropriate using
+                    -- directive will be added at the top of the current file. This option can
+                    -- have a negative impact on initial completion responsiveness,
+                    -- particularly for the first few completion sessions after opening a
+                    -- solution.
+                    EnableImportCompletion = true,
+                    -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+                    -- true
+                    AnalyzeOpenDocumentsOnly = true,
+                },
+            }
+            c["capabilities"] = cap
+
+            conf["omnisharp"].setup(c)
+        end
+
+        omnisharp()
+    end
+
+    local function js()
+        local function tsserver()
+            local c = {}
+            c["capabilities"] = cap
+
+            -- disable tsserver's formatting (use none_ls as configured below)
+            c["on_attach"] = function(client, _)
+                -- REF:
+                --  https://neovim.discourse.group/t/how-to-config-multiple-lsp-for-document-hover/3093
+                --  https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#serverCapabilities
+                client.server_capabilities.documentFormattingProvider = false
+            end
+
+            conf["tsserver"].setup(c)
+        end
+
+        tsserver()
+    end
+
+    local function servers_default()
+        for _, lang in ipairs(
+            {
+                "lua_ls", "hls", "clangd",
+                "eslint", "cssls", "html", "jsonls", -- vscode-extracted family
+                "vimls",
+                "bashls", "sqlls",
+                "ltex"
+            }
+        ) do
+            conf[lang].setup({ capabilities = cap })
+        end
+    end
+
+    python()
+    csharp()
+    js()
+    servers_default()
 end
 
 local function border()
@@ -522,7 +537,7 @@ local function main()
     neodev()
     fidget()
     bind()
-    setup()
+    lang()
     border()
     diagnostic()
     none_ls()
