@@ -94,7 +94,7 @@ local function lang()
         end
     end
 
-    local function python()
+    local function python(use_pylsp)
         local function ruff()
             local c = {}
 
@@ -198,10 +198,13 @@ local function lang()
             })
         end
 
-        ruff()
-        pyright()
-        nonels()
-        pylsp()
+        if use_pylsp then
+            pylsp()
+        else
+            ruff()
+            pyright()
+            nonels()
+        end
     end
 
     local function csharp()
