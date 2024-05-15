@@ -123,6 +123,8 @@ local function bind()
 
         vim.keymap.set("n", "<Leader>R", require("telescope.builtin").lsp_references, opts)
 
+        -- definition := .c[pp]
+        -- declaration := .h[pp]
         vim.keymap.set("n", "<Leader>d", function()
             telescope_builtin.lsp_definitions({ jump_type = "split" })
         end, opts)
@@ -241,11 +243,42 @@ local function server_tsserver(cap)
     return c
 end
 
+local function server_omnisharp(cap)
+    local c = {}
+
+    c["cmd"] = { "dotnet", "/usr/lib/omnisharp/OmniSharp.dll" }
+    c["settings"] = {
+        FormattingOptions = {
+            EnableEditorConfigSupport = true,
+            OrganizeImports = true,
+        },
+        RoslynExtensionsOptions = {
+            -- Enables support for roslyn analyzers, code fixes and rulesets.
+            EnableAnalyzersSupport = true,
+            -- Enables support for showing unimported types and unimported extension
+            -- methods in completion lists. When committed, the appropriate using
+            -- directive will be added at the top of the current file. This option can
+            -- have a negative impact on initial completion responsiveness,
+            -- particularly for the first few completion sessions after opening a
+            -- solution.
+            EnableImportCompletion = true,
+            -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+            -- true
+            AnalyzeOpenDocumentsOnly = true,
+        },
+    }
+    c["capabilities"] = cap
+
+    return c
+end
+
 local function servers_default()
     return {
         "lua_ls", "hls", "clangd",
+        "eslint", "cssls", "html", "jsonls", -- vscode-extracted family
         "vimls",
         "bashls", "sqlls",
+        "ltex"
     }
 end
 
@@ -259,6 +292,7 @@ local function setup()
 
     conf["pylsp"].setup(server_pylsp(cap))
     conf["tsserver"].setup(server_tsserver(cap))
+    conf["omnisharp"].setup(server_omnisharp(cap))
 
     for _, lang in ipairs(servers_default()) do
         conf[lang].setup({ capabilities = cap })
@@ -292,7 +326,7 @@ local function diagnostic()
             format = function(d)
                 -- REF:
                 --  h: diagnostic-structure
-                local msg = "<<" .. d.source
+                local msg = "<<" .. (d.source or " ?") -- e.g. jsonls contains no |source|
                 if d.code then
                     return msg .. " [" .. d.code .. "]"
                 end
@@ -316,7 +350,7 @@ local function diagnostic()
     local function gutter_sign()
         local d_str = "Diagnostic"
         local type_sign = { "Error", "Warn", "Hint", "Info" }
-        for __, type in ipairs(type_sign) do
+        for _, type in ipairs(type_sign) do
             local hl_sign = d_str .. "Sign" .. type
             local hl_linenumber = d_str .. type
             vim.fn.sign_define(
@@ -349,14 +383,6 @@ local function none_ls()
         }
         local extras = { "mail", "tex", unpack(raws) }
 
-        -- ltrs does NOT handle tex-keywords
-        for _, s in ipairs({
-            null_ls.builtins.diagnostics.ltrs,
-            null_ls.builtins.code_actions.ltrs,
-        }) do
-            table.insert(sources, s.with({ filetypes = raws }))
-        end
-
         for _, s in ipairs({
             null_ls.builtins.diagnostics.proselint,
             null_ls.builtins.code_actions.proselint,
@@ -369,39 +395,27 @@ local function none_ls()
 
     local function js()
         for _, s in ipairs({
-            null_ls.builtins.code_actions.eslint_d,
-            null_ls.builtins.diagnostics.eslint_d,
+            require("none-ls.code_actions.eslint_d"),
+            require("none-ls.diagnostics.eslint_d"),
+            require("none-ls.formatting.eslint_d"),
 
-            null_ls.builtins.formatting.standardjs,
-            null_ls.builtins.formatting.standardts,
+            null_ls.builtins.formatting.prettier,
+            null_ls.builtins.formatting.prettierd,
 
-            -- NOTE: alternative for |standardjs|
-            --  null_ls.builtins.formatting.prettier_standard
+            -- NOTE (deprecated):
+            --  null_ls.builtins.formatting.standardjs,
+            --  null_ls.builtins.formatting.standardts,
+            --  null_ls.builtins.formatting.prettier_standard (alternative for |standardjs|)
             -- REF:
             --  https://standardjs.com/awesome#automatic-code-formatters
             --  https://github.com/sheerun/prettier-standard
         }) do
             table.insert(sources, s)
         end
+    end
 
-        local function is_in(v, array)
-            for _, vl in ipairs(array) do
-                if v == vl then return true end
-            end
-            return false
-        end
-
-        local types_prettier = {}
-        local types_to_remove = { "javascript", "javascriptreact", "typescript", "typescriptreact" }
-        for _, t in ipairs(null_ls.builtins.formatting.prettierd.filetypes) do
-            if not is_in(t, types_to_remove) then
-                table.insert(types_prettier, t)
-            end
-        end
-        table.insert(
-            sources,
-            null_ls.builtins.formatting.prettierd.with({ filetypes = types_prettier })
-        )
+    local function csharp()
+        table.insert(sources, null_ls.builtins.formatting.csharpier)
     end
 
     local function shell()
@@ -418,7 +432,7 @@ local function none_ls()
         ))
 
         -- fallback if shfmt unavailable
-        table.insert(sources, null_ls.builtins.formatting.beautysh.with(
+        table.insert(sources, require("none-ls.formatting.beautysh").with(
             { disabled_filetypes = { "sh", "bash" } }
         ))
 
@@ -427,6 +441,7 @@ local function none_ls()
 
     prose()
     js()
+    csharp()
     shell()
     null_ls.setup({ sources = sources })
 end
