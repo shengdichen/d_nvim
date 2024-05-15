@@ -1,102 +1,3 @@
-local function neodev()
-    require("neodev").setup()
-end
-
-local function fidget()
-    -- NOTE:
-    --  1. jargon
-    --  ->  group := lsp-server
-    --  ->  annote/annotation := actual lsp-item
-    --  2. item construction:
-    --  |render_message|->|format_message| |space| |format_annote|
-
-    local function progress_format_message(msg)
-        local res = ">"
-        if msg.message then
-            res = msg.message .. res
-        end
-        return res
-    end
-
-    -- further format message from progress_format_message()
-    local function render_message(message, count)
-        if count == 1 then
-            return message
-        else
-            return string.format("%d%s", count, message)
-        end
-    end
-
-    -- lsp-item
-    local function progress_format_annotation(msg)
-        if msg.title then
-            return "[" .. msg.title .. "]"
-        else
-            return "[]"
-        end
-    end
-
-    -- lsp-server
-    local function progress_format_group(group)
-        return "// " .. tostring(group)
-    end
-
-    local c = {
-        progress = {
-            poll_rate = 0.25,
-            ignore_done_already = true,
-
-            display = {
-                -- items completed
-                done_ttl = 2,
-                done_icon = "",
-                done_style = "Comment",
-
-                -- items in progress
-                progress_ttl = math.huge, -- do NOT auto-hide
-                progress_icon = "...",
-                progress_style = "Normal",
-
-                icon_style = "Normal", -- icons of done&progress
-
-                format_group_name = progress_format_group,
-                group_style = "Comment",
-
-                format_message = progress_format_message,
-                format_annote = progress_format_annotation,
-            },
-        },
-
-        notification = {
-            poll_rate = 1,
-            history_size = 37,
-
-            view = {
-                stack_upwards = false,
-                icon_separator = "", -- specify separator directly in |*_icon|
-
-                group_separator = "|",
-                group_separator_hl = "Comment",
-
-                render_message = render_message,
-            },
-
-            window = {
-                normal_hl = "Comment",
-                winblend = 0, -- fully transparent
-                border = "single",
-                border_hl = "Comment",
-
-                y_padding = 1,
-                x_padding = 2,
-                align = "top",
-            },
-        },
-    }
-
-    require("fidget").setup(c)
-end
-
 local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
@@ -455,6 +356,8 @@ local function lang()
     end
 
     local function misc()
+        require("neodev").setup()
+
         for _, server in ipairs(
             {
                 "lua_ls", "hls", "clangd",
@@ -477,24 +380,11 @@ local function lang()
     m_nonels.setup({ sources = sources_nonels })
 end
 
-local function border()
-    local weight = "single"
+local function visual()
+    local function diagnostic()
+        -- REF:
+        --  https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization
 
-    -- REF:
-    --  :help lsp-handlers
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-        vim.lsp.handlers.hover, { border = weight }
-    )
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-        vim.lsp.handlers.signature_help, { border = weight }
-    )
-end
-
-local function diagnostic()
-    -- REF:
-    --  https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization
-
-    local function general()
         local c = {}
 
         c["virtual_text"] = {
@@ -525,6 +415,19 @@ local function diagnostic()
         vim.diagnostic.config(c)
     end
 
+    local function border()
+        local weight = "single"
+
+        -- REF:
+        --  :help lsp-handlers
+        vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+            vim.lsp.handlers.hover, { border = weight }
+        )
+        vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+            vim.lsp.handlers.signature_help, { border = weight }
+        )
+    end
+
     local function gutter_sign()
         local d_str = "Diagnostic"
         local type_sign = { "Error", "Warn", "Hint", "Info" }
@@ -542,16 +445,110 @@ local function diagnostic()
         end
     end
 
-    general()
+    local function fidget()
+        -- NOTE:
+        --  1. jargon
+        --  ->  group := lsp-server
+        --  ->  annote/annotation := actual lsp-item
+        --  2. item construction:
+        --  |render_message|->|format_message| |space| |format_annote|
+
+        local function progress_format_message(msg)
+            local res = ">"
+            if msg.message then
+                res = msg.message .. res
+            end
+            return res
+        end
+
+        -- further format message from progress_format_message()
+        local function render_message(message, count)
+            if count == 1 then
+                return message
+            else
+                return string.format("%d%s", count, message)
+            end
+        end
+
+        -- lsp-item
+        local function progress_format_annotation(msg)
+            if msg.title then
+                return "[" .. msg.title .. "]"
+            else
+                return "[]"
+            end
+        end
+
+        -- lsp-server
+        local function progress_format_group(group)
+            return "// " .. tostring(group)
+        end
+
+        local c = {
+            progress = {
+                poll_rate = 0.25,
+                ignore_done_already = true,
+
+                display = {
+                    -- items completed
+                    done_ttl = 2,
+                    done_icon = "",
+                    done_style = "Comment",
+
+                    -- items in progress
+                    progress_ttl = math.huge, -- do NOT auto-hide
+                    progress_icon = "...",
+                    progress_style = "Normal",
+
+                    icon_style = "Normal", -- icons of done&progress
+
+                    format_group_name = progress_format_group,
+                    group_style = "Comment",
+
+                    format_message = progress_format_message,
+                    format_annote = progress_format_annotation,
+                },
+            },
+
+            notification = {
+                poll_rate = 1,
+                history_size = 37,
+
+                view = {
+                    stack_upwards = false,
+                    icon_separator = "", -- specify separator directly in |*_icon|
+
+                    group_separator = "|",
+                    group_separator_hl = "Comment",
+
+                    render_message = render_message,
+                },
+
+                window = {
+                    normal_hl = "Comment",
+                    winblend = 0, -- fully transparent
+                    border = "single",
+                    border_hl = "Comment",
+
+                    y_padding = 1,
+                    x_padding = 2,
+                    align = "top",
+                },
+            },
+        }
+
+        require("fidget").setup(c)
+    end
+
+    diagnostic()
+    border()
     gutter_sign()
+    fidget()
 end
 
 local function main()
-    neodev()
-    fidget()
-    bind()
     lang()
-    border()
-    diagnostic()
+    bind()
+    visual()
 end
 main()
