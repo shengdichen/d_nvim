@@ -10,7 +10,7 @@ local function signcolumn()
     --  https://github.com/neovim/neovim/issues/990
 
     -- set to |number| if sign(s) shall take over line-number
-    vim.opt.signcolumn = "auto:5"
+    vim.opt.signcolumn = "auto:3"
 end
 
 local function ibl()

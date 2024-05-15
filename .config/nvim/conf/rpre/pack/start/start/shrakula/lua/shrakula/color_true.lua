@@ -152,18 +152,18 @@ local function syntax(mapping, palette)
         mapping["Underlined"] = { fg = "fg", underline = true }
         mapping["Ignore"] = { fg = palette["grey_dark"] }
         mapping["Error"] = { fg = palette["red"] }
-        mapping["Todo"] = { reverse = true }
+        mapping["Todo"] = { bg = palette["grey_bright"], fg = palette["black"] }
     end
 
     local function diagnostic()
         -- REF
         --  |:help diagnostic-highlights|
 
-        mapping["DiagnosticError"] = { fg = palette["red"] }
-        mapping["DiagnosticWarn"] = { fg = palette["yellow"] }
-        mapping["DiagnosticInfo"] = { link = "Comment" }
-        mapping["DiagnosticHint"] = { link = "Comment" }
-        mapping["DiagnosticOk"] = { fg = palette["grey_dark"] }
+        mapping["DiagnosticError"] = { fg = palette["red"], underline = true }
+        mapping["DiagnosticWarn"] = { fg = palette["yellow"], underline = true }
+        mapping["DiagnosticInfo"] = { underline = true }
+        mapping["DiagnosticHint"] = { underline = true }
+        mapping["DiagnosticOk"] = { underline = true }
 
         -- Note
         --  1. *Sign* := gutter
@@ -211,12 +211,24 @@ local function syntax(mapping, palette)
         -- REF:
         --  |:help treesitter-highlight-groups|
 
+        map_each(
+            mapping,
+            { "@keyword.luadoc", "@keyword.return.luadoc" },
+            { link = "Comment" }
+        )
+
         mapping["@keyword.import"] = { link = "@include" }
 
         mapping["@constructor"] = { link = "Type" }
 
         mapping["@text.uri"] = { underline = true }
         mapping["@string.special.url"] = { link = "@text.uri" }
+
+        map_each(
+            mapping,
+            { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
+            { link = "Todo" }
+        )
 
         map_each(
             mapping,
