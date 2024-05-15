@@ -228,6 +228,40 @@ local function server_pylsp(cap)
     }
 end
 
+local function server_ruff(cap)
+    local c = {}
+    c["capabilities"] = cap
+
+    -- disable hovering (use pyright)
+    c["on_attach"] = function(client, _)
+        -- REF:
+        --  https://github.com/astral-sh/ruff-lsp?tab=readme-ov-file#example-neovim
+        client.server_capabilities.hoverProvider = false
+    end
+
+    return c
+end
+
+local function server_pyright(cap)
+    local c = {}
+    c["capabilities"] = cap
+
+    -- REF:
+    --  https://github.com/astral-sh/ruff-lsp?tab=readme-ov-file#example-neovim
+    c["settings"] = {
+        pyright = {
+            disableOrganizeImports = true, -- use ruff instead
+        },
+        python = {
+            analysis = {
+                ignore = { '*' }, -- use ruff instead
+            },
+        },
+    }
+
+    return c
+end
+
 local function server_tsserver(cap)
     local c = {}
     c["capabilities"] = cap
@@ -290,7 +324,9 @@ local function setup()
     local conf = require("lspconfig")
     local cap = require("cmp_nvim_lsp").default_capabilities()
 
-    conf["pylsp"].setup(server_pylsp(cap))
+    -- conf["pylsp"].setup(server_pylsp(cap))
+    conf["ruff_lsp"].setup(server_ruff(cap))
+    conf["pyright"].setup(server_pyright(cap))
     conf["tsserver"].setup(server_tsserver(cap))
     conf["omnisharp"].setup(server_omnisharp(cap))
 
@@ -409,6 +445,16 @@ local function none_ls()
         end
     end
 
+    local function python()
+        for _, s in ipairs({
+            null_ls.builtins.diagnostics.mypy,
+            null_ls.builtins.diagnostics.pylint,
+            null_ls.builtins.formatting.isort,
+        }) do
+            table.insert(sources, s)
+        end
+    end
+
     local function js()
         for _, s in ipairs({
             require("none-ls.code_actions.eslint_d"),
@@ -456,6 +502,7 @@ local function none_ls()
     end
 
     prose()
+    python()
     js()
     csharp()
     shell()
