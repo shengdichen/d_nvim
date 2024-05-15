@@ -177,10 +177,25 @@ local function lang()
     local m_nonels = require("null-ls")
     local sources_nonels = {}
 
+    local function set_official(server, c)
+        c = c or {}
+        c["capabilities"] = cap
+        m_lspconfig[server].setup(c)
+    end
+
+    local function set_nonels(servers, opts)
+        for _, server in ipairs(servers) do
+            if opts then
+                table.insert(sources_nonels, server.with(opts))
+            else
+                table.insert(sources_nonels, server)
+            end
+        end
+    end
+
     local function python()
         local function ruff()
             local c = {}
-            c["capabilities"] = cap
 
             -- disable hovering (use pyright)
             c["on_attach"] = function(client, _)
@@ -189,12 +204,11 @@ local function lang()
                 client.server_capabilities.hoverProvider = false
             end
 
-            m_lspconfig["ruff_lsp"].setup(c)
+            set_official("ruff_lsp", c)
         end
 
         local function pyright()
             local c = {}
-            c["capabilities"] = cap
 
             -- REF:
             --  https://github.com/astral-sh/ruff-lsp?tab=readme-ov-file#example-neovim
@@ -209,17 +223,15 @@ local function lang()
                 },
             }
 
-            m_lspconfig["pyright"].setup(c)
+            set_official("pyright", c)
         end
 
         local function nonels()
-            for _, s in ipairs({
+            set_nonels({
                 m_nonels.builtins.diagnostics.mypy,
                 m_nonels.builtins.diagnostics.pylint,
                 m_nonels.builtins.formatting.isort,
-            }) do
-                table.insert(sources_nonels, s)
-            end
+            })
         end
 
         local function pylsp()
@@ -275,17 +287,14 @@ local function lang()
             c["autopep8"] = off
             c["yapf"] = off
 
-            m_lspconfig["pylsp"].setup(
-                {
-                    capabilities = cap,
-                    cmd = {
-                        "pylsp",
-                        "--log-file",
-                        os.getenv("HOME") .. "/.local/state/nvim/pylsp.log",
-                    },
-                    settings = { pylsp = { plugins = c } },
-                }
-            )
+            set_official("pylsp", {
+                cmd = {
+                    "pylsp",
+                    "--log-file",
+                    os.getenv("HOME") .. "/.local/state/nvim/pylsp.log",
+                },
+                settings = { pylsp = { plugins = c } },
+            })
         end
 
         ruff()
@@ -319,13 +328,12 @@ local function lang()
                     AnalyzeOpenDocumentsOnly = true,
                 },
             }
-            c["capabilities"] = cap
 
-            m_lspconfig["omnisharp"].setup(c)
+            set_official("omnisharp", c)
         end
 
         local function csharpier()
-            table.insert(sources_nonels, m_nonels.builtins.formatting.csharpier)
+            set_nonels({ m_nonels.builtins.formatting.csharpier })
         end
 
         omnisharp()
@@ -335,7 +343,6 @@ local function lang()
     local function js()
         local function tsserver()
             local c = {}
-            c["capabilities"] = cap
 
             -- disable tsserver's formatting (use none_ls as configured below)
             c["on_attach"] = function(client, _)
@@ -345,7 +352,7 @@ local function lang()
                 client.server_capabilities.documentFormattingProvider = false
             end
 
-            m_lspconfig["tsserver"].setup(c)
+            set_official("tsserver", c)
         end
 
         local function nonels(as_server)
@@ -357,97 +364,98 @@ local function lang()
             --  https://standardjs.com/awesome#automatic-code-formatters
             --  https://github.com/sheerun/prettier-standard
 
-            local sources
+            local servers
             if as_server then
-                sources = {
+                servers = {
                     require("none-ls.code_actions.eslint_d"),
                     require("none-ls.diagnostics.eslint_d"),
                     require("none-ls.formatting.eslint_d"),
                     m_nonels.builtins.formatting.prettierd,
                 }
             else
-                sources = {
+                servers = {
                     require("none-ls.code_actions.eslint"),
                     require("none-ls.diagnostics.eslint"),
                     require("none-ls.formatting.eslint"),
                     m_nonels.builtins.formatting.prettier,
                 }
             end
-            for _, s in ipairs(sources) do
-                table.insert(sources_nonels, s)
-            end
+            set_nonels(servers)
         end
 
         tsserver()
         nonels()
-        m_lspconfig["eslint"].setup({ capabilities = cap })
+        set_official("eslint")
     end
 
     local function shell()
         local function nonels()
             -- NOTE:
             --  use bash-language-server (with shellcheck) for linting
-            table.insert(sources_nonels, m_nonels.builtins.formatting.shfmt.with(
+            set_nonels(
+                { m_nonels.builtins.formatting.shfmt },
                 {
                     extra_args = {
                         "-i", "4", -- 4 spaces (not tabs)
                         "-ci"      -- indent case(s) of switch
                     }
                 }
-            ))
+            )
 
             -- fallback if shfmt unavailable
-            table.insert(sources_nonels, require("none-ls.formatting.beautysh").with(
+            set_nonels(
+                { require("none-ls.formatting.beautysh") },
                 { disabled_filetypes = { "sh", "bash" } }
-            ))
+            )
 
-            table.insert(sources_nonels, m_nonels.builtins.diagnostics.zsh)
+            set_nonels({ m_nonels.builtins.diagnostics.zsh })
         end
 
         nonels()
-        m_lspconfig["bashls"].setup({ capabilities = cap })
+        set_official("bashls")
     end
 
     local function prose()
         local function nonels()
-            for _, s in ipairs({
-                m_nonels.builtins.diagnostics.proselint,
-                m_nonels.builtins.code_actions.proselint,
-            }) do
-                table.insert(sources_nonels, s.with({
+            set_nonels(
+                {
+                    m_nonels.builtins.diagnostics.proselint,
+                    m_nonels.builtins.code_actions.proselint,
+                },
+                {
                     filetypes = {
                         "text", "markdown",
                         "html", "tex", "mail", "rst",
                     }
-                }))
-            end
+                })
 
-            for _, s in ipairs({
-                m_nonels.builtins.diagnostics.textlint,
-                m_nonels.builtins.formatting.textlint,
-            }) do
-                table.insert(sources_nonels, s.with({
+            set_nonels(
+                {
+                    m_nonels.builtins.diagnostics.textlint,
+                    m_nonels.builtins.formatting.textlint,
+                },
+                {
                     filetypes = {
                         "text", "markdown",
                         "html", "tex" -- extra plugins
                     }
-                }))
-            end
+                }
+            )
             -- make up for types unsupported by textlint
-            for _, s in ipairs({
-                m_nonels.builtins.diagnostics.alex,
-                m_nonels.builtins.diagnostics.write_good,
-            }) do
-                table.insert(sources_nonels, s.with({ filetypes = { "mail", "rst" } }))
-            end
+            set_nonels({
+                    m_nonels.builtins.diagnostics.alex,
+                    m_nonels.builtins.diagnostics.write_good,
+                },
+                { filetypes = { "mail", "rst" } }
+            )
         end
 
         nonels()
-        m_lspconfig["ltex"].setup({ capabilities = cap })
+        set_official("ltex")
     end
 
     local function misc()
-        for _, lang in ipairs(
+        for _, server in ipairs(
             {
                 "lua_ls", "hls", "clangd",
                 "cssls", "html", "jsonls", -- vscode-extracted family
@@ -455,7 +463,7 @@ local function lang()
                 "sqlls",
             }
         ) do
-            m_lspconfig[lang].setup({ capabilities = cap })
+            set_official(server)
         end
     end
 
