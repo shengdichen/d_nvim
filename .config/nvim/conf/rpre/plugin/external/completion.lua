@@ -217,6 +217,47 @@ local function snippets_collection()
             { n_t({ "[ " }), n_i(1, "var?"), n_t({ " -le " }), n_i(2, "value"), n_t({ " ]" }), }
         ),
 
+        -- REF:
+        --  https://www.shellcheck.net/wiki/SC2044
+        spt("forfind",
+            {
+                n_t("find "), n_i(1, "where?"),
+                n_t(" -maxdepth "), n_i(2, "depth?"),
+                n_t(" -type "), n_i(3, "type?"),
+                n_t(' ! -name "$(printf "*\\n*")"'),
+                n_t(" |"),
+                line_break(1),
+
+                tab(1), n_t('while IFS="" read -r _path; do'), line_break(1),
+                tab(2), n_t('printf "> [%s]\\n" "${_path}"'), line_break(1),
+                tab(2), n_i(4, "what?"), line_break(1),
+                tab(1), n_t("done"), line_break(1),
+
+                n_i(0)
+            }
+        ),
+        spt("forfindtmp",
+            {
+                n_t('local _tmp="./_tmp"'), line_break(1),
+                n_t('mkdir "${_tmp}"'), line_break(1),
+
+                n_t("find "), n_i(1, "where?"),
+                n_t(" -maxdepth "), n_i(2, "depth?"),
+                n_t(" -type "), n_i(3, "type?"),
+                n_t(' ! -name "$(printf "*\\n*")"'),
+                n_t(' >"${_tmp}"'),
+                line_break(1),
+
+                n_t('while IFS="" read -r _path; do'), line_break(1),
+                tab(1), n_t('printf "> [%s]\\n" "${_path}"'), line_break(1),
+                tab(1), n_i(4, "what?"), line_break(1),
+                n_t('done <"${_tmp}"'), line_break(1),
+
+                n_t('rm "${_tmp}"'), line_break(1),
+                n_i(0)
+            }
+        ),
+
         spt("while",
             {
                 n_t("while "), n_i(1, "test?"), n_t("; do"),
@@ -256,6 +297,35 @@ local function snippets_collection()
 
                 n_t("esac"),
                 line_break(1),
+                n_i(0)
+            }
+        ),
+        spt("whilecase",
+            {
+                n_t('while [ "${#}" -gt 0 ]; do'), line_break(1),
+                tab(1), n_t('case "${1}" in'), line_break(1),
+
+                tab(2), n_t('"--'), n_i(1, "opt1?"), n_t('")'), line_break(1),
+                tab(3), n_i(2, "var?"), n_t('="${2}"'), line_break(1),
+                tab(3), n_t("shift && shift"), line_break(1),
+                tab(3), n_t(";;"), line_break(1),
+
+                tab(2), n_t('"--'), n_i(3, "opt2?"), n_t('")'), line_break(1),
+                tab(3), n_t("shift"), line_break(1),
+                tab(3), n_i(4, "var?"), n_t('="${1}"'), line_break(1),
+                tab(3), n_t('shift'), line_break(1),
+                tab(3), n_t(";;"), line_break(1),
+
+                tab(2), n_t('"--")'), line_break(1),
+                tab(3), n_t("shift && break"), line_break(1),
+                tab(3), n_t(";;"), line_break(1),
+
+                tab(2), n_t("*)"), line_break(1),
+                tab(3), n_i(5, "exit 3"), line_break(1),
+                tab(3), n_t(";;"), line_break(1),
+
+                tab(1), n_t("esac"), line_break(1),
+                n_t("done"), line_break(1),
                 n_i(0)
             }
         ),
@@ -314,6 +384,24 @@ local function snippets_collection()
         spt("importplt",
             {
                 n_t({ "import matplotlib.pyplot as plt" }),
+                line_break(1),
+            }
+        ),
+        spt("importmpl",
+            {
+                n_t({ "import matplotlib as mpl" }),
+                line_break(1),
+            }
+        ),
+        spt("importcallable",
+            {
+                n_t({ "from collections.abc import Callable" }),
+                line_break(1),
+            }
+        ),
+        spt("importiterable",
+            {
+                n_t({ "from collections.abc import Iterable" }),
                 line_break(1),
             }
         ),
@@ -404,6 +492,27 @@ local function snippets_collection()
                 line_break(1),
             }
         ),
+
+        spt("fnstatic",
+            {
+                n_t("@staticmethod"),
+                line_break(1),
+                n_t("def "), n_i(1, "fn?"), n_t("("), n_i(2, "args?"), n_t(") -> "), n_i(3, "type?"), n_t(":"),
+                line_break(1),
+                tab(1), n_i(4, "what?"),
+                line_break(1),
+            }
+        ),
+        spt("fnclass",
+            {
+                n_t("@classmethod"),
+                line_break(1),
+                n_t("def "), n_i(1, "fn?"), n_t("(cls, "), n_i(2, "args?"), n_t(") -> "), n_i(3, "type?"), n_t(":"),
+                line_break(1),
+                tab(1), n_i(4, "what?"),
+                line_break(1),
+            }
+        ),
         spt("prop",
             {
                 n_t("@property"),
@@ -451,16 +560,37 @@ local function snippets_collection()
                 n_ct("list"),
             })
         ),
+        spt("ttuple",
+            n_c(1, {
+                { n_t({ "tuple[" }), n_i(1, "types?"), n_t({ "]" }) },
+                n_ct("tuple"),
+            })
+        ),
         spt("tdict",
             {
                 n_t({ "dict[" }), n_i(1, "key?"), n_t({ ", " }), n_i(2, "val?"), n_t({ "]" }),
             }
+        ),
+        spt("tgenerator",
+            { n_t({ "Generator[" }), n_i(1, "type?"), n_t({ ", None, None]" }) }
+        ),
+        spt("tdataset",
+            { n_t({ "torch.utils.data.dataset.TensorDataset" }) }
+        ),
+        spt("tcallable",
+            { n_t({ "Callable[[" }), n_i(1, "args?"), n_t({ "], " }), n_i(2, "ret?"), n_t({ "]" }) }
         ),
         spt("tmatrix",
             n_c(1, {
                 n_ct("np.ndarray"),
                 n_ct("torch.Tensor"),
             })
+        ),
+        spt("tfigure",
+            { n_t({ "mpl.figure.Figure" }) }
+        ),
+        spt("taxes",
+            { n_t({ "mpl.axes.Axes" }) }
         ),
         spt("tret",
             {

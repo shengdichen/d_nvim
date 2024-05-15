@@ -104,6 +104,13 @@ __plugin() {
     unset -f __lsp __snippet __completion __syntax __misc
 }
 
+__update_treesitter() {
+    # NOTE:
+    #   1. must use the sync variant
+    #   2. no-more to prevent more-prompt
+    nvim -c "set nomore | TSUpdateSync | q"
+}
+
 __stow() {
     (
         cd .. && stow -R "$(basename "${SCRIPT_PATH}")"
@@ -121,9 +128,10 @@ main() {
 
     __plugin "${_update}"
     __stow
+    __update_treesitter
 
     unset SCRIPT_PATH
-    unset -f __clone __plugin __stow
+    unset -f __install __clone __update __plugin __stow __update_treesitter
 }
 main "${@}"
 unset -f main
