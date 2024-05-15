@@ -123,6 +123,8 @@ local function bind()
 
         vim.keymap.set("n", "<Leader>R", require("telescope.builtin").lsp_references, opts)
 
+        -- definition := .c[pp]
+        -- declaration := .h[pp]
         vim.keymap.set("n", "<Leader>d", function()
             telescope_builtin.lsp_definitions({ jump_type = "split" })
         end, opts)
@@ -348,7 +350,7 @@ local function diagnostic()
     local function gutter_sign()
         local d_str = "Diagnostic"
         local type_sign = { "Error", "Warn", "Hint", "Info" }
-        for __, type in ipairs(type_sign) do
+        for _, type in ipairs(type_sign) do
             local hl_sign = d_str .. "Sign" .. type
             local hl_linenumber = d_str .. type
             vim.fn.sign_define(
