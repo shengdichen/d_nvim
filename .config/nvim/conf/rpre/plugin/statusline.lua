@@ -1,3 +1,5 @@
+local util = require("internal")
+
 local function assemble()
     local conf = ""
 
@@ -41,7 +43,7 @@ local function assemble()
             "%{" ..
             '&modified==""' ..
             "?" ..
-            '""' ..            -- not-modified
+            '""' ..      -- not-modified
             ":" ..
             '"!*!  "' .. -- modified
             "}"
@@ -54,29 +56,29 @@ local function assemble()
     vim.opt.statusline = conf
 end
 
-local function hide()
-    require("internal")["statusline"](0)
-    vim.cmd("redraw")
-end
-
-local function show_if_modified()
-    if vim.api.nvim_buf_get_option(0, "modified") then
-        require("internal")["statusline"](2)
-    else
-        require("internal")["statusline"](0)
+local function autocmds()
+    local function hide()
+        util.statusline(0)
+        vim.cmd("redraw")
     end
-end
 
-local function show(redraw)
-    return function()
-        require("internal")["statusline"](2)
-        if redraw then
-            vim.cmd("redrawstatus")
+    local function show_if_modified()
+        if vim.api.nvim_buf_get_option(0, "modified") then
+            util.statusline(2)
+        else
+            util.statusline(0)
         end
     end
-end
 
-local function make_autocmds()
+    local function show(redraw)
+        return function()
+            util.statusline(2)
+            if redraw then
+                vim.cmd("redrawstatus")
+            end
+        end
+    end
+
     local gid = vim.api.nvim_create_augroup(
         "StatuslineToggle", { clear = true }
     )
@@ -100,9 +102,9 @@ local function make_autocmds()
 end
 
 local function general()
-    require("internal")["statusline"](0)
+    util.statusline(0)
 
-    vim.opt.ruler = false  -- use our own cursor-coordinate display instead
+    vim.opt.ruler = false -- use our own cursor-coordinate display instead
 
     -- display incomplete commands in operator-pending mode
     vim.opt.showcmd = true
@@ -112,7 +114,7 @@ end
 
 local function main()
     assemble()
-    make_autocmds()
+    autocmds()
     general()
 end
 main()
