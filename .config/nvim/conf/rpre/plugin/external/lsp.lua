@@ -22,7 +22,7 @@ local function bind()
 
         vim.keymap.set({ "n", "v" }, "<Leader>a", vim.lsp.buf.code_action, opts)
 
-        vim.keymap.set("n", "<Leader>R", require("telescope.builtin").lsp_references, opts)
+        vim.keymap.set("n", "<Leader>R", telescope_builtin.lsp_references, opts)
 
         -- definition := .c[pp]
         -- declaration := .h[pp]
