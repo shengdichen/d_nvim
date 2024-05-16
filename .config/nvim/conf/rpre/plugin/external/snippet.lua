@@ -36,46 +36,44 @@ local function make_nodes()
         return nodes.choice_insert()
     end
 
+    nodes.linebreak = function(count)
+        local text = {}
+        for _ = 0, count or 1 do
+            table.insert(text, "")
+        end
+        return nodes.text(text)
+    end
+    nodes.tab = function(count)
+        local text = string.rep(" ", 4 * (count or 1))
+        return nodes.text(text)
+    end
+    nodes.break_formatted = function(idx)
+        nodes.indent(
+            idx,
+            { nodes.text({ "", "" }) },
+            ""
+        )
+    end
+
     return nodes
 end
 local nodes = make_nodes()
-
-local line_break = function(count)
-    local text = {}
-    for _ = 0, count or 1 do
-        table.insert(text, "")
-    end
-    return nodes.text(text)
-end
-
-local tab = function(count)
-    local text = string.rep(" ", 4 * (count or 1))
-    return nodes.text(text)
-end
-
-local break_formatted = function(idx)
-    nodes.indent(
-        idx,
-        { nodes.text({ "", "" }) },
-        ""
-    )
-end
 
 local function shell()
     local snippets = {
         snippet("scriptpath", {
             nodes.text('SCRIPT_PATH="$(realpath "$(dirname "${0}")")"'),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("scriptname", {
             nodes.text('SCRIPT_NAME="$(basename "${0}")"'),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("stowname", {
             nodes.choice(1, {
                 {
                     nodes.text('STOW_NAME="$(basename "${SCRIPT_PATH}")"'),
-                    line_break(2),
+                    nodes.linebreak(2),
                     nodes.insert(1),
                 },
                 nodes.choice_text('"$(basename "${SCRIPT_PATH}")"'),
@@ -128,11 +126,11 @@ local function shell()
 
         snippet("fn", {
             nodes.insert(1, "fn?"), nodes.text("() {"),
-            line_break(),
-            tab(), nodes.insert(2, "what?"),
-            line_break(),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(2, "what?"),
+            nodes.linebreak(),
             nodes.text("}"),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("fnret", {
             nodes.choice(1, {
@@ -142,11 +140,11 @@ local function shell()
         }),
         snippet("sub", {
             nodes.text("("),
-            line_break(),
-            tab(), nodes.insert(1, "what?"),
-            line_break(),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(1, "what?"),
+            nodes.linebreak(),
             nodes.text(")"),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("cd", {
             nodes.choice(1, {
@@ -155,7 +153,7 @@ local function shell()
                     nodes.insert(1, "where?"),
                     nodes.text(" || exit "),
                     nodes.insert(2, "3"),
-                    line_break(),
+                    nodes.linebreak(),
                 },
                 {
                     nodes.text("cd "),
@@ -171,11 +169,11 @@ local function shell()
         --  fi
         snippet("if", {
             nodes.text("if "), nodes.insert(1, "test?"), nodes.text("; then"),
-            line_break(),
-            tab(), nodes.insert(2, "what?"),
-            line_break(),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(2, "what?"),
+            nodes.linebreak(),
             nodes.text("fi"),
-            line_break()
+            nodes.linebreak()
         }),
         snippet("if--", {
             nodes.text('if [ "${1}" = "--" ]; then shift; fi')
@@ -284,104 +282,104 @@ local function shell()
             nodes.text(" -type "), nodes.insert(3, "type?"),
             nodes.text(' ! -name "$(printf "*\\n*")"'),
             nodes.text(" |"),
-            line_break(),
+            nodes.linebreak(),
 
-            tab(), nodes.text('while IFS="" read -r _path; do'), line_break(),
-            tab(2), nodes.text('printf "> [%s]\\n" "${_path}"'), line_break(),
-            tab(2), nodes.insert(4, "what?"), line_break(),
-            tab(), nodes.text("done"), line_break(),
+            nodes.tab(), nodes.text('while IFS="" read -r _path; do'), nodes.linebreak(),
+            nodes.tab(2), nodes.text('printf "> [%s]\\n" "${_path}"'), nodes.linebreak(),
+            nodes.tab(2), nodes.insert(4, "what?"), nodes.linebreak(),
+            nodes.tab(), nodes.text("done"), nodes.linebreak(),
 
             nodes.insert(0)
         }),
         snippet("forfindtmp", {
-            nodes.text('local _tmp="./_tmp"'), line_break(),
-            nodes.text('mkdir "${_tmp}"'), line_break(),
+            nodes.text('local _tmp="./_tmp"'), nodes.linebreak(),
+            nodes.text('mkdir "${_tmp}"'), nodes.linebreak(),
 
             nodes.text("find "), nodes.insert(1, "where?"),
             nodes.text(" -maxdepth "), nodes.insert(2, "depth?"),
             nodes.text(" -type "), nodes.insert(3, "type?"),
             nodes.text(' ! -name "$(printf "*\\n*")"'),
             nodes.text(' >"${_tmp}"'),
-            line_break(),
+            nodes.linebreak(),
 
-            nodes.text('while IFS="" read -r _path; do'), line_break(),
-            tab(), nodes.text('printf "> [%s]\\n" "${_path}"'), line_break(),
-            tab(), nodes.insert(4, "what?"), line_break(),
-            nodes.text('done <"${_tmp}"'), line_break(),
+            nodes.text('while IFS="" read -r _path; do'), nodes.linebreak(),
+            nodes.tab(), nodes.text('printf "> [%s]\\n" "${_path}"'), nodes.linebreak(),
+            nodes.tab(), nodes.insert(4, "what?"), nodes.linebreak(),
+            nodes.text('done <"${_tmp}"'), nodes.linebreak(),
 
-            nodes.text('rm "${_tmp}"'), line_break(),
+            nodes.text('rm "${_tmp}"'), nodes.linebreak(),
             nodes.insert(0)
         }),
 
         snippet("while", {
             nodes.text("while "), nodes.insert(1, "test?"), nodes.text("; do"),
-            line_break(),
-            tab(), nodes.insert(2, "what?"),
-            line_break(),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(2, "what?"),
+            nodes.linebreak(),
             nodes.text("done"),
-            line_break(),
+            nodes.linebreak(),
             nodes.insert(0)
         }),
         snippet("case", {
             nodes.text("case "), nodes.insert(1, "var?"), nodes.text(" in"),
-            line_break(),
+            nodes.linebreak(),
 
-            tab(), nodes.text('"'), nodes.insert(2, "val1?"), nodes.text('")'),
-            line_break(),
-            tab(2), nodes.insert(3, "what?"),
-            line_break(),
-            tab(2), nodes.text(";;"),
-            line_break(),
+            nodes.tab(), nodes.text('"'), nodes.insert(2, "val1?"), nodes.text('")'),
+            nodes.linebreak(),
+            nodes.tab(2), nodes.insert(3, "what?"),
+            nodes.linebreak(),
+            nodes.tab(2), nodes.text(";;"),
+            nodes.linebreak(),
 
-            tab(), nodes.text('"'), nodes.insert(4, "val2?"), nodes.text('")'),
-            line_break(),
-            tab(2), nodes.insert(5, "what?"),
-            line_break(),
-            tab(2), nodes.text(";;"),
-            line_break(),
+            nodes.tab(), nodes.text('"'), nodes.insert(4, "val2?"), nodes.text('")'),
+            nodes.linebreak(),
+            nodes.tab(2), nodes.insert(5, "what?"),
+            nodes.linebreak(),
+            nodes.tab(2), nodes.text(";;"),
+            nodes.linebreak(),
 
-            tab(), nodes.text("*)"),
-            line_break(),
-            tab(2), nodes.insert(6, "exit 3"),
-            line_break(),
-            tab(2), nodes.text(";;"),
-            line_break(),
+            nodes.tab(), nodes.text("*)"),
+            nodes.linebreak(),
+            nodes.tab(2), nodes.insert(6, "exit 3"),
+            nodes.linebreak(),
+            nodes.tab(2), nodes.text(";;"),
+            nodes.linebreak(),
 
             nodes.text("esac"),
-            line_break(),
+            nodes.linebreak(),
             nodes.insert(0)
         }),
         snippet("whilecase", {
-            nodes.text('while [ "${#}" -gt 0 ]; do'), line_break(),
-            tab(), nodes.text('case "${1}" in'), line_break(),
+            nodes.text('while [ "${#}" -gt 0 ]; do'), nodes.linebreak(),
+            nodes.tab(), nodes.text('case "${1}" in'), nodes.linebreak(),
 
-            tab(2), nodes.text('"--'), nodes.insert(1, "opt1?"), nodes.text('")'), line_break(),
-            tab(3), nodes.insert(2, "var?"), nodes.text('="${2}"'), line_break(),
-            tab(3), nodes.text("shift && shift"), line_break(),
-            tab(3), nodes.text(";;"), line_break(),
+            nodes.tab(2), nodes.text('"--'), nodes.insert(1, "opt1?"), nodes.text('")'), nodes.linebreak(),
+            nodes.tab(3), nodes.insert(2, "var?"), nodes.text('="${2}"'), nodes.linebreak(),
+            nodes.tab(3), nodes.text("shift && shift"), nodes.linebreak(),
+            nodes.tab(3), nodes.text(";;"), nodes.linebreak(),
 
-            tab(2), nodes.text('"--'), nodes.insert(3, "opt2?"), nodes.text('")'), line_break(),
-            tab(3), nodes.text("shift"), line_break(),
-            tab(3), nodes.insert(4, "var?"), nodes.text('="${1}"'), line_break(),
-            tab(3), nodes.text('shift'), line_break(),
-            tab(3), nodes.text(";;"), line_break(),
+            nodes.tab(2), nodes.text('"--'), nodes.insert(3, "opt2?"), nodes.text('")'), nodes.linebreak(),
+            nodes.tab(3), nodes.text("shift"), nodes.linebreak(),
+            nodes.tab(3), nodes.insert(4, "var?"), nodes.text('="${1}"'), nodes.linebreak(),
+            nodes.tab(3), nodes.text('shift'), nodes.linebreak(),
+            nodes.tab(3), nodes.text(";;"), nodes.linebreak(),
 
-            tab(2), nodes.text('"--")'), line_break(),
-            tab(3), nodes.text("shift && break"), line_break(),
-            tab(3), nodes.text(";;"), line_break(),
+            nodes.tab(2), nodes.text('"--")'), nodes.linebreak(),
+            nodes.tab(3), nodes.text("shift && break"), nodes.linebreak(),
+            nodes.tab(3), nodes.text(";;"), nodes.linebreak(),
 
-            tab(2), nodes.text("*)"), line_break(),
-            tab(3), nodes.insert(5, "exit 3"), line_break(),
-            tab(3), nodes.text(";;"), line_break(),
+            nodes.tab(2), nodes.text("*)"), nodes.linebreak(),
+            nodes.tab(3), nodes.insert(5, "exit 3"), nodes.linebreak(),
+            nodes.tab(3), nodes.text(";;"), nodes.linebreak(),
 
-            tab(), nodes.text("esac"), line_break(),
-            nodes.text("done"), line_break(),
+            nodes.tab(), nodes.text("esac"), nodes.linebreak(),
+            nodes.text("done"), nodes.linebreak(),
             nodes.insert(0)
         }),
 
         snippet("shebang", {
             nodes.text("#!/usr/bin/env "), nodes.insert(1, "da"), nodes.text("sh"),
-            line_break(),
+            nodes.linebreak(),
         }),
     }
 
@@ -392,55 +390,55 @@ local function python()
     local snippets = {
         snippet("definition", {
             nodes.text("from pathlib import Path"),
-            line_break(3),
+            nodes.linebreak(3),
             nodes.text("class Definition:"),
-            line_break(), tab(), nodes.text("SRC_DIR = Path(__file__).parent"),
-            line_break(2), tab(), nodes.text("ROOT_DIR = SRC_DIR.parent"),
-            line_break(), tab(), nodes.text('TEST_DIR = SRC_DIR.parent / "tests"'),
-            line_break(2), tab(), nodes.text('BIN_DIR = SRC_DIR.parent / "bin"'),
-            line_break(3),
+            nodes.linebreak(), nodes.tab(), nodes.text("SRC_DIR = Path(__file__).parent"),
+            nodes.linebreak(2), nodes.tab(), nodes.text("ROOT_DIR = SRC_DIR.parent"),
+            nodes.linebreak(), nodes.tab(), nodes.text('TEST_DIR = SRC_DIR.parent / "tests"'),
+            nodes.linebreak(2), nodes.tab(), nodes.text('BIN_DIR = SRC_DIR.parent / "bin"'),
+            nodes.linebreak(3),
             nodes.text("DEFINITION = Definition()"),
         }),
 
         snippet("importlog", {
             nodes.text("import logging"),
-            line_break(),
+            nodes.linebreak(),
             nodes.text("logger = logging.getLogger(__name__)"),
         }),
         snippet("importpath", {
             nodes.text("from pathlib import Path"),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("importnp", {
             nodes.text("import numpy as np"),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("importplt", {
             nodes.text("import matplotlib.pyplot as plt"),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("importmpl", {
             nodes.text("import matplotlib as mpl"),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("importcallable", {
             nodes.text("from collections.abc import Callable"),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("importiterable", {
             nodes.text("from collections.abc import Iterable"),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("importsrc", {
             nodes.text("from src."),
             nodes.insert(1, "where?"),
             nodes.text(" import "),
             nodes.insert(2, "what?"),
-            line_break(),
+            nodes.linebreak(),
         }),
         snippet("importdefinition", {
             nodes.text("from src.definition import DEFINITION"),
-            line_break(),
+            nodes.linebreak(),
         }),
 
         snippet("cl", {
@@ -455,9 +453,9 @@ local function python()
                 nodes.choice_insert("class?")
             }),
             nodes.text(":"),
-            line_break(),
-            tab(), nodes.insert(2, "what?"),
-            line_break(2),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(2, "what?"),
+            nodes.linebreak(2),
         }
         ),
         snippet("init", {
@@ -467,9 +465,9 @@ local function python()
                 nodes.choice_blank(),
             }),
             nodes.text("):"),
-            line_break(),
-            tab(), nodes.insert(2, "what?"),
-            line_break(2),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(2, "what?"),
+            nodes.linebreak(2),
         }
         ),
         snippet("super", {
@@ -484,13 +482,13 @@ local function python()
                 nodes.choice_blank(),
             }),
             nodes.text(")"),
-            line_break(2),
+            nodes.linebreak(2),
         }),
         snippet("repr", {
             nodes.text("def __repr__(self):"),
-            line_break(),
-            tab(), nodes.insert(1, "what?"),
-            line_break(2),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(1, "what?"),
+            nodes.linebreak(2),
         }),
         snippet("fn", {
             nodes.choice(1, {
@@ -510,58 +508,58 @@ local function python()
             }),
 
             nodes.text(":"),
-            line_break(),
-            tab(), nodes.insert(4, "what?"),
-            line_break(),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(4, "what?"),
+            nodes.linebreak(),
         }),
 
         snippet("fnstatic", {
             nodes.text("@staticmethod"),
-            line_break(),
+            nodes.linebreak(),
             nodes.text("def "), nodes.insert(1, "fn?"), nodes.text("("), nodes.insert(2, "args?"), nodes.text(
             ") -> "), nodes.insert(3, "type?"),
             nodes.text(":"),
-            line_break(),
-            tab(), nodes.insert(4, "what?"),
-            line_break(),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(4, "what?"),
+            nodes.linebreak(),
         }),
         snippet("fnclass", {
             nodes.text("@classmethod"),
-            line_break(),
+            nodes.linebreak(),
             nodes.text("def "), nodes.insert(1, "fn?"), nodes.text("(cls, "), nodes.insert(2, "args?"), nodes.text(
             ") -> "), nodes.insert(3,
             "type?"), nodes.text(":"),
-            line_break(),
-            tab(), nodes.insert(4, "what?"),
-            line_break(),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(4, "what?"),
+            nodes.linebreak(),
         }),
         snippet("prop", {
             nodes.text("@property"),
-            line_break(),
+            nodes.linebreak(),
             nodes.text("def "), nodes.insert(1, "fn?"), nodes.text("(self) -> "), nodes.insert(3, "type?"), nodes
             .text(":"),
-            line_break(), tab(), nodes.text("return self._"), nodes.insert(2, "what?"),
-            line_break(),
+            nodes.linebreak(), nodes.tab(), nodes.text("return self._"), nodes.insert(2, "what?"),
+            nodes.linebreak(),
         }
         ),
 
         snippet("testfn", {
             nodes.text("def test_"), nodes.insert(1, "fn?"), nodes.text("(self):"),
-            line_break(),
-            tab(), nodes.insert(2, "what?"),
-            line_break(2),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(2, "what?"),
+            nodes.linebreak(2),
         }),
         snippet("testcl", {
             nodes.text("class Test"), nodes.insert(1, "class?"), nodes.text(":"),
-            line_break(),
-            tab(), nodes.insert(2, "what?"),
-            line_break(3),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(2, "what?"),
+            nodes.linebreak(3),
         }),
         snippet("testraise", {
             nodes.text("with pytest.raises("), nodes.insert(1, "except?"), nodes.text(")"),
-            line_break(),
-            tab(), nodes.insert(2, "what?"),
-            line_break(),
+            nodes.linebreak(),
+            nodes.tab(), nodes.insert(2, "what?"),
+            nodes.linebreak(),
         }
         ),
 
@@ -627,20 +625,20 @@ local function python()
 
         snippet("__main__", {
             nodes.text('if __name__ == "__main__":'),
-            line_break(),
+            nodes.linebreak(),
             nodes.choice(1, {
                 {
-                    tab(),
+                    nodes.tab(),
                     nodes.text(
                         'logging.basicConfig(format="%(module)s [%(levelname)s]> %(message)s", level=logging.'
                     ),
                     nodes.insert(1, "INFO"),
                     nodes.text(")"),
-                    line_break(2),
+                    nodes.linebreak(2),
                 },
                 nodes.choice_blank(),
             }),
-            tab(), nodes.insert(2, "what?")
+            nodes.tab(), nodes.insert(2, "what?")
         }),
     }
 
@@ -651,17 +649,17 @@ local function mail()
     local snippets = {
         snippet("dear", {
             nodes.text("Dear "), nodes.insert(1, "who?"), nodes.text(":"),
-            line_break(2),
+            nodes.linebreak(2),
             nodes.insert(0, "what?"),
         }),
         snippet("dear_sir", {
-            nodes.text("Dear Sir or Madam:"), line_break(2),
+            nodes.text("Dear Sir or Madam:"), nodes.linebreak(2),
         }),
         snippet("dear_mishra", {
             nodes.text("Dear Prof. Mishra:"),
-            line_break(2),
+            nodes.linebreak(2),
             nodes.text("Thanks for your mail!"),
-            line_break(2),
+            nodes.linebreak(2),
         }),
 
         snippet("thank_mail", {
