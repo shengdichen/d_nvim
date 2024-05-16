@@ -1,11 +1,13 @@
-local function install(conf)
+local c = {}
+
+local function install()
     -- REF:
     --  https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
-    conf["ensure_installed"] = "all"
+    c["ensure_installed"] = "all"
 end
 
-local function highlight(conf)
-    conf["highlight"] = {
+local function highlight()
+    c["highlight"] = {
         enable = true,
         additional_vim_regex_highlighting = false, -- use treesitter only
     }
@@ -25,11 +27,10 @@ local function fold()
 end
 
 local function main()
-    local conf = {}
-    install(conf)
-    highlight(conf)
-    fold()
+    install()
+    highlight()
+    require("nvim-treesitter.configs").setup(c)
 
-    require("nvim-treesitter.configs").setup(conf)
+    fold()
 end
 main()
