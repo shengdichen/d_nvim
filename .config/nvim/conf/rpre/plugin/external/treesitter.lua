@@ -17,10 +17,11 @@ local function fold()
     vim.opt.foldmethod = "expr"
     vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
-    -- NOTE:
-    --  1. just enough for one indent-level in a (class-)method
-    --  2. use |vim.opt.foldenable = false| for full expansion
+    -- just enough for one indent-level in a (class-)method
     vim.opt.foldlevel = 3
+
+    -- do NOT auto-fold
+    vim.opt.foldenable = false
 end
 
 local function main()
