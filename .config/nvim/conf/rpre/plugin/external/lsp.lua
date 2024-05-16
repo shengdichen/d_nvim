@@ -70,7 +70,7 @@ local function lang()
     --  https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     --  https://github.com/hrsh7th/nvim-cmp#recommended-configuration
     local m_lspconfig = require("lspconfig")
-    local cap = require("cmp_nvim_lsp").default_capabilities()
+    local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
     -- REF:
     --  https://github.com/nvimtools/none-ls.nvim/blob/main/doc/BUILTINS.md
@@ -80,7 +80,7 @@ local function lang()
 
     local function set_official(server, c)
         c = c or {}
-        c["capabilities"] = cap
+        c["capabilities"] = capabilities
         m_lspconfig[server].setup(c)
     end
 
@@ -450,10 +450,10 @@ local function visual()
 
     local function gutter_sign()
         local d_str = "Diagnostic"
-        local type_sign = { "Error", "Warn", "Hint", "Info" }
-        for _, type in ipairs(type_sign) do
-            local hl_sign = d_str .. "Sign" .. type
-            local hl_linenumber = d_str .. type
+        local d_types = { "Error", "Warn", "Hint", "Info" }
+        for _, d_type in ipairs(d_types) do
+            local hl_sign = d_str .. "Sign" .. d_type
+            local hl_linenumber = d_str .. d_type
             vim.fn.sign_define(
                 hl_sign,       -- slight trickery: name the sign as the hl-group itself
                 {
@@ -483,20 +483,14 @@ local function visual()
 
         -- further format message from progress_format_message()
         local function render_message(message, count)
-            if count == 1 then
-                return message
-            else
-                return string.format("%d%s", count, message)
-            end
+            if count == 1 then return message end
+            return string.format("%d%s", count, message)
         end
 
         -- lsp-item
         local function progress_format_annotation(msg)
-            if msg.title then
-                return "[" .. msg.title .. "]"
-            else
-                return "[]"
-            end
+            if msg.title then return "[" .. msg.title .. "]" end
+            return "[]"
         end
 
         -- lsp-server

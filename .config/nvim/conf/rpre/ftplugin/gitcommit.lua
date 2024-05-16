@@ -3,7 +3,7 @@ local util_vim = require("util_vim")
 local function visual()
     util_vim.statusline(2)
 
-    util_vim.spell(true, { "en" })()
+    util_vim.spell(true, { "en" })
 end
 
 local function bind()

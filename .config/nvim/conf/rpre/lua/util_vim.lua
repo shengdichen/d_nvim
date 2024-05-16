@@ -16,23 +16,20 @@ end
 
 ---@param enable boolean
 ---@param langs string|table|nil
----@return fun(): nil
 MODULE.spell = function(enable, langs)
-    return function()
-        if enable then
-            vim.opt_local.spell = true
-        else
-            vim.opt_local.spell = false
-        end
-
-        if type(langs) == "table" then
-            langs = table.concat(langs, ",")
-        end
-        if not langs then
-            langs = "en"
-        end
-        vim.opt_local.spelllang = langs
+    if enable then
+        vim.opt_local.spell = true
+    else
+        vim.opt_local.spell = false
     end
+
+    if type(langs) == "table" then
+        langs = table.concat(langs, ",")
+    end
+    if not langs then
+        langs = "en"
+    end
+    vim.opt_local.spelllang = langs
 end
 
 ---@param level integer
