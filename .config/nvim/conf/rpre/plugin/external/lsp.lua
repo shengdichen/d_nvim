@@ -108,23 +108,40 @@ local function lang()
             set_official("ruff_lsp", c)
         end
 
-        local function pyright()
-            local c = {}
-
+        local function pyright(use_based)
+            -- NOTE:
+            --  disable diagnostics in favor of ruff
             -- REF:
             --  https://github.com/astral-sh/ruff-lsp?tab=readme-ov-file#example-neovim
-            c["settings"] = {
-                pyright = {
-                    disableOrganizeImports = true, -- use ruff instead
-                },
-                python = {
-                    analysis = {
-                        ignore = { '*' }, -- use ruff instead
-                    },
-                },
-            }
 
-            set_official("pyright", c)
+            local c = {}
+            if use_based then
+                -- REF:
+                --  https://detachhead.github.io/basedpyright/#/settings
+                c["settings"] = {
+                    basedpyright = {
+                        disableOrganizeImports = true, -- use ruff instead
+                        analysis = {
+                            ignore = { '*' },          -- use ruff instead
+                        },
+                    },
+                }
+                set_official("basedpyright", c)
+            else
+                -- REF:
+                --  https://microsoft.github.io/pyright/#/settings
+                c["settings"] = {
+                    pyright = {
+                        disableOrganizeImports = true, -- use ruff instead
+                    },
+                    python = {
+                        analysis = {
+                            ignore = { '*' }, -- use ruff instead
+                        },
+                    },
+                }
+                set_official("pyright", c)
+            end
         end
 
         local function nonels()
