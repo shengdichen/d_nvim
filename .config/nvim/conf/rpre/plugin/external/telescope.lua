@@ -1,6 +1,6 @@
-local util_vim = require("internal")
+local util_vim          = require("util_vim")
 
-local telescope = require("telescope")
+local telescope         = require("telescope")
 local telescope_builtin = require("telescope.builtin")
 local telescope_actions = require("telescope.actions")
 

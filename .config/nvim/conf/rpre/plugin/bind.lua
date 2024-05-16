@@ -1,7 +1,7 @@
 -- NOTE:
 --  1. find name for keys from |:h key-notation|
 
-local _unbind         = require("internal")["unbind"]
+local util_vim        = require("util_vim")
 local mode_nv, mode_i = { "n", "v" }, { "i" }
 
 local function navigate()
@@ -26,10 +26,10 @@ local function navigate()
     end
 
     local function unbind()
-        _unbind(mode_nv, "<Up>")
-        _unbind(mode_nv, "<Down>")
-        _unbind(mode_nv, "<PageUp>")
-        _unbind(mode_nv, "<PageUp>")
+        util_vim.unbind(mode_nv, "<Up>")
+        util_vim.unbind(mode_nv, "<Down>")
+        util_vim.unbind(mode_nv, "<PageUp>")
+        util_vim.unbind(mode_nv, "<PageUp>")
     end
 
     move_as_seen()
@@ -41,8 +41,8 @@ local function insert()
     vim.keymap.set("i", "jj", "<ESC>")
     vim.keymap.set("n", "<S-CR>", 'o<Esc>0"_D') -- |"_| := blackhole-buffer
 
-    _unbind(mode_i, "<PageUp>")
-    _unbind(mode_i, "<PageDown>")
+    util_vim.unbind(mode_i, "<PageUp>")
+    util_vim.unbind(mode_i, "<PageDown>")
 
     vim.keymap.set(mode_i, "<C-h>", "<Left>")
     vim.keymap.set(mode_i, "<C-j>", "<Down>")
@@ -57,7 +57,7 @@ local function insert()
 end
 
 local function misc()
-    vim.g.mapleader = " "                       -- |space| as leader-key
+    vim.g.mapleader = " " -- |space| as leader-key
 end
 
 local function main()

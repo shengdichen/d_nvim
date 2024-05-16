@@ -1,7 +1,9 @@
-local function visual()
-    require("internal")["statusline"](2)
+local util_vim = require("util_vim")
 
-    require("internal")["spell"](true, { "en" })()
+local function visual()
+    util_vim.statusline(2)
+
+    util_vim.spell(true, { "en" })()
 end
 
 local function bind()

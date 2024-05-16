@@ -1,4 +1,4 @@
-local run_in_terminal = require("internal")["run_in_terminal"]
+local util_vim = require("util_vim")
 
 local augroup = "GitLayout"
 
@@ -39,11 +39,11 @@ local function layout_triple()
 
     -- lower-right
     vim.cmd("rightbelow split")
-    run_in_terminal(show_log(false)())
+    util_vim.run_in_terminal(show_log(false)())
 
     -- upper-right
     vim.cmd("wincmd k")
-    run_in_terminal(show_cache_smart())
+    util_vim.run_in_terminal(show_cache_smart())
 
     -- left
     vim.cmd("wincmd h")
@@ -54,7 +54,7 @@ local function layout_double(start_insert, show_patch)
     return function()
         -- right
         vim.cmd("rightbelow vsplit")
-        run_in_terminal(show_log(show_patch)())
+        util_vim.run_in_terminal(show_log(show_patch)())
 
         -- left
         vim.cmd("wincmd h")

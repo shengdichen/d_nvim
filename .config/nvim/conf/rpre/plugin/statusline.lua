@@ -1,4 +1,4 @@
-local util = require("internal")
+local util_vim = require("util_vim")
 
 local function assemble()
     local conf = ""
@@ -58,21 +58,21 @@ end
 
 local function autocmds()
     local function hide()
-        util.statusline(0)
+        util_vim.statusline(0)
         vim.cmd("redraw")
     end
 
     local function show_if_modified()
         if vim.api.nvim_buf_get_option(0, "modified") then
-            util.statusline(2)
+            util_vim.statusline(2)
         else
-            util.statusline(0)
+            util_vim.statusline(0)
         end
     end
 
     local function show(redraw)
         return function()
-            util.statusline(2)
+            util_vim.statusline(2)
             if redraw then
                 vim.cmd("redrawstatus")
             end
@@ -102,7 +102,7 @@ local function autocmds()
 end
 
 local function general()
-    util.statusline(0)
+    util_vim.statusline(0)
 
     vim.opt.ruler = false -- use our own cursor-coordinate display instead
 
