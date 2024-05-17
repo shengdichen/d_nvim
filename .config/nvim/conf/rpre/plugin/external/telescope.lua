@@ -1,43 +1,44 @@
-local util_lua = require("util")
-local util_vim = require("internal")
+local util_vim          = require("util_vim")
 
-local telescope = require("telescope")
+local telescope         = require("telescope")
 local telescope_builtin = require("telescope.builtin")
 local telescope_actions = require("telescope.actions")
 
 local function conf()
     local c = {}
 
-    c.defaults = {
-        -- REF:
-        --  https://en.wikipedia.org/wiki/Box-drawing_character
-        borderchars = { " ", "│", " ", "│", "┌", "┐", "┘", "└" },
+    local function defaults()
+        c.defaults = {
+            -- REF:
+            --  https://en.wikipedia.org/wiki/Box-drawing_character
+            borderchars = { " ", "│", " ", "│", "┌", "┐", "┘", "└" },
 
-        -- NOTE:
-        --  setting (global) prompt_title & preview_title here has no effect
-        results_title = false,
+            -- NOTE:
+            --  setting (global) prompt_title & preview_title here has no effect
+            results_title = false,
 
-        selection_caret = "",           -- the current line in picker
-        multi_icon = "",                -- all selected lines in picker
-        entry_prefix = "",              -- all other lines in picker
+            selection_caret = "",           -- the current line in picker
+            multi_icon = "",                -- all selected lines in picker
+            entry_prefix = "",              -- all other lines in picker
 
-        layout_strategy = "horizontal", -- default layout
-        layout_config = {
-            prompt_position = "top",    -- prompt above picker
-            height = 0.89,
-            width = 0.89,
+            layout_strategy = "horizontal", -- default layout
+            layout_config = {
+                prompt_position = "top",    -- prompt above picker
+                height = 0.89,
+                width = 0.89,
 
-            horizontal = {
-                preview_width = 0.59 -- proportion of preview (RHS)
-            }
-        },
-        sorting_strategy = "ascending", -- simulate fzf's --reverse
-        mappings = {
-            i = {
-                ["<C-q>"] = telescope_actions.smart_send_to_qflist
-            }
-        },
-    }
+                horizontal = {
+                    preview_width = 0.59 -- proportion of preview (RHS)
+                }
+            },
+            sorting_strategy = "ascending", -- simulate fzf's --reverse
+            mappings = {
+                i = {
+                    ["<C-q>"] = telescope_actions.smart_send_to_qflist
+                }
+            },
+        }
+    end
 
     local function pickers()
         c.pickers = {}
@@ -63,22 +64,21 @@ local function conf()
         end
     end
 
+    local function extensions()
+        local exts = { "fzf" }
+        for _, ext in ipairs(exts) do
+            telescope.load_extension(ext)
+        end
+    end
+
+    defaults()
     pickers()
     telescope.setup(c)
-
-    local extensions = { "fzf" }
-    for _, ext in ipairs(extensions) do
-        telescope.load_extension(ext)
-    end
+    extensions()
 end
 
 local function bind()
     vim.keymap.set("c", ":F", "Telescope ")
-
-    local config_quiet = {
-        prompt_title = false,
-        preview_title = false, -- hide "Grep Preview" (undocumented)
-    }
 
     local function content()
         -- current buffer

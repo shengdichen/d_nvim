@@ -1,5 +1,7 @@
+local util_vim = require("util_vim")
+
 local function spell()
-    require("internal")["spell"](true, { "en", "fr", "de" })()
+    util_vim.spell(true, { "en", "fr", "de" })
 end
 
 local function append_space_signature()

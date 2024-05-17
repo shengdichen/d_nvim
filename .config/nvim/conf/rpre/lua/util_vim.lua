@@ -1,4 +1,4 @@
-local util = require("util")
+local util_lua = require("util_lua")
 
 local MODULE = {}
 
@@ -16,23 +16,20 @@ end
 
 ---@param enable boolean
 ---@param langs string|table|nil
----@return fun(): nil
 MODULE.spell = function(enable, langs)
-    return function()
-        if enable then
-            vim.opt_local.spell = true
-        else
-            vim.opt_local.spell = false
-        end
-
-        if type(langs) == "table" then
-            langs = table.concat(langs, ",")
-        end
-        if not langs then
-            langs = "en"
-        end
-        vim.opt_local.spelllang = langs
+    if enable then
+        vim.opt_local.spell = true
+    else
+        vim.opt_local.spell = false
     end
+
+    if type(langs) == "table" then
+        langs = table.concat(langs, ",")
+    end
+    if not langs then
+        langs = "en"
+    end
+    vim.opt_local.spelllang = langs
 end
 
 ---@param level integer
@@ -76,7 +73,7 @@ MODULE.augroup.names = function()
     local gnames = {}
     for _, ginfo in ipairs(vim.api.nvim_get_autocmds({})) do
         local gname = ginfo.group_name
-        if not util.has_value(gnames, gname) then
+        if not util_lua.has_value(gnames, gname) then
             table.insert(gnames, gname)
         end
     end
@@ -86,7 +83,7 @@ end
 ---@param name string
 ---@return boolean
 MODULE.augroup.has_name = function(name)
-    if util.has_value(MODULE.augroup.names(), name) then
+    if util_lua.has_value(MODULE.augroup.names(), name) then
         return true
     end
     return false

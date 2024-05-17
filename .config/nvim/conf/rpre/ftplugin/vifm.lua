@@ -1,8 +1,8 @@
-local util = require("internal")
+local util_vim = require("util_vim")
 
 local function unbind_help()
     local gr = "VifmHelpAutoCmds"
-    if util.augroup.has_name(gr) then
+    if util_vim.augroup.has_name(gr) then
         -- conflicts with |K| (for navigation)
         vim.api.nvim_del_augroup_by_name(gr)
     end
