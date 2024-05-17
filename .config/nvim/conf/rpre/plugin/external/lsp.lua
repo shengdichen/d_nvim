@@ -378,6 +378,26 @@ local function lang()
     local function misc()
         require("neodev").setup()
 
+        local function refactoring()
+            local m_refactoring = require("refactoring")
+            ---@diagnostic disable-next-line: missing-parameter
+            m_refactoring.setup()
+
+            set_nonels(m_nonels.builtins.code_actions.refactoring)
+            vim.keymap.set("c", ":R", "lua vim.lsp.buf.code_action()")
+
+            local m_telescope = require("telescope")
+            m_telescope.load_extension("refactoring")
+            vim.keymap.set(
+                { "n", "x" },
+                "<Leader>e",
+                function()
+                    m_telescope.extensions.refactoring.refactors()
+                end
+            )
+        end
+        refactoring()
+
         for _, server in ipairs(
             {
                 "lua_ls", "hls", "clangd",
