@@ -214,6 +214,12 @@ local function syntax(palette)
             { link = "Comment" }
         )
 
+        -- tune down $() and ${} in particular
+        map_each(
+            { "@punctuation.special.bash" },
+            { link = "Delimiter" }
+        )
+
         mapping["@keyword.import"] = { link = "@include" }
 
         mapping["@constructor"] = { link = "Type" }
