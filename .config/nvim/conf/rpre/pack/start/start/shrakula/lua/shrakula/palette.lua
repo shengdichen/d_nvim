@@ -20,7 +20,7 @@ local function make_color_normal()
     PALETTE.magenta = "#ef77c7"
 
     -- tertiary
-    PALETTE.orange = "#efa74f"
+    PALETTE.orange = "#cf9f77"
     PALETTE.purple = "#a787f7"
 end
 
