@@ -117,7 +117,7 @@ local function syntax(palette)
         --  |:help group-name|
 
         map_each(
-            { "Constant", "String", "Character", "Number", "Boolean", "Float" },
+            { "String", "Character", "Number", "Boolean", "Float" },
             { fg = palette["green"] }
         )
         map_each({ "Identifier" }, { link = "Normal" })
@@ -138,7 +138,7 @@ local function syntax(palette)
         )
 
         map_each(
-            { "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
+            { "Constant", "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
             { fg = palette["yellow"] }
         )
 
