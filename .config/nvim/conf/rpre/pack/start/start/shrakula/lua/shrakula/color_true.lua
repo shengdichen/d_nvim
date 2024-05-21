@@ -220,7 +220,10 @@ local function syntax(palette)
             { link = "Delimiter" }
         )
 
-        mapping["@keyword.import"] = { link = "@include" }
+        map_each(
+            { "@keyword.import", "@include" },
+            { link = "Include" }
+        )
 
         mapping["@constructor"] = { link = "Type" }
 
