@@ -118,7 +118,7 @@ local function syntax(palette)
 
         map_each(
             { "String", "Character", "Number", "Boolean", "Float" },
-            { fg = palette["green"] }
+            { fg = palette["orange"] }
         )
         map_each({ "Identifier" }, { link = "Normal" })
 
@@ -139,7 +139,7 @@ local function syntax(palette)
 
         map_each(
             { "Constant", "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
-            { fg = palette["yellow"] }
+            { fg = palette["green"] }
         )
 
         mapping["Delimiter"] = { link = "Comment" }
