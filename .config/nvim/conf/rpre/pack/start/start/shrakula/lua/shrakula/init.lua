@@ -20,12 +20,14 @@ local function setup_vim()
     vim.g.colors_name = "shrakula"
 end
 
+local function set_color()
+    require("shrakula.color_true")()
+    require("shrakula.color_16")()
+end
+
 local function main()
     if not check_version() then return end
     setup_vim()
-
-    local palette = require("shrakula.palette")
-    require("shrakula.color_true")(palette)
-    require("shrakula.color_16")(palette)
+    set_color()
 end
 return main

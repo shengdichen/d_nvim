@@ -1,14 +1,17 @@
-local mapping = {}
+local PALETTE = require("shrakula.palette")
+
+---@type table<string, table<string, any>>
+local MAP = {}
 
 ---@param groups string[]
----@param color table<string, string>
-local function map_each(groups, color)
+---@param style table<string, any>
+local function map_each(groups, style)
     for _, group in ipairs(groups) do
-        mapping[group] = color
+        MAP[group] = style
     end
 end
 
-local function common(palette)
+local function common()
     -- REF:
     --  :h guifg
     -- NOTE:
@@ -18,88 +21,88 @@ local function common(palette)
     --  ->  specify explicitly (if same as |Normal|, consider using "fg")
 
     local function general()
-        mapping["Comment"] = { fg = palette["grey_bright"] }
-        mapping["MatchParen"] = { fg = palette["cyan"], underline = true }
-        mapping["EndOfBuffer"] = { fg = palette["black"] }                      -- tilde at EOF
+        MAP.Comment = { fg = PALETTE.grey_bright }
+        MAP.MatchParen = { fg = PALETTE.cyan, underline = true }
+        MAP.EndOfBuffer = { fg = PALETTE.black }                   -- tilde at EOF
 
-        mapping["IncSearch"] = { bg = palette["white"], fg = palette["black"] } -- current match
-        mapping["Search"] = { bg = palette["grey_bright"], fg = "fg" }          -- other matches
+        MAP.IncSearch = { bg = PALETTE.white, fg = PALETTE.black } -- current match
+        MAP.Search = { bg = PALETTE.grey_bright, fg = "fg" }       -- other matches
 
-        mapping["Visual"] = { bg = palette["grey_bright"], fg = palette["black"] }
-        mapping["VisualNOS"] = { bg = palette["grey_dark"], fg = "fg" }
+        MAP.Visual = { bg = PALETTE.grey_bright, fg = PALETTE.black }
+        MAP.VisualNOS = { bg = PALETTE.grey_dark, fg = "fg" }
 
         -- notably used for diagnostics, e.g., lsp
-        mapping["NormalFloat"] = { link = "Normal" }
-        mapping["FloatBorder"] = { link = "Comment" }
+        MAP.NormalFloat = { link = "Normal" }
+        MAP.FloatBorder = { link = "Comment" }
     end
 
     local function cursor()
-        mapping["Cursor"] = { reverse = true }                -- the single point of the cursor
-        mapping["CursorLine"] = { bg = palette["grey_dark"] } -- the entire line that the cursor is on
-        mapping["QuickFixLine"] = { bg = palette["grey_bright"], fg = palette["black"] }
+        MAP.Cursor = { reverse = true }             -- the single point of the cursor
+        MAP.CursorLine = { bg = PALETTE.grey_dark } -- the entire line that the cursor is on
+        MAP.QuickFixLine = { bg = PALETTE.grey_bright, fg = PALETTE.black }
 
-        mapping["CursorLineNr"] = { link = "Normal" } -- current
-        mapping["LineNr"] = { link = "Comment" }      -- non-current
+        MAP.CursorLineNr = { link = "Normal" } -- current
+        MAP.LineNr = { link = "Comment" }      -- non-current
 
-        mapping["CursorColumn"] = { reverse = true }  -- horizontal indicator for |cursorcolumn|
-        mapping["ColorColumn"] = { bg = palette["grey_dark"] }
+        MAP.CursorColumn = { reverse = true }  -- horizontal indicator for |cursorcolumn|
+        MAP.ColorColumn = { bg = PALETTE.grey_dark }
     end
 
     local function line_horizontal()
-        mapping["StatusLine"] = { link = "Normal" }    -- current
-        mapping["StatusLineNC"] = { link = "Comment" } -- non-current
+        MAP.StatusLine = { link = "Normal" }    -- current
+        MAP.StatusLineNC = { link = "Comment" } -- non-current
 
-        mapping["Folded"] = { link = "Comment" }
-        mapping["FoldColumn"] = { link = "Comment" }
-        mapping["TabLine"] = { link = "Comment" } -- non-current
-        mapping["TabLineFill"] = { link = "Normal" }
+        MAP.Folded = { link = "Comment" }
+        MAP.FoldColumn = { link = "Comment" }
+        MAP.TabLine = { link = "Comment" } -- non-current
+        MAP.TabLineFill = { link = "Normal" }
     end
 
     local function cmd()
-        mapping["WarningMsg"] = { fg = palette["orange"] }
-        mapping["ErrorMsg"] = { fg = palette["red"] }
-        mapping["Question"] = { fg = palette["purple"] }
+        MAP.WarningMsg = { fg = PALETTE.orange }
+        MAP.ErrorMsg = { fg = PALETTE.red }
+        MAP.Question = { fg = PALETTE.purple }
 
-        mapping["WildMenu"] = { link = "Comment" }
-        mapping["Title"] = { fg = palette["cyan"] }
+        MAP.WildMenu = { link = "Comment" }
+        MAP.Title = { fg = PALETTE.cyan }
 
-        mapping["PmenuSel"] = { bg = palette["white"], fg = palette["black"] } -- selected
-        mapping["Pmenu"] = { bg = palette["grey_dark"] }                       -- non-selected
-        mapping["PmenuSbar"] = { fg = palette["grey_dark"] }                   -- scrollbar
-        mapping["PmenuThumb"] = { link = "Comment" }                           -- none
+        MAP.PmenuSel = { bg = PALETTE.white, fg = PALETTE.black } -- selected
+        MAP.Pmenu = { bg = PALETTE.grey_dark }                    -- non-selected
+        MAP.PmenuSbar = { fg = PALETTE.grey_dark }                -- scrollbar
+        MAP.PmenuThumb = { link = "Comment" }                     -- none
 
-        mapping["Terminal"] = { fg = "NONE" }                                  -- cursor in builtin terminal
+        MAP.Terminal = { fg = "NONE" }                            -- cursor in builtin terminal
     end
 
     local function diff()
-        mapping["DiffAdd"] = { fg = palette["green"] }
-        mapping["DiffDelete"] = { fg = palette["red"] }
+        MAP.DiffAdd = { fg = PALETTE.green }
+        MAP.DiffDelete = { fg = PALETTE.red }
 
         -- lines with differences
-        mapping["DiffChange"] = { bg = palette["grey_bright"], fg = palette["black"] }
+        MAP.DiffChange = { bg = PALETTE.grey_bright, fg = PALETTE.black }
         -- the differences themselves
-        mapping["DiffText"] = { bg = palette["white"], fg = palette["black"] }
+        MAP.DiffText = { bg = PALETTE.white, fg = PALETTE.black }
     end
 
     local function spellcheck()
-        mapping["SpellCap"] = { fg = palette["yellow"] }
-        mapping["SpellLocal"] = { fg = palette["yellow"] }
-        mapping["SpellRare"] = { fg = palette["orange"] }
+        MAP.SpellCap = { fg = PALETTE.yellow }
+        MAP.SpellLocal = { fg = PALETTE.yellow }
+        MAP.SpellRare = { fg = PALETTE.orange }
 
-        mapping["SpellBad"] = { fg = palette["red"], underline = true }
+        MAP.SpellBad = { fg = PALETTE.red, underline = true }
     end
 
     local function misc()
         -- sign-column(s) for rows without sign(s)
-        mapping["SignColumn"] = { link = "Normal" }
+        MAP.SignColumn = { link = "Normal" }
 
-        mapping["Directory"] = { fg = palette["cyan"] }
+        MAP.Directory = { fg = PALETTE.cyan }
 
-        mapping["VertSplit"] = { link = "Comment" }
+        MAP.VertSplit = { link = "Comment" }
 
-        mapping["SpecialKey"] = { link = "Comment" }
-        mapping["NonText"] = { link = "Comment" }
-        mapping["Conceal"] = { link = "Comment" }
+        MAP.SpecialKey = { link = "Comment" }
+        MAP.NonText = { link = "Comment" }
+        MAP.Conceal = { link = "Comment" }
     end
 
     general()
@@ -111,43 +114,43 @@ local function common(palette)
     misc()
 end
 
-local function syntax(palette)
+local function syntax()
     local function internal()
         -- REF:
         --  |:help group-name|
 
         map_each(
             { "String", "Character", "Number", "Boolean", "Float" },
-            { fg = palette["orange"] }
+            { fg = PALETTE.orange }
         )
-        map_each({ "Identifier" }, { link = "Normal" })
+        MAP.Identifier = { link = "Normal" }
 
         map_each(
             { "Statement", "Conditional", "Repeat", "Label", "Operator", "Keyword", "Exception" },
-            { fg = palette["magenta"] }
+            { fg = PALETTE.magenta }
         )
 
         map_each(
             { "Function", "PreProc", "Include", "Define", "Macro", "PreCondit" },
-            { fg = palette["purple"] }
+            { fg = PALETTE.purple }
         )
 
         map_each(
             { "Type", "StorageClass", "Structure", "TypeDef" },
-            { fg = palette["cyan"] }
+            { fg = PALETTE.cyan }
         )
 
         map_each(
             { "Constant", "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
-            { fg = palette["green"] }
+            { fg = PALETTE.green }
         )
 
-        mapping["Delimiter"] = { link = "Comment" }
+        MAP.Delimiter = { link = "Comment" }
 
-        mapping["Underlined"] = { fg = "fg", underline = true }
-        mapping["Ignore"] = { fg = palette["grey_dark"] }
-        mapping["Error"] = { fg = palette["red"] }
-        mapping["Todo"] = { bg = palette["grey_bright"], fg = palette["black"] }
+        MAP.Underlined = { fg = "fg", underline = true }
+        MAP.Ignore = { fg = PALETTE.grey_dark }
+        MAP.Error = { fg = PALETTE.red }
+        MAP.Todo = { bg = PALETTE.grey_bright, fg = PALETTE.black }
     end
 
     local function diagnostic()
@@ -155,8 +158,8 @@ local function syntax(palette)
         --  |:help diagnostic-highlights|
 
         local bg = "#433f4b" -- slightly brighter than grey-dark
-        mapping["DiagnosticError"] = { bg = bg, fg = palette["red"] }
-        mapping["DiagnosticWarn"] = { bg = bg, fg = palette["yellow"] }
+        MAP.DiagnosticError = { bg = bg, fg = PALETTE.red }
+        MAP.DiagnosticWarn = { bg = bg, fg = PALETTE.yellow }
         map_each(
             {
                 "DiagnosticInfo",
@@ -225,10 +228,10 @@ local function syntax(palette)
             { link = "Include" }
         )
 
-        mapping["@constructor"] = { link = "Type" }
+        MAP["@constructor"] = { link = "Type" }
 
-        mapping["@text.uri"] = { underline = true }
-        mapping["@string.special.url"] = { link = "@text.uri" }
+        MAP["@text.uri"] = { underline = true }
+        MAP["@string.special.url"] = { link = "@text.uri" }
 
         map_each(
             { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
@@ -237,7 +240,7 @@ local function syntax(palette)
 
         map_each(
             { "@field", "@property", "@variable.member" },
-            { fg = palette["blue"] }
+            { fg = PALETTE.blue }
         )
     end
 
@@ -245,33 +248,33 @@ local function syntax(palette)
         -- REF:
         --  |:help lsp-semantic-highlight|
 
-        mapping["@lsp.type.namespace"] = { link = "@namespace" }
-        mapping["@lsp.type.interface"] = { link = "@structure" }
-        mapping["@lsp.type.struct"] = { link = "@structure" }
-        mapping["@lsp.type.class"] = { link = "@structure" }
-        mapping["@lsp.type.enum"] = { link = "@structure" }
-        mapping["@lsp.type.enumMember"] = { link = "@constant" }
+        MAP["@lsp.type.namespace"] = { link = "@namespace" }
+        MAP["@lsp.type.interface"] = { link = "@structure" }
+        MAP["@lsp.type.struct"] = { link = "@structure" }
+        MAP["@lsp.type.class"] = { link = "@structure" }
+        MAP["@lsp.type.enum"] = { link = "@structure" }
+        MAP["@lsp.type.enumMember"] = { link = "@constant" }
 
-        mapping["@lsp.type.type"] = { link = "@type" }
-        mapping["@lsp.type.typeParameter"] = { link = "@type.definition" }
+        MAP["@lsp.type.type"] = { link = "@type" }
+        MAP["@lsp.type.typeParameter"] = { link = "@type.definition" }
 
-        mapping["@lsp.type.function"] = { link = "@function" }
-        mapping["@lsp.type.method"] = { link = "@method" }
-        mapping["@lsp.type.decorator"] = { link = "@method" }
-        mapping["@lsp.type.parameter"] = { link = "@parameter" }
+        MAP["@lsp.type.function"] = { link = "@function" }
+        MAP["@lsp.type.method"] = { link = "@method" }
+        MAP["@lsp.type.decorator"] = { link = "@method" }
+        MAP["@lsp.type.parameter"] = { link = "@parameter" }
 
-        mapping["@lsp.type.variable"] = { link = "@variable" }
-        mapping["@lsp.type.property"] = { link = "@property" }
-        mapping["@lsp.type.macro"] = { link = "@macro" }
+        MAP["@lsp.type.variable"] = { link = "@variable" }
+        MAP["@lsp.type.property"] = { link = "@property" }
+        MAP["@lsp.type.macro"] = { link = "@macro" }
     end
 
     local function cmp()
         -- type of complemention, e.g., function, snippet...
-        mapping["CmpItemKind"] = { link = "Comment" }
+        MAP.CmpItemKind = { link = "Comment" }
     end
 
     local function ibl()
-        mapping["IblIndent"] = {
+        MAP.IblIndent = {
             fg = "#27232b" -- slightly darker than grey-dark
         }
     end
@@ -284,10 +287,10 @@ local function syntax(palette)
     ibl()
 end
 
-local function filetype(palette)
+local function filetype()
     local function debug()
-        mapping["debugPc"] = { bg = palette["white"], fg = palette["black"] }
-        mapping["debugBreakpoint"] = { bg = palette["red"], fg = "fg" }
+        MAP.debugPc = { bg = PALETTE.white, fg = PALETTE.black }
+        MAP.debugBreakpoint = { bg = PALETTE.red, fg = "fg" }
     end
 
     local function gitsigns()
@@ -305,18 +308,18 @@ local function filetype(palette)
     end
 
     local function telescope()
-        mapping["TelescopeBorder"] = { link = "Comment" }
-        mapping["TelescopeTitle"] = { link = "Comment" }
+        MAP.TelescopeBorder = { link = "Comment" }
+        MAP.TelescopeTitle = { link = "Comment" }
 
         -- prompt
-        mapping["TelescopePromptPrefix"] = { link = "Comment" }
-        mapping["TelescopePromptCounter"] = { link = "Comment" } -- <num>/<num> on RHS
+        MAP.TelescopePromptPrefix = { link = "Comment" }
+        MAP.TelescopePromptCounter = { link = "Comment" } -- <num>/<num> on RHS
 
         -- picker
-        mapping["TelescopeSelectionCaret"] = { link = "Comment" } -- caret
-        mapping["TelescopeSelection"] = { link = "CursorLine" }   -- the current line
-        mapping["TelescopeMatching"] = { link = "IncSearch" }     -- matching part
-        mapping["TelescopeMultiSelection"] = { link = "Visual" }  -- all selected lines
+        MAP.TelescopeSelectionCaret = { link = "Comment" } -- caret
+        MAP.TelescopeSelection = { link = "CursorLine" }   -- the current line
+        MAP.TelescopeMatching = { link = "IncSearch" }     -- matching part
+        MAP.TelescopeMultiSelection = { link = "Visual" }  -- all selected lines
         map_each(
             {
                 "TelescopeResultsSpecialComment", -- e.g., line-number when searching current buffer
@@ -327,8 +330,8 @@ local function filetype(palette)
         )
 
         -- preview
-        mapping["TelescopePreviewLine"] = { link = "Visual" }     -- the current line
-        mapping["TelescopePreviewMatch"] = { link = "IncSearch" } -- matching part
+        MAP.TelescopePreviewLine = { link = "Visual" }     -- the current line
+        MAP.TelescopePreviewMatch = { link = "IncSearch" } -- matching part
     end
 
     debug()
@@ -337,18 +340,15 @@ local function filetype(palette)
 end
 
 local function main()
-    local function f(palette)
-        -- define "Normal" first to allow shortcuts "fg"&"bg"
-        vim.api.nvim_set_hl(0, "Normal", { bg = "NONE", fg = palette["white"] })
+    -- define "Normal" first to allow shortcuts "fg"&"bg"
+    vim.api.nvim_set_hl(0, "Normal", { bg = "NONE", fg = PALETTE.white })
 
-        common(palette)
-        syntax(palette)
-        filetype(palette)
-        for item, color in pairs(mapping) do
-            vim.api.nvim_set_hl(0, item, color)
-        end
+    common()
+    syntax()
+    filetype()
+
+    for group, style in pairs(MAP) do
+        vim.api.nvim_set_hl(0, group, style)
     end
-
-    return f
 end
-return main()
+return main

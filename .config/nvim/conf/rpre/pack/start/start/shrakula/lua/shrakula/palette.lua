@@ -33,11 +33,7 @@ local function make_color_bright()
     PALETTE.cyan_bright = "#2fffff"
 end
 
-local function main()
-    make_greyscale()
-    make_color_normal()
-    make_color_bright()
-
-    return PALETTE
-end
-return main()
+make_greyscale()
+make_color_normal()
+make_color_bright()
+return PALETTE
