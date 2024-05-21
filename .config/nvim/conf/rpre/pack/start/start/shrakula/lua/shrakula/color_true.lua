@@ -187,6 +187,17 @@ local function syntax()
 
         map_each(
             {
+                "DiagnosticUnderlineTextError",
+                "DiagnosticUnderlineTextWarn",
+                "DiagnosticUnderlineTextInfo",
+                "DiagnosticUnderlineTextHint",
+                "DiagnosticUnderlineTextOk"
+            },
+            { underline = true }
+        )
+
+        map_each(
+            {
                 "DiagnosticVirtualTextError",
                 "DiagnosticVirtualTextWarn",
                 "DiagnosticVirtualTextInfo",
@@ -213,22 +224,34 @@ local function syntax()
         --  |:help treesitter-highlight-groups|
 
         map_each(
-            { "@keyword.luadoc", "@keyword.return.luadoc" },
+            {
+                "@keyword.luadoc", "@keyword.return.luadoc",
+                "@variable.builtin", "@variable.parameter.builtin",
+            },
             { link = "Comment" }
         )
 
         -- tune down $() and ${} in particular
         map_each(
-            { "@punctuation.special.bash" },
+            {
+                "@punctuation.bracket",
+                "@punctuation.special.bash", -- tune down $() and ${} in particular
+            },
             { link = "Delimiter" }
         )
 
+        MAP["@function.builtin"] = { link = "Function" }
         map_each(
             { "@keyword.import", "@include" },
             { link = "Include" }
         )
 
-        MAP["@constructor"] = { link = "Type" }
+        MAP["@module.builtin"] = { link = "Label" }
+
+        map_each(
+            { "@constructor", "@type.builtin" },
+            { link = "Type" }
+        )
 
         MAP["@text.uri"] = { underline = true }
         MAP["@string.special.url"] = { link = "@text.uri" }

@@ -449,7 +449,7 @@ local function visual()
             severity = { min = vim.diagnostic.severity.INFO },
             priority = 2,
         }
-        c["underline"] = false
+        c["underline"] = true
         c["severity_sort"] = true
 
         vim.diagnostic.config(c)
