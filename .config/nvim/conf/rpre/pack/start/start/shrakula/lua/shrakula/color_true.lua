@@ -118,39 +118,83 @@ local function syntax()
     local function internal()
         -- REF:
         --  |:help group-name|
+        --  |:help treesitter-highlight-groups|
 
+        -- literals
         map_each(
             { "String", "Character", "Number", "Boolean", "Float" },
             { fg = PALETTE.orange }
         )
-        MAP.Identifier = { link = "Normal" }
 
+        MAP.Identifier = { link = "Normal" }
+        map_each(
+            { "@field", "@property", "@variable.member" },
+            { fg = PALETTE.blue }
+        )
+
+        -- keyword
         map_each(
             { "Statement", "Conditional", "Repeat", "Label", "Operator", "Keyword", "Exception" },
             { fg = PALETTE.magenta }
         )
+        MAP["@module.builtin"] = { link = "Label" }
 
+        -- function
         map_each(
             { "Function", "PreProc", "Include", "Define", "Macro", "PreCondit" },
             { fg = PALETTE.purple }
         )
+        MAP["@function.builtin"] = { link = "Function" }
+        map_each(
+            { "@keyword.import", "@include" },
+            { link = "Include" }
+        )
 
+        -- type
         map_each(
             { "Type", "StorageClass", "Structure", "TypeDef" },
             { fg = PALETTE.cyan }
         )
+        map_each(
+            { "@constructor", "@type.builtin" },
+            { link = "Type" }
+        )
 
+        -- global; special
         map_each(
             { "Constant", "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
             { fg = PALETTE.green }
         )
 
-        MAP.Delimiter = { link = "Comment" }
+        -- comment; delimiter
+        map_each(
+            {
+                "Delimiter",
+                "@keyword.luadoc", "@keyword.return.luadoc",
+                "@variable.builtin", "@variable.parameter.builtin",
+            },
+            { link = "Comment" }
+        )
+        map_each(
+            {
+                "@punctuation.bracket",
+                "@punctuation.special.bash", -- tune down $() and ${} in particular
+            },
+            { link = "Delimiter" }
+        )
 
         MAP.Underlined = { fg = "fg", underline = true }
+        MAP["@text.uri"] = { underline = true }
+        MAP["@string.special.url"] = { link = "@text.uri" }
+
         MAP.Ignore = { fg = PALETTE.grey_dark }
         MAP.Error = { fg = PALETTE.red }
+
         MAP.Todo = { bg = PALETTE.grey_bright, fg = PALETTE.black }
+        map_each(
+            { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
+            { link = "Todo" }
+        )
     end
 
     local function diagnostic()
@@ -219,54 +263,6 @@ local function syntax()
         )
     end
 
-    local function treesitter()
-        -- REF:
-        --  |:help treesitter-highlight-groups|
-
-        map_each(
-            {
-                "@keyword.luadoc", "@keyword.return.luadoc",
-                "@variable.builtin", "@variable.parameter.builtin",
-            },
-            { link = "Comment" }
-        )
-
-        -- tune down $() and ${} in particular
-        map_each(
-            {
-                "@punctuation.bracket",
-                "@punctuation.special.bash", -- tune down $() and ${} in particular
-            },
-            { link = "Delimiter" }
-        )
-
-        MAP["@function.builtin"] = { link = "Function" }
-        map_each(
-            { "@keyword.import", "@include" },
-            { link = "Include" }
-        )
-
-        MAP["@module.builtin"] = { link = "Label" }
-
-        map_each(
-            { "@constructor", "@type.builtin" },
-            { link = "Type" }
-        )
-
-        MAP["@text.uri"] = { underline = true }
-        MAP["@string.special.url"] = { link = "@text.uri" }
-
-        map_each(
-            { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
-            { link = "Todo" }
-        )
-
-        map_each(
-            { "@field", "@property", "@variable.member" },
-            { fg = PALETTE.blue }
-        )
-    end
-
     local function lsp()
         -- REF:
         --  |:help lsp-semantic-highlight|
@@ -305,7 +301,6 @@ local function syntax()
     internal()
     diagnostic()
     lsp()
-    treesitter()
     cmp()
     ibl()
 end
