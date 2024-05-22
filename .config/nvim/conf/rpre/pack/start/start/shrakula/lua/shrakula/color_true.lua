@@ -124,7 +124,7 @@ local function syntax()
         -- literals
         map_each(
             { "String", "Character", "Number", "Boolean", "Float" },
-            { fg = PALETTE.orange }
+            { fg = PALETTE.green }
         )
 
         MAP.Identifier = { link = "Normal" }
@@ -164,7 +164,7 @@ local function syntax()
         -- global; special
         map_each(
             { "Constant", "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
-            { fg = PALETTE.green }
+            { fg = PALETTE.orange }
         )
 
         -- comment; delimiter
