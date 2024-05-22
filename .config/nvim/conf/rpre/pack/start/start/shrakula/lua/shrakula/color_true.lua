@@ -25,7 +25,8 @@ local function common()
         MAP.MatchParen = { fg = PALETTE.cyan, underline = true }
         MAP.EndOfBuffer = { fg = PALETTE.black }                   -- tilde at EOF
 
-        MAP.IncSearch = { bg = PALETTE.white, fg = PALETTE.black } -- current match
+        MAP.IncSearch = { bg = PALETTE.white, fg = PALETTE.black } -- current match, during search
+        MAP.CurSearch = { link = "IncSearch" }                     -- current match, after search (jumping)
         MAP.Search = { bg = PALETTE.grey_bright, fg = "fg" }       -- other matches
 
         MAP.Visual = { bg = PALETTE.grey_bright, fg = PALETTE.black }
