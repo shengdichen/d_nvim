@@ -63,7 +63,7 @@ local function autocmds()
     end
 
     local function show_if_modified()
-        if vim.api.nvim_buf_get_option(0, "modified") then
+        if vim.api.nvim_get_option_value("modified", { buf = 0 }) then
             util_vim.statusline(2)
         else
             util_vim.statusline(0)
