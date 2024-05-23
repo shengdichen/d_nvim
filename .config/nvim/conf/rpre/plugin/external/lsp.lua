@@ -180,28 +180,17 @@ local function lang()
 
             -- checker & linter
             c["mccabe"] = on
-            -- REF:
-            --  https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
-            -- NOTE:
-            --  1. must specify this even if global flake8-config exists
-            c["flake8"] = {
-                enabled = true,
-                maxLineLength = 88,
-                ignore = {
-                    "E203", -- spaces around |:|
-                    "W503", -- binary-operator (e.g., +) at start-of-line
-                }
-            }
             -- https://github.com/python-lsp/python-lsp-ruff#configuration
-            c["ruff"] = off -- use (separate) ruff_lsp instead
+            c["ruff"] = on
             c["pylint"] = on
+            c["flake8"] = off
             c["pyflakes"] = off
             c["pycodestyle"] = off
             c["pydocstyle"] = off
 
-            -- formater
-            c["black"] = on
-            c["isort"] = on
+            -- formatter
+            c["black"] = off
+            c["isort"] = off -- broken; use nonels-plugin instead
             c["autopep8"] = off
             c["yapf"] = off
 
@@ -212,6 +201,10 @@ local function lang()
                     os.getenv("HOME") .. "/.local/state/nvim/pylsp.log",
                 },
                 settings = { pylsp = { plugins = c } },
+            })
+
+            set_nonels({
+                m_nonels.builtins.formatting.isort,
             })
         end
 
