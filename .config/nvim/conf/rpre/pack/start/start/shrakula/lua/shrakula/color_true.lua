@@ -138,7 +138,13 @@ local function syntax()
             { "Statement", "Conditional", "Repeat", "Label", "Operator", "Keyword", "Exception" },
             { fg = PALETTE.magenta }
         )
-        MAP["@module.builtin"] = { link = "Label" }
+        map_each(
+            {
+                "@module.builtin",
+                "@attribute", "@attribute.builtin"
+            },
+            { link = "Keyword" }
+        )
 
         -- function
         map_each(
