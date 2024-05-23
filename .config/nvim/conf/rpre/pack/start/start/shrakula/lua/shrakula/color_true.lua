@@ -1,3 +1,4 @@
+local util_lua = require("util_lua")
 local PALETTE = require("shrakula.palette")
 
 ---@type table<string, table<string, any>>
@@ -9,6 +10,98 @@ local function map_each(groups, style)
     for _, group in ipairs(groups) do
         MAP[group] = style
     end
+end
+
+local STYLES = {
+    default = { bg = "NONE", fg = PALETTE.white },
+    commment = { fg = PALETTE.grey_bright },
+    keyword = { fg = PALETTE.magenta },
+    field = { fg = PALETTE.blue },
+    type = { fg = PALETTE.cyan },
+
+    _link_default = { link = "Normal" },
+    _link_comment = { link = "Comment" },
+    _link_keyword = { link = "Keyword" },
+    _link_special = { link = "Special" },
+    _link_type = { link = "Type" },
+    _link_field = { link = "Keyword" },
+    _link_function = { link = "Function" },
+}
+STYLES["function"] = { fg = PALETTE.purple }
+
+---@param groups string[]|string
+---@param name string|table<string, string>
+STYLES.link_to = function(groups, name)
+    if type(groups) == "string" then
+        groups = { groups }
+    end
+    if type(name) == "string" then
+        name = { link = name }
+    end
+    for _, group in ipairs(groups) do
+        MAP[group] = name
+    end
+end
+
+---@param groups string[]|string
+STYLES.link_to_default = function(groups)
+    STYLES.link_to(groups, STYLES._link_default)
+end
+
+---@param groups string[]|string
+STYLES.link_to_comment = function(groups)
+    STYLES.link_to(groups, STYLES._link_comment)
+end
+
+---@param groups string[]|string
+STYLES.link_to_keyword = function(groups)
+    STYLES.link_to(groups, STYLES._link_keyword)
+end
+
+---@param groups string[]|string
+STYLES.link_to_special = function(groups)
+    STYLES.link_to(groups, STYLES._link_special)
+end
+
+---@param groups string[]|string
+STYLES.link_to_type = function(groups)
+    STYLES.link_to(groups, STYLES._link_type)
+end
+
+---@param groups string[]|string
+STYLES.link_to_field = function(groups)
+    STYLES.link_to(groups, STYLES._link_field)
+end
+
+---@param groups string[]|string
+STYLES.link_to_function = function(groups)
+    STYLES.link_to(groups, STYLES._link_function)
+end
+
+---@return table<string, table<string, any>>
+STYLES.make_default = function()
+    return {}
+end
+
+---@return table<string, table<string, any>>
+STYLES.make_comment = function()
+    return { fg = PALETTE.grey_bright }
+end
+
+---@param style table<string, any>|nil
+---@return table<string, any>
+function STYLES.underline_like(style)
+    if style == nil then style = {} end
+    style.underline = true
+    return style
+end
+
+---@param style table<string, any>|nil
+---@return table<string, any>
+function STYLES.reverse_like(style)
+    if style == nil then style = {} end
+    style.reverse = true
+    return style
 end
 
 local function common()
@@ -33,30 +126,30 @@ local function common()
         MAP.VisualNOS = { bg = PALETTE.grey_dark, fg = "fg" }
 
         -- notably used for diagnostics, e.g., lsp
-        MAP.NormalFloat = { link = "Normal" }
-        MAP.FloatBorder = { link = "Comment" }
+        STYLES.link_to_default("NormalFloat")
+        STYLES.link_to_comment("FloatBorder")
     end
 
     local function cursor()
-        MAP.Cursor = { reverse = true }             -- the single point of the cursor
+        MAP.Cursor = STYLES.reverse_like()          -- the single point of the cursor
         MAP.CursorLine = { bg = PALETTE.grey_dark } -- the entire line that the cursor is on
         MAP.QuickFixLine = { bg = PALETTE.grey_bright, fg = PALETTE.black }
 
-        MAP.CursorLineNr = { link = "Normal" } -- current
-        MAP.LineNr = { link = "Comment" }      -- non-current
+        STYLES.link_to_default("CursorLineNr")   -- current
+        STYLES.link_to_comment("LineNr")         -- non-current
 
-        MAP.CursorColumn = { reverse = true }  -- horizontal indicator for |cursorcolumn|
+        MAP.CursorColumn = STYLES.reverse_like() -- horizontal indicator for |cursorcolumn|
         MAP.ColorColumn = { bg = PALETTE.grey_dark }
     end
 
     local function line_horizontal()
-        MAP.StatusLine = { link = "Normal" }    -- current
-        MAP.StatusLineNC = { link = "Comment" } -- non-current
+        STYLES.link_to_default("StatusLine")   -- current
+        STYLES.link_to_comment("StatusLineNC") -- non-current
 
-        MAP.Folded = { link = "Comment" }
-        MAP.FoldColumn = { link = "Comment" }
-        MAP.TabLine = { link = "Comment" } -- non-current
-        MAP.TabLineFill = { link = "Normal" }
+        STYLES.link_to_comment("Folded")
+        STYLES.link_to_comment("FoldColumn")
+        STYLES.link_to_comment("TabLine") -- non-current
+        STYLES.link_to_default("TabLineFill")
     end
 
     local function cmd()
@@ -64,13 +157,13 @@ local function common()
         MAP.ErrorMsg = { fg = PALETTE.red }
         MAP.Question = { fg = PALETTE.purple }
 
-        MAP.WildMenu = { link = "Comment" }
+        STYLES.link_to_comment("WildMenu")
         MAP.Title = { fg = PALETTE.cyan }
 
         MAP.PmenuSel = { bg = PALETTE.white, fg = PALETTE.black } -- selected
         MAP.Pmenu = { bg = PALETTE.grey_dark }                    -- non-selected
         MAP.PmenuSbar = { fg = PALETTE.grey_dark }                -- scrollbar
-        MAP.PmenuThumb = { link = "Comment" }                     -- none
+        STYLES.link_to_comment("PmenuThumb")                      -- none
 
         MAP.Terminal = { fg = "NONE" }                            -- cursor in builtin terminal
     end
@@ -95,15 +188,15 @@ local function common()
 
     local function misc()
         -- sign-column(s) for rows without sign(s)
-        MAP.SignColumn = { link = "Normal" }
+        STYLES.link_to_default("SignColumn")
 
         MAP.Directory = { fg = PALETTE.cyan }
 
-        MAP.VertSplit = { link = "Comment" }
+        STYLES.link_to_comment("VertSplit")
 
-        MAP.SpecialKey = { link = "Comment" }
-        MAP.NonText = { link = "Comment" }
-        MAP.Conceal = { link = "Comment" }
+        STYLES.link_to_comment("SpecialKey")
+        STYLES.link_to_comment("NonText")
+        STYLES.link_to_comment("Conceal")
     end
 
     general()
@@ -158,49 +251,54 @@ local function syntax()
         )
 
         -- type
-        map_each(
-            { "Type", "StorageClass", "Structure", "TypeDef" },
-            { fg = PALETTE.cyan }
-        )
-        map_each(
-            { "@constructor", "@type.builtin" },
-            { link = "Type" }
-        )
+        MAP.Type = { fg = PALETTE.cyan }
+        STYLES.link_to_type({
+            "StorageClass", "Structure", "TypeDef",
+            "@constructor", "@type.builtin"
+        })
 
+        local style_special = { fg = PALETTE.orange }
         -- global; special
         map_each(
             { "Constant", "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
-            { fg = PALETTE.orange }
+            style_special
+        )
+        map_each(
+            {
+                "@string.special.url",
+                "@string.special.path",
+            },
+            STYLES.underline_like(util_lua.copy_shallow(style_special))
         )
 
         -- comment; delimiter
-        map_each(
+        STYLES.link_to_comment(
             {
-                "Delimiter",
                 "@keyword.luadoc", "@keyword.return.luadoc",
                 "@variable.builtin", "@variable.parameter.builtin",
-            },
-            { link = "Comment" }
+                "Delimiter",
+            }
         )
-        map_each(
+        STYLES.link_to(
             {
                 "@punctuation.bracket",
                 "@punctuation.special.bash", -- tune down $() and ${} in particular
             },
-            { link = "Delimiter" }
+            "Delimiter"
         )
 
-        MAP.Underlined = { fg = "fg", underline = true }
-        MAP["@text.uri"] = { underline = true }
-        MAP["@string.special.url"] = { link = "@text.uri" }
+        map_each(
+            { "Underlined", "@text.uri" },
+            STYLES.underline_like()
+        )
 
         MAP.Ignore = { fg = PALETTE.grey_dark }
         MAP.Error = { fg = PALETTE.red }
 
         MAP.Todo = { bg = PALETTE.grey_bright, fg = PALETTE.black }
-        map_each(
+        STYLES.link_to(
             { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
-            { link = "Todo" }
+            "Todo"
         )
     end
 
@@ -225,16 +323,13 @@ local function syntax()
         --  2. *Underline* := portion of code inducing the diagnostic
         --  3. *VirtualText* := inline message
         --  4. *Floating* := detail message
-        map_each(
-            {
-                "DiagnosticSignError",
-                "DiagnosticSignWarn",
-                "DiagnosticSignInfo",
-                "DiagnosticSignHint",
-                "DiagnosticSignOk"
-            },
-            { link = "Normal" }
-        )
+        STYLES.link_to_default({
+            "DiagnosticSignError",
+            "DiagnosticSignWarn",
+            "DiagnosticSignInfo",
+            "DiagnosticSignHint",
+            "DiagnosticSignOk"
+        })
 
         map_each(
             {
@@ -244,21 +339,18 @@ local function syntax()
                 "DiagnosticUnderlineTextHint",
                 "DiagnosticUnderlineTextOk"
             },
-            { underline = true }
+            STYLES.underline_like()
         )
 
-        map_each(
-            {
-                "DiagnosticVirtualTextError",
-                "DiagnosticVirtualTextWarn",
-                "DiagnosticVirtualTextInfo",
-                "DiagnosticVirtualTextHint",
-                "DiagnosticVirtualTextOk"
-            },
-            { link = "Comment" }
-        )
+        STYLES.link_to_comment({
+            "DiagnosticVirtualTextError",
+            "DiagnosticVirtualTextWarn",
+            "DiagnosticVirtualTextInfo",
+            "DiagnosticVirtualTextHint",
+            "DiagnosticVirtualTextOk"
+        })
 
-        map_each(
+        STYLES.link_to(
             {
                 "DiagnosticFloatingError",
                 "DiagnosticFloatingWarn",
@@ -266,7 +358,7 @@ local function syntax()
                 "DiagnosticFloatingHint",
                 "DiagnosticFloatingOk"
             },
-            { link = "NormalFloat" }
+            "NormalFloat"
         )
     end
 
@@ -274,29 +366,29 @@ local function syntax()
         -- REF:
         --  |:help lsp-semantic-highlight|
 
-        MAP["@lsp.type.namespace"] = { link = "@namespace" }
-        MAP["@lsp.type.interface"] = { link = "@structure" }
-        MAP["@lsp.type.struct"] = { link = "@structure" }
-        MAP["@lsp.type.class"] = { link = "@structure" }
-        MAP["@lsp.type.enum"] = { link = "@structure" }
-        MAP["@lsp.type.enumMember"] = { link = "@constant" }
+        STYLES.link_to("@lsp.type.namespace", "@namespace")
+        STYLES.link_to("@lsp.type.interface", "@structure")
+        STYLES.link_to("@lsp.type.struct", "@structure")
+        STYLES.link_to("@lsp.type.class", "@structure")
+        STYLES.link_to("@lsp.type.enum", "@structure")
+        STYLES.link_to("@lsp.type.enumMember", "@constant")
 
-        MAP["@lsp.type.type"] = { link = "@type" }
-        MAP["@lsp.type.typeParameter"] = { link = "@type.definition" }
+        STYLES.link_to("@lsp.type.type", "@type")
+        STYLES.link_to("@lsp.type.typeParameter", "@type.definition")
 
-        MAP["@lsp.type.function"] = { link = "@function" }
-        MAP["@lsp.type.method"] = { link = "@method" }
-        MAP["@lsp.type.decorator"] = { link = "@method" }
-        MAP["@lsp.type.parameter"] = { link = "@parameter" }
+        STYLES.link_to("@lsp.type.function", "@function")
+        STYLES.link_to("@lsp.type.method", "@method")
+        STYLES.link_to("@lsp.type.decorator", "@method")
+        STYLES.link_to("@lsp.type.parameter", "@parameter")
 
-        MAP["@lsp.type.variable"] = { link = "@variable" }
-        MAP["@lsp.type.property"] = { link = "@property" }
-        MAP["@lsp.type.macro"] = { link = "@macro" }
+        STYLES.link_to("@lsp.type.variable", "@variable")
+        STYLES.link_to("@lsp.type.property", "@property")
+        STYLES.link_to("@lsp.type.macro", "@macro")
     end
 
     local function cmp()
         -- type of complemention, e.g., function, snippet...
-        MAP.CmpItemKind = { link = "Comment" }
+        STYLES.link_to_comment("CmpItemKind")
     end
 
     local function ibl()
@@ -319,44 +411,39 @@ local function filetype()
     end
 
     local function gitsigns()
-        map_each(
-            {
-                "GitSignsAdd",
-                "GitSignsDelete",
-                "GitSignsTopdelete",
-                "GitSignsChange",
-                "GitSignsChangedelete",
-                "GitSignsUntracked",
-            },
-            { link = "Comment" }
-        )
+        STYLES.link_to_comment({
+            "GitSignsAdd",
+            "GitSignsDelete",
+            "GitSignsTopdelete",
+            "GitSignsChange",
+            "GitSignsChangedelete",
+            "GitSignsUntracked",
+        })
     end
 
     local function telescope()
-        MAP.TelescopeBorder = { link = "Comment" }
-        MAP.TelescopeTitle = { link = "Comment" }
+        STYLES.link_to_comment({
+            "TelescopeBorder", "TelescopeTitle",
 
-        -- prompt
-        MAP.TelescopePromptPrefix = { link = "Comment" }
-        MAP.TelescopePromptCounter = { link = "Comment" } -- <num>/<num> on RHS
+            -- prompt
+            "TelescopePromptPrefix",
+            "TelescopePromptCounter" -- <num>/<num> on RHS
+        })
 
         -- picker
-        MAP.TelescopeSelectionCaret = { link = "Comment" } -- caret
-        MAP.TelescopeSelection = { link = "CursorLine" }   -- the current line
-        MAP.TelescopeMatching = { link = "IncSearch" }     -- matching part
-        MAP.TelescopeMultiSelection = { link = "Visual" }  -- all selected lines
-        map_each(
-            {
-                "TelescopeResultsSpecialComment", -- e.g., line-number when searching current buffer
-                "TelescopeResultsNumber",         -- e.g., buffer id
-                "TelescopeResultsComment",        -- e.g., buffer type (%a, #h...)
-            },
-            { link = "Comment" }
-        )
+        STYLES.link_to_comment("TelescopeSelectionCaret")   -- caret
+        STYLES.link_to("TelescopeSelection", "CursorLine")  -- the current line
+        STYLES.link_to("TelescopeMatching", "IncSearch")    -- matching part
+        STYLES.link_to("TelescopeMultiSelection", "Visual") -- all selected lines
+        STYLES.link_to_comment({
+            "TelescopeResultsSpecialComment",               -- e.g., line-number when searching current buffer
+            "TelescopeResultsNumber",                       -- e.g., buffer id
+            "TelescopeResultsComment",                      -- e.g., buffer type (%a, #h...)
+        })
 
         -- preview
-        MAP.TelescopePreviewLine = { link = "Visual" }     -- the current line
-        MAP.TelescopePreviewMatch = { link = "IncSearch" } -- matching part
+        STYLES.link_to("TelescopePreviewLine", "Visual")     -- the current line
+        STYLES.link_to("TelescopePreviewMatch", "IncSearch") -- matching part
     end
 
     debug()
