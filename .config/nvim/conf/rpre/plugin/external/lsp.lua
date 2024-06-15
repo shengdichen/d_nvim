@@ -366,6 +366,7 @@ local function lang()
 
         nonels()
         set_official("ltex")
+        set_official("texlab")
     end
 
     local function misc()
@@ -393,7 +394,7 @@ local function lang()
 
         for _, server in ipairs(
             {
-                "lua_ls", "hls", "clangd",
+                "lua_ls", "hls", "clangd", "zls",
                 "cssls", "html", "jsonls", -- vscode-extracted family
                 "vimls",
                 "sqlls",
