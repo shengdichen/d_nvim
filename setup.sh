@@ -49,6 +49,7 @@ __plugin() {
         __install "${_update}" "nvimtools" "none-ls.nvim"
         __install "${_update}" "nvimtools" "none-ls-extras.nvim"
         __install "${_update}" "Hoffs" "omnisharp-extended-lsp.nvim"
+        __install "${_update}" "ThePrimeagen" "refactoring.nvim"
 
         __install "${_update}" "folke" "neodev.nvim"
         __install "${_update}" "j-hui" "fidget.nvim"

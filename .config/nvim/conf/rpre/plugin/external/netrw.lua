@@ -1,6 +1,6 @@
 local function handling()
     -- sync [n]vim's (internal) dir with current dir of netrw
-    vim.g.netrw_keepdir = 1
+    vim.g.netrw_keepdir = 0
 
     -- use dir-cache only on remotes
     vim.g.netrw_fastbrowse = 1
@@ -13,9 +13,9 @@ local function handling()
 end
 
 local function visual()
-    vim.g.netrw_banner = 0 -- hide banner
+    vim.g.netrw_banner = 0    -- hide banner
 
-    vim.g.netrw_hide = 0
+    vim.g.netrw_hide = 0      -- show dotfiles
     vim.g.netrw_liststyle = 1 -- show extra info
 
     vim.g.netrw_sort_options = "name"

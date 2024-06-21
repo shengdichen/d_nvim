@@ -1,14 +1,110 @@
-local mapping = {}
+local util_lua = require("util_lua")
+local PALETTE = require("shrakula.palette")
+
+---@type table<string, table<string, any>>
+local MAP = {}
 
 ---@param groups string[]
----@param color table<string, string>
-local function map_each(groups, color)
+---@param style table<string, any>
+local function map_each(groups, style)
     for _, group in ipairs(groups) do
-        mapping[group] = color
+        MAP[group] = style
     end
 end
 
-local function common(palette)
+local STYLES = {
+    default = { bg = "NONE", fg = PALETTE.white },
+    commment = { fg = PALETTE.grey_bright },
+    keyword = { fg = PALETTE.magenta },
+    field = { fg = PALETTE.blue },
+    type = { fg = PALETTE.cyan },
+
+    _link_default = { link = "Normal" },
+    _link_comment = { link = "Comment" },
+    _link_keyword = { link = "Keyword" },
+    _link_special = { link = "Special" },
+    _link_type = { link = "Type" },
+    _link_field = { link = "Keyword" },
+    _link_function = { link = "Function" },
+}
+STYLES["function"] = { fg = PALETTE.purple }
+
+---@param groups string[]|string
+---@param name string|table<string, string>
+STYLES.link_to = function(groups, name)
+    if type(groups) == "string" then
+        groups = { groups }
+    end
+    if type(name) == "string" then
+        name = { link = name }
+    end
+    for _, group in ipairs(groups) do
+        MAP[group] = name
+    end
+end
+
+---@param groups string[]|string
+STYLES.link_to_default = function(groups)
+    STYLES.link_to(groups, STYLES._link_default)
+end
+
+---@param groups string[]|string
+STYLES.link_to_comment = function(groups)
+    STYLES.link_to(groups, STYLES._link_comment)
+end
+
+---@param groups string[]|string
+STYLES.link_to_keyword = function(groups)
+    STYLES.link_to(groups, STYLES._link_keyword)
+end
+
+---@param groups string[]|string
+STYLES.link_to_special = function(groups)
+    STYLES.link_to(groups, STYLES._link_special)
+end
+
+---@param groups string[]|string
+STYLES.link_to_type = function(groups)
+    STYLES.link_to(groups, STYLES._link_type)
+end
+
+---@param groups string[]|string
+STYLES.link_to_field = function(groups)
+    STYLES.link_to(groups, STYLES._link_field)
+end
+
+---@param groups string[]|string
+STYLES.link_to_function = function(groups)
+    STYLES.link_to(groups, STYLES._link_function)
+end
+
+---@return table<string, table<string, any>>
+STYLES.make_default = function()
+    return {}
+end
+
+---@return table<string, table<string, any>>
+STYLES.make_comment = function()
+    return { fg = PALETTE.grey_bright }
+end
+
+---@param style table<string, any>|nil
+---@return table<string, any>
+function STYLES.underline_like(style)
+    if style == nil then style = {} end
+    style.underline = true
+    return style
+end
+
+---@param style table<string, any>|nil
+---@return table<string, any>
+function STYLES.reverse_like(style)
+    if style == nil then style = {} end
+    style.reverse = true
+    return style
+end
+
+local function common()
     -- REF:
     --  :h guifg
     -- NOTE:
@@ -18,88 +114,89 @@ local function common(palette)
     --  ->  specify explicitly (if same as |Normal|, consider using "fg")
 
     local function general()
-        mapping["Comment"] = { fg = palette["grey_bright"] }
-        mapping["MatchParen"] = { fg = palette["cyan"], underline = true }
-        mapping["EndOfBuffer"] = { fg = palette["black"] }                      -- tilde at EOF
+        MAP.Comment = { fg = PALETTE.grey_bright }
+        MAP.MatchParen = { fg = PALETTE.cyan, underline = true }
+        MAP.EndOfBuffer = { fg = PALETTE.black }                   -- tilde at EOF
 
-        mapping["IncSearch"] = { bg = palette["white"], fg = palette["black"] } -- current match
-        mapping["Search"] = { bg = palette["grey_bright"], fg = "fg" }          -- other matches
+        MAP.IncSearch = { bg = PALETTE.white, fg = PALETTE.black } -- current match, during search
+        MAP.CurSearch = { link = "IncSearch" }                     -- current match, after search (jumping)
+        MAP.Search = { bg = PALETTE.grey_bright, fg = "fg" }       -- other matches
 
-        mapping["Visual"] = { bg = palette["grey_bright"], fg = palette["black"] }
-        mapping["VisualNOS"] = { bg = palette["grey_dark"], fg = "fg" }
+        MAP.Visual = { bg = PALETTE.grey_bright, fg = PALETTE.black }
+        MAP.VisualNOS = { bg = PALETTE.grey_dark, fg = "fg" }
 
         -- notably used for diagnostics, e.g., lsp
-        mapping["NormalFloat"] = { link = "Normal" }
-        mapping["FloatBorder"] = { link = "Comment" }
+        STYLES.link_to_default("NormalFloat")
+        STYLES.link_to_comment("FloatBorder")
     end
 
     local function cursor()
-        mapping["Cursor"] = { reverse = true }                -- the single point of the cursor
-        mapping["CursorLine"] = { bg = palette["grey_dark"] } -- the entire line that the cursor is on
-        mapping["QuickFixLine"] = { bg = palette["grey_bright"], fg = palette["black"] }
+        MAP.Cursor = STYLES.reverse_like()          -- the single point of the cursor
+        MAP.CursorLine = { bg = PALETTE.grey_dark } -- the entire line that the cursor is on
+        MAP.QuickFixLine = { bg = PALETTE.grey_bright, fg = PALETTE.black }
 
-        mapping["CursorLineNr"] = { link = "Normal" } -- current
-        mapping["LineNr"] = { link = "Comment" }      -- non-current
+        STYLES.link_to_default("CursorLineNr")   -- current
+        STYLES.link_to_comment("LineNr")         -- non-current
 
-        mapping["CursorColumn"] = { reverse = true }  -- horizontal indicator for |cursorcolumn|
-        mapping["ColorColumn"] = { bg = palette["grey_dark"] }
+        MAP.CursorColumn = STYLES.reverse_like() -- horizontal indicator for |cursorcolumn|
+        MAP.ColorColumn = { bg = PALETTE.grey_dark }
     end
 
     local function line_horizontal()
-        mapping["StatusLine"] = { link = "Normal" }    -- current
-        mapping["StatusLineNC"] = { link = "Comment" } -- non-current
+        STYLES.link_to_default("StatusLine")   -- current
+        STYLES.link_to_comment("StatusLineNC") -- non-current
 
-        mapping["Folded"] = { link = "Comment" }
-        mapping["FoldColumn"] = { link = "Comment" }
-        mapping["TabLine"] = { link = "Comment" } -- non-current
-        mapping["TabLineFill"] = { link = "Normal" }
+        STYLES.link_to_comment("Folded")
+        STYLES.link_to_comment("FoldColumn")
+        STYLES.link_to_comment("TabLine") -- non-current
+        STYLES.link_to_default("TabLineFill")
     end
 
     local function cmd()
-        mapping["WarningMsg"] = { fg = palette["orange"] }
-        mapping["ErrorMsg"] = { fg = palette["red"] }
-        mapping["Question"] = { fg = palette["purple"] }
+        MAP.WarningMsg = { fg = PALETTE.orange }
+        MAP.ErrorMsg = { fg = PALETTE.red }
+        MAP.Question = { fg = PALETTE.purple }
 
-        mapping["WildMenu"] = { link = "Comment" }
-        mapping["Title"] = { fg = palette["cyan"] }
+        STYLES.link_to_comment("WildMenu")
+        MAP.Title = { fg = PALETTE.cyan }
 
-        mapping["PmenuSel"] = { bg = palette["white"], fg = palette["black"] } -- selected
-        mapping["Pmenu"] = { bg = palette["grey_dark"] }                       -- non-selected
-        mapping["PmenuSbar"] = { fg = palette["grey_dark"] }                   -- scrollbar
-        mapping["PmenuThumb"] = { link = "Comment" }                           -- none
+        MAP.PmenuSel = { bg = PALETTE.white, fg = PALETTE.black } -- selected
+        MAP.Pmenu = { bg = PALETTE.grey_dark }                    -- non-selected
+        MAP.PmenuSbar = { fg = PALETTE.grey_dark }                -- scrollbar
+        STYLES.link_to_comment("PmenuThumb")                      -- none
 
-        mapping["Terminal"] = { fg = "NONE" }                                  -- cursor in builtin terminal
+        MAP.Terminal = { fg = "NONE" }                            -- cursor in builtin terminal
     end
 
     local function diff()
-        mapping["DiffAdd"] = { fg = palette["green"] }
-        mapping["DiffDelete"] = { fg = palette["red"] }
+        MAP.DiffAdd = { fg = PALETTE.green }
+        MAP.DiffDelete = { fg = PALETTE.red }
 
         -- lines with differences
-        mapping["DiffChange"] = { bg = palette["grey_bright"], fg = palette["black"] }
+        MAP.DiffChange = { bg = PALETTE.grey_bright, fg = PALETTE.black }
         -- the differences themselves
-        mapping["DiffText"] = { bg = palette["white"], fg = palette["black"] }
+        MAP.DiffText = { bg = PALETTE.white, fg = PALETTE.black }
     end
 
     local function spellcheck()
-        mapping["SpellCap"] = { fg = palette["yellow"] }
-        mapping["SpellLocal"] = { fg = palette["yellow"] }
-        mapping["SpellRare"] = { fg = palette["orange"] }
+        MAP.SpellCap = { fg = PALETTE.yellow }
+        MAP.SpellLocal = { fg = PALETTE.yellow }
+        MAP.SpellRare = { fg = PALETTE.orange }
 
-        mapping["SpellBad"] = { fg = palette["red"], underline = true }
+        MAP.SpellBad = { fg = PALETTE.red, underline = true }
     end
 
     local function misc()
         -- sign-column(s) for rows without sign(s)
-        mapping["SignColumn"] = { link = "Normal" }
+        STYLES.link_to_default("SignColumn")
 
-        mapping["Directory"] = { fg = palette["cyan"] }
+        MAP.Directory = { fg = PALETTE.cyan }
 
-        mapping["VertSplit"] = { link = "Comment" }
+        STYLES.link_to_comment("VertSplit")
 
-        mapping["SpecialKey"] = { link = "Comment" }
-        mapping["NonText"] = { link = "Comment" }
-        mapping["Conceal"] = { link = "Comment" }
+        STYLES.link_to_comment("SpecialKey")
+        STYLES.link_to_comment("NonText")
+        STYLES.link_to_comment("Conceal")
     end
 
     general()
@@ -111,43 +208,98 @@ local function common(palette)
     misc()
 end
 
-local function syntax(palette)
+local function syntax()
     local function internal()
         -- REF:
         --  |:help group-name|
+        --  |:help treesitter-highlight-groups|
 
+        -- literals
         map_each(
-            { "Constant", "String", "Character", "Number", "Boolean", "Float" },
-            { fg = palette["green"] }
+            { "String", "Character", "Number", "Boolean", "Float" },
+            { fg = PALETTE.green }
         )
-        map_each({ "Identifier" }, { link = "Normal" })
 
+        MAP.Identifier = { link = "Normal" }
+        map_each(
+            { "@field", "@property", "@variable.member" },
+            { fg = PALETTE.blue }
+        )
+
+        -- keyword
         map_each(
             { "Statement", "Conditional", "Repeat", "Label", "Operator", "Keyword", "Exception" },
-            { fg = palette["magenta"] }
+            { fg = PALETTE.magenta }
+        )
+        map_each(
+            {
+                "@module.builtin",
+                "@attribute", "@attribute.builtin"
+            },
+            { link = "Keyword" }
         )
 
+        -- function
         map_each(
             { "Function", "PreProc", "Include", "Define", "Macro", "PreCondit" },
-            { fg = palette["purple"] }
+            { fg = PALETTE.purple }
+        )
+        MAP["@function.builtin"] = { link = "Function" }
+        map_each(
+            { "@keyword.import", "@include" },
+            { link = "Include" }
+        )
+
+        -- type
+        MAP.Type = { fg = PALETTE.cyan }
+        STYLES.link_to_type({
+            "StorageClass", "Structure", "TypeDef",
+            "@constructor", "@type.builtin"
+        })
+
+        local style_special = { fg = PALETTE.orange }
+        -- global; special
+        map_each(
+            { "Constant", "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
+            style_special
+        )
+        map_each(
+            {
+                "@string.special.url",
+                "@string.special.path",
+            },
+            STYLES.underline_like(util_lua.copy_shallow(style_special))
+        )
+
+        -- comment; delimiter
+        STYLES.link_to_comment(
+            {
+                "@keyword.luadoc", "@keyword.return.luadoc",
+                "@variable.builtin", "@variable.parameter.builtin",
+                "Delimiter",
+            }
+        )
+        STYLES.link_to(
+            {
+                "@punctuation.bracket",
+                "@punctuation.special.bash", -- tune down $() and ${} in particular
+            },
+            "Delimiter"
         )
 
         map_each(
-            { "Type", "StorageClass", "Structure", "TypeDef" },
-            { fg = palette["cyan"] }
+            { "Underlined", "@text.uri" },
+            STYLES.underline_like()
         )
 
-        map_each(
-            { "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
-            { fg = palette["yellow"] }
+        MAP.Ignore = { fg = PALETTE.grey_dark }
+        MAP.Error = { fg = PALETTE.red }
+
+        MAP.Todo = { bg = PALETTE.grey_bright, fg = PALETTE.black }
+        STYLES.link_to(
+            { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
+            "Todo"
         )
-
-        mapping["Delimiter"] = { link = "Comment" }
-
-        mapping["Underlined"] = { fg = "fg", underline = true }
-        mapping["Ignore"] = { fg = palette["grey_dark"] }
-        mapping["Error"] = { fg = palette["red"] }
-        mapping["Todo"] = { bg = palette["grey_bright"], fg = palette["black"] }
     end
 
     local function diagnostic()
@@ -155,8 +307,8 @@ local function syntax(palette)
         --  |:help diagnostic-highlights|
 
         local bg = "#433f4b" -- slightly brighter than grey-dark
-        mapping["DiagnosticError"] = { bg = bg, fg = palette["red"] }
-        mapping["DiagnosticWarn"] = { bg = bg, fg = palette["yellow"] }
+        MAP.DiagnosticError = { bg = bg, fg = PALETTE.red }
+        MAP.DiagnosticWarn = { bg = bg, fg = PALETTE.yellow }
         map_each(
             {
                 "DiagnosticInfo",
@@ -171,29 +323,34 @@ local function syntax(palette)
         --  2. *Underline* := portion of code inducing the diagnostic
         --  3. *VirtualText* := inline message
         --  4. *Floating* := detail message
-        map_each(
-            {
-                "DiagnosticSignError",
-                "DiagnosticSignWarn",
-                "DiagnosticSignInfo",
-                "DiagnosticSignHint",
-                "DiagnosticSignOk"
-            },
-            { link = "Normal" }
-        )
+        STYLES.link_to_default({
+            "DiagnosticSignError",
+            "DiagnosticSignWarn",
+            "DiagnosticSignInfo",
+            "DiagnosticSignHint",
+            "DiagnosticSignOk"
+        })
 
         map_each(
             {
-                "DiagnosticVirtualTextError",
-                "DiagnosticVirtualTextWarn",
-                "DiagnosticVirtualTextInfo",
-                "DiagnosticVirtualTextHint",
-                "DiagnosticVirtualTextOk"
+                "DiagnosticUnderlineTextError",
+                "DiagnosticUnderlineTextWarn",
+                "DiagnosticUnderlineTextInfo",
+                "DiagnosticUnderlineTextHint",
+                "DiagnosticUnderlineTextOk"
             },
-            { link = "Comment" }
+            STYLES.underline_like()
         )
 
-        map_each(
+        STYLES.link_to_comment({
+            "DiagnosticVirtualTextError",
+            "DiagnosticVirtualTextWarn",
+            "DiagnosticVirtualTextInfo",
+            "DiagnosticVirtualTextHint",
+            "DiagnosticVirtualTextOk"
+        })
+
+        STYLES.link_to(
             {
                 "DiagnosticFloatingError",
                 "DiagnosticFloatingWarn",
@@ -201,34 +358,7 @@ local function syntax(palette)
                 "DiagnosticFloatingHint",
                 "DiagnosticFloatingOk"
             },
-            { link = "NormalFloat" }
-        )
-    end
-
-    local function treesitter()
-        -- REF:
-        --  |:help treesitter-highlight-groups|
-
-        map_each(
-            { "@keyword.luadoc", "@keyword.return.luadoc" },
-            { link = "Comment" }
-        )
-
-        mapping["@keyword.import"] = { link = "@include" }
-
-        mapping["@constructor"] = { link = "Type" }
-
-        mapping["@text.uri"] = { underline = true }
-        mapping["@string.special.url"] = { link = "@text.uri" }
-
-        map_each(
-            { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
-            { link = "Todo" }
-        )
-
-        map_each(
-            { "@field", "@property", "@variable.member" },
-            { fg = palette["blue"] }
+            "NormalFloat"
         )
     end
 
@@ -236,33 +366,33 @@ local function syntax(palette)
         -- REF:
         --  |:help lsp-semantic-highlight|
 
-        mapping["@lsp.type.namespace"] = { link = "@namespace" }
-        mapping["@lsp.type.interface"] = { link = "@structure" }
-        mapping["@lsp.type.struct"] = { link = "@structure" }
-        mapping["@lsp.type.class"] = { link = "@structure" }
-        mapping["@lsp.type.enum"] = { link = "@structure" }
-        mapping["@lsp.type.enumMember"] = { link = "@constant" }
+        STYLES.link_to("@lsp.type.namespace", "@namespace")
+        STYLES.link_to("@lsp.type.interface", "@structure")
+        STYLES.link_to("@lsp.type.struct", "@structure")
+        STYLES.link_to("@lsp.type.class", "@structure")
+        STYLES.link_to("@lsp.type.enum", "@structure")
+        STYLES.link_to("@lsp.type.enumMember", "@constant")
 
-        mapping["@lsp.type.type"] = { link = "@type" }
-        mapping["@lsp.type.typeParameter"] = { link = "@type.definition" }
+        STYLES.link_to("@lsp.type.type", "@type")
+        STYLES.link_to("@lsp.type.typeParameter", "@type.definition")
 
-        mapping["@lsp.type.function"] = { link = "@function" }
-        mapping["@lsp.type.method"] = { link = "@method" }
-        mapping["@lsp.type.decorator"] = { link = "@method" }
-        mapping["@lsp.type.parameter"] = { link = "@parameter" }
+        STYLES.link_to("@lsp.type.function", "@function")
+        STYLES.link_to("@lsp.type.method", "@method")
+        STYLES.link_to("@lsp.type.decorator", "@method")
+        STYLES.link_to("@lsp.type.parameter", "@parameter")
 
-        mapping["@lsp.type.variable"] = { link = "@variable" }
-        mapping["@lsp.type.property"] = { link = "@property" }
-        mapping["@lsp.type.macro"] = { link = "@macro" }
+        STYLES.link_to("@lsp.type.variable", "@variable")
+        STYLES.link_to("@lsp.type.property", "@property")
+        STYLES.link_to("@lsp.type.macro", "@macro")
     end
 
     local function cmp()
         -- type of complemention, e.g., function, snippet...
-        mapping["CmpItemKind"] = { link = "Comment" }
+        STYLES.link_to_comment("CmpItemKind")
     end
 
     local function ibl()
-        mapping["IblIndent"] = {
+        MAP.IblIndent = {
             fg = "#27232b" -- slightly darker than grey-dark
         }
     end
@@ -270,56 +400,50 @@ local function syntax(palette)
     internal()
     diagnostic()
     lsp()
-    treesitter()
     cmp()
     ibl()
 end
 
-local function filetype(palette)
+local function filetype()
     local function debug()
-        mapping["debugPc"] = { bg = palette["white"], fg = palette["black"] }
-        mapping["debugBreakpoint"] = { bg = palette["red"], fg = "fg" }
+        MAP.debugPc = { bg = PALETTE.white, fg = PALETTE.black }
+        MAP.debugBreakpoint = { bg = PALETTE.red, fg = "fg" }
     end
 
     local function gitsigns()
-        map_each(
-            {
-                "GitSignsAdd",
-                "GitSignsDelete",
-                "GitSignsTopdelete",
-                "GitSignsChange",
-                "GitSignsChangedelete",
-                "GitSignsUntracked",
-            },
-            { link = "Comment" }
-        )
+        STYLES.link_to_comment({
+            "GitSignsAdd",
+            "GitSignsDelete",
+            "GitSignsTopdelete",
+            "GitSignsChange",
+            "GitSignsChangedelete",
+            "GitSignsUntracked",
+        })
     end
 
     local function telescope()
-        mapping["TelescopeBorder"] = { link = "Comment" }
-        mapping["TelescopeTitle"] = { link = "Comment" }
+        STYLES.link_to_comment({
+            "TelescopeBorder", "TelescopeTitle",
 
-        -- prompt
-        mapping["TelescopePromptPrefix"] = { link = "Comment" }
-        mapping["TelescopePromptCounter"] = { link = "Comment" } -- <num>/<num> on RHS
+            -- prompt
+            "TelescopePromptPrefix",
+            "TelescopePromptCounter" -- <num>/<num> on RHS
+        })
 
         -- picker
-        mapping["TelescopeSelectionCaret"] = { link = "Comment" } -- caret
-        mapping["TelescopeSelection"] = { link = "CursorLine" }   -- the current line
-        mapping["TelescopeMatching"] = { link = "IncSearch" }     -- matching part
-        mapping["TelescopeMultiSelection"] = { link = "Visual" }  -- all selected lines
-        map_each(
-            {
-                "TelescopeResultsSpecialComment", -- e.g., line-number when searching current buffer
-                "TelescopeResultsNumber",         -- e.g., buffer id
-                "TelescopeResultsComment",        -- e.g., buffer type (%a, #h...)
-            },
-            { link = "Comment" }
-        )
+        STYLES.link_to_comment("TelescopeSelectionCaret")   -- caret
+        STYLES.link_to("TelescopeSelection", "CursorLine")  -- the current line
+        STYLES.link_to("TelescopeMatching", "IncSearch")    -- matching part
+        STYLES.link_to("TelescopeMultiSelection", "Visual") -- all selected lines
+        STYLES.link_to_comment({
+            "TelescopeResultsSpecialComment",               -- e.g., line-number when searching current buffer
+            "TelescopeResultsNumber",                       -- e.g., buffer id
+            "TelescopeResultsComment",                      -- e.g., buffer type (%a, #h...)
+        })
 
         -- preview
-        mapping["TelescopePreviewLine"] = { link = "Visual" }     -- the current line
-        mapping["TelescopePreviewMatch"] = { link = "IncSearch" } -- matching part
+        STYLES.link_to("TelescopePreviewLine", "Visual")     -- the current line
+        STYLES.link_to("TelescopePreviewMatch", "IncSearch") -- matching part
     end
 
     debug()
@@ -328,18 +452,15 @@ local function filetype(palette)
 end
 
 local function main()
-    local function f(palette)
-        -- define "Normal" first to allow shortcuts "fg"&"bg"
-        vim.api.nvim_set_hl(0, "Normal", { bg = "NONE", fg = palette["white"] })
+    -- define "Normal" first to allow shortcuts "fg"&"bg"
+    vim.api.nvim_set_hl(0, "Normal", { bg = "NONE", fg = PALETTE.white })
 
-        common(palette)
-        syntax(palette)
-        filetype(palette)
-        for item, color in pairs(mapping) do
-            vim.api.nvim_set_hl(0, item, color)
-        end
+    common()
+    syntax()
+    filetype()
+
+    for group, style in pairs(MAP) do
+        vim.api.nvim_set_hl(0, group, style)
     end
-
-    return f
 end
-return main()
+return main

@@ -49,7 +49,9 @@ local function bind()
         -- REF
         --  |h: vim.lsp.semantic_tokens.start()|
         local client = vim.lsp.get_client_by_id(args.data.client_id)
-        client.server_capabilities.semanticTokensProvider = nil
+        if client then
+            client.server_capabilities.semanticTokensProvider = nil
+        end
     end
 
     vim.api.nvim_create_autocmd(
@@ -180,28 +182,17 @@ local function lang()
 
             -- checker & linter
             c["mccabe"] = on
-            -- REF:
-            --  https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#flake8
-            -- NOTE:
-            --  1. must specify this even if global flake8-config exists
-            c["flake8"] = {
-                enabled = true,
-                maxLineLength = 88,
-                ignore = {
-                    "E203", -- spaces around |:|
-                    "W503", -- binary-operator (e.g., +) at start-of-line
-                }
-            }
             -- https://github.com/python-lsp/python-lsp-ruff#configuration
-            c["ruff"] = off -- use (separate) ruff_lsp instead
+            c["ruff"] = on
             c["pylint"] = on
+            c["flake8"] = off
             c["pyflakes"] = off
             c["pycodestyle"] = off
             c["pydocstyle"] = off
 
-            -- formater
-            c["black"] = on
-            c["isort"] = on
+            -- formatter
+            c["black"] = off
+            c["isort"] = off -- broken; use nonels-plugin instead
             c["autopep8"] = off
             c["yapf"] = off
 
@@ -212,6 +203,10 @@ local function lang()
                     os.getenv("HOME") .. "/.local/state/nvim/pylsp.log",
                 },
                 settings = { pylsp = { plugins = c } },
+            })
+
+            set_nonels({
+                m_nonels.builtins.formatting.isort,
             })
         end
 
@@ -373,14 +368,35 @@ local function lang()
 
         nonels()
         set_official("ltex")
+        set_official("texlab")
     end
 
     local function misc()
         require("neodev").setup()
 
+        local function refactoring()
+            local m_refactoring = require("refactoring")
+            ---@diagnostic disable-next-line: missing-parameter
+            m_refactoring.setup()
+
+            set_nonels(m_nonels.builtins.code_actions.refactoring)
+            vim.keymap.set("c", ":R", "lua vim.lsp.buf.code_action()")
+
+            local m_telescope = require("telescope")
+            m_telescope.load_extension("refactoring")
+            vim.keymap.set(
+                { "n", "x" },
+                "<Leader>e",
+                function()
+                    m_telescope.extensions.refactoring.refactors()
+                end
+            )
+        end
+        refactoring()
+
         for _, server in ipairs(
             {
-                "lua_ls", "hls", "clangd",
+                "lua_ls", "hls", "clangd", "zls",
                 "cssls", "html", "jsonls", -- vscode-extracted family
                 "vimls",
                 "sqlls",
@@ -429,7 +445,7 @@ local function visual()
             severity = { min = vim.diagnostic.severity.INFO },
             priority = 2,
         }
-        c["underline"] = false
+        c["underline"] = true
         c["severity_sort"] = true
 
         vim.diagnostic.config(c)
