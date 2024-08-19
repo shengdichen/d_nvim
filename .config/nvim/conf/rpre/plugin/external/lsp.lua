@@ -331,6 +331,15 @@ local function lang()
         set_official("bashls")
     end
 
+    local function java()
+        -- set_official("java_language_server",
+        --     {
+        --         cmd = { os.getenv("HOME") .. "/.local/bin/java-language-server/dist/lang_server_linux.sh" },
+        --     }
+        -- )
+        set_official("jdtls")
+    end
+
     local function prose()
         local function nonels()
             set_nonels(
@@ -410,6 +419,7 @@ local function lang()
     csharp()
     js()
     shell()
+    java()
     prose()
     misc()
 
