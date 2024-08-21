@@ -84,6 +84,7 @@ __plugin() {
     __syntax() {
         __install "${_update}" "nvim-treesitter" "nvim-treesitter"
         __install "${_update}" "lukas-reineke" "indent-blankline.nvim"
+        __install "${_update}" "numToStr" "Comment.nvim"
     }
 
     __misc() {
