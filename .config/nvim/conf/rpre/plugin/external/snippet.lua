@@ -645,6 +645,260 @@ local function python()
     m_luasnip.add_snippets("python", snippets)
 end
 
+local function java()
+    local base = {
+        snippet("cast/number", {
+            nodes.choice(1, {
+                nodes.text('Integer.parseInt("100");'),
+                nodes.text('Double.parseDouble("100.0");'),
+                nodes.text('Long.parseLong("100");'),
+                nodes.text('Float.parseFloat("100.0");'),
+            })
+        }),
+
+        snippet("string/repeat", {
+            nodes.text("s2 = s1.repeat(3);"),
+        }),
+        snippet("string/join", {
+            nodes.choice(1, {
+                nodes.text('s = String.join(" - ", listOfStrings)'),
+                nodes.text('s = String.join(" - ", listOfStrings)'),
+            })
+        }),
+        snippet("string/substring", {
+            nodes.text("s2 = s1.substring(1, s1.length() - 1);"),
+        }),
+        snippet("string/reverse", {
+            nodes.text("s2 = new StringBuilder(s1).reverse().toString();"),
+        }),
+
+        snippet("fn/avg", {
+            nodes.text("elements.stream().mapToDouble(e -> e).average().getAsDouble();"),
+        }),
+        snippet("fn/prod", {
+            nodes.text("elements.stream().reduce(1, (e1, e2) -> e1 * e2 );"),
+        }),
+    }
+
+    local array = {
+        snippet("array", {
+            nodes.choice(1, {
+                nodes.text("Integer[] elements = { 1, 2 };"),
+                { nodes.text("new Integer["),    nodes.insert(1, "count?"),  nodes.text("]") },
+                { nodes.text("new Integer[] {"), nodes.insert(1, "e1, ..."), nodes.text("]") },
+                nodes.text("new Integer[] { 1, 2 };"),
+            }),
+        }),
+        snippet("array/copy", {
+            nodes.text("Arrays.copyOf(from?, len?);"),
+        }),
+    }
+
+    local list = {
+        snippet("list", {
+            nodes.text("List<"),
+            nodes.choice(3, {
+                { nodes.insert(1, "type?") },
+                nodes.text("Integer"),
+                nodes.text("String"),
+                nodes.text("Double"),
+            }),
+            nodes.text("> "),
+            nodes.insert(1, "name?"),
+            nodes.text(" = new ArrayList<>(Arrays.asList("),
+            nodes.choice(2, {
+                nodes.insert(1, "e1, ..."),
+                nodes.choice_blank(),
+            }),
+            nodes.text("));"),
+        }),
+        snippet("list/read", {
+            nodes.choice(1, {
+                nodes.text("elements.getFirst(); // elements.get(0)"),
+                nodes.text("elements.getLast(); // elements.get(elements.size() - 1)"),
+            })
+        }),
+        snippet("list/iter", {
+            nodes.choice(1, {
+                nodes.text("elements.forEach(e -> System.out.println(e));"),
+                {
+                    nodes.text("for (Integer e : elements) {"), nodes.linebreak(),
+                    nodes.tab(), nodes.text("System.out.println(e);"), nodes.linebreak(),
+                    nodes.text("}"),
+                },
+            })
+        }),
+        snippet("list/sort", {
+            nodes.choice(1, {
+                nodes.text("Collections.sort(elements);"),
+                nodes.text("Collections.reverse(elements);"),
+            })
+        }),
+        snippet("list/copyshallow", {
+            nodes.choice(1, {
+                nodes.text("elementsNew = new ArrayList<Integer>(elementsOld)"),
+                nodes.text("elementsNew = elements.subList(1, elements.size() - 1)"),
+            })
+        }),
+        snippet("list/append", {
+            nodes.choice(1, {
+                nodes.text("elements.add(2, 42);"),
+                nodes.text("elements.addFirst(42);"),
+                nodes.text("elements.addLast(42);"),
+            })
+        }),
+        snippet("list/extend", {
+            nodes.text("elements.addAll(Arrays.asList(10, 20));"),
+        }),
+        snippet("list/delete_one", {
+            nodes.choice(1, {
+                nodes.text("elements.remove(0);"),
+                nodes.text("elements.remove((Object) 42);"),
+            })
+        }),
+        snippet("list/delete_recurs", {
+            nodes.choice(1, {
+                {
+                    nodes.text("while (elements.remove((Object) 42)) {"), nodes.linebreak(),
+                    nodes.tab(), nodes.text(";"), nodes.linebreak(),
+                    nodes.text("}"),
+                },
+                nodes.text("elements.removeIf(e -> e == 42);"),
+                nodes.text("elements.clear();"),
+            })
+        }),
+    }
+
+    local dict = {
+        snippet("dict", {
+            nodes.text("HashMap<"),
+            nodes.choice(3, {
+                nodes.text("String"),
+                { nodes.insert(2, "type_K?") },
+            }),
+            nodes.text(", "),
+            nodes.choice(2, {
+                nodes.text("Integer"),
+                { nodes.insert(2, "type_V?") },
+            }),
+            nodes.text("> "),
+            nodes.insert(1, "name?"),
+            nodes.text(" = new HashMap<>();"),
+
+            nodes.linebreak(),
+
+            nodes.text("dict.put(\"a\", 42);"),
+        }),
+        snippet("dict/read", {
+            nodes.text('if (dict.containsKey("k")) {'), nodes.linebreak(),
+            nodes.text('    return dict.get("k");'), nodes.linebreak(),
+            nodes.text('}'), nodes.linebreak(),
+        }),
+        snippet("dict/modify", {
+            nodes.text('if (!dict.containsKey("x")) {'), nodes.linebreak(),
+            nodes.text('    dict.put("x", 42);'), nodes.linebreak(),
+            nodes.text('} else {'), nodes.linebreak(),
+            nodes.text('    dict.put("x", dict.get("x") + 1));'), nodes.linebreak(),
+            nodes.text('}'), nodes.linebreak(),
+        }),
+        snippet("dict/delete_one", {
+            nodes.text('dict.remove("a");')
+        }),
+        snippet("dict/delete_recurs", {
+            nodes.text('dict.entrySet().removeIf(kv -> kv.getValue() == 3);')
+        }),
+
+        snippet("dict/iter", {
+            nodes.choice(1, {
+                {
+                    nodes.text('for (K k : dict.keySet()) {'), nodes.linebreak(),
+                    nodes.text('    // k.toString();'), nodes.linebreak(),
+                    nodes.text('    ;'), nodes.linebreak(),
+                    nodes.text('}'), nodes.linebreak(),
+                },
+                {
+                    nodes.text('for (V v : dict.values()) {'), nodes.linebreak(),
+                    nodes.text('    // v.toString();'), nodes.linebreak(),
+                    nodes.text('    ;'), nodes.linebreak(),
+                    nodes.text('}'), nodes.linebreak(),
+                },
+                {
+                    nodes.text('for (Map.Entry<K, V> kv : dict.entrySet()) {'), nodes.linebreak(),
+                    nodes.text('    // kv.getKey().toString(); kv.getValue().toString()'), nodes.linebreak(),
+                    nodes.text('    ;'), nodes.linebreak(),
+                    nodes.text('}'), nodes.linebreak(),
+                }
+            }),
+        }),
+    }
+
+    local kafka = {
+        snippet("kafka/admin", {
+            nodes.text(
+                'admin.listTopics().names().get().stream().anyMatch(t -> t.equalsIgnoreCase("TOPIC"));'
+            ), nodes
+            .linebreak(),
+            nodes.text('List<NewTopic> topics = Arrays.asList(new NewTopic("TOPIC", 1, (short) 1));'), nodes.linebreak(),
+            nodes.text('admin.createTopics(topics);'), nodes.linebreak(),
+        }),
+        snippet("kafka/producer/config", {
+            nodes.text("Properties props = new Properties();"), nodes.linebreak(),
+            nodes.text('props.put("bootstrap.servers", "localhost:9092");'), nodes.linebreak(),
+            nodes.text(
+                'props.put(ProducerConfig.ACKS_CONFIG, "all/1/0"); // https://kafka.apache.org/documentation/#acks'
+            ), nodes.linebreak(),
+            nodes.text(
+                'props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");'
+            ), nodes.linebreak(),
+            nodes.text(
+                'props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");'
+            ), nodes.linebreak(),
+        }),
+        snippet("kafka/producer/make", {
+            nodes.text("Producer<String, String> producer = new KafkaProducer<>("), nodes.linebreak(),
+            nodes.text("props, new StringSerializer(), new StringSerializer()"), nodes.linebreak(),
+            nodes.text(");"), nodes.linebreak(),
+        }),
+        snippet("kafka/producer/record", {
+            nodes.text("producer.send(new ProducerRecord<>(topic?, key?, value?));"), nodes.linebreak(),
+        }),
+
+        snippet("kafka/consumer/config", {
+            nodes.text("Properties props = new Properties();"), nodes.linebreak(),
+            nodes.text('props.put("bootstrap.servers", "localhost:9092");'), nodes.linebreak(),
+            nodes.text('props.put("group.id", group?);'), nodes.linebreak(),
+            nodes.text('props.put("auto.offset.reset", "latest/earliest");'), nodes.linebreak(),
+            nodes.text(
+                'props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");'
+            ), nodes.linebreak(),
+            nodes.text(
+                'props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");'
+            ), nodes.linebreak(),
+        }),
+        snippet("kafka/consumer/make", {
+            nodes.text("KafkaConsumer<String, String> consumer = new KafkaConsumer<>("), nodes.linebreak(),
+            nodes.text("props, new StringSerializer(), new StringSerializer()"), nodes.linebreak(),
+            nodes.text(");"), nodes.linebreak(),
+        }),
+        snippet("kafka/consumer/subscribe", {
+            nodes.text("consumer.subscribe(Arrays.asList(topic?));"), nodes.linebreak(),
+        }),
+        snippet("kafka/consumer/poll", {
+            nodes.text(
+                "ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));"
+            ), nodes.linebreak(),
+            nodes.text('for (ConsumerRecord<String, String> record : records) {'), nodes.linebreak(),
+            nodes.text("// .offset(); .key(); .value()"), nodes.linebreak(),
+            nodes.text(";"), nodes.linebreak(),
+            nodes.text("}"), nodes.linebreak(),
+        }),
+    }
+
+    for _, snippets in ipairs({ base, array, list, dict, kafka }) do
+        m_luasnip.add_snippets("java", snippets)
+    end
+end
+
 local function mail()
     local snippets = {
         snippet("dear", {
@@ -676,6 +930,7 @@ end
 local function main()
     shell()
     python()
+    java()
     mail()
 end
 main()
