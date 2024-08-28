@@ -15,6 +15,13 @@ local function gitsigns()
                 change       = { text = "|" },
                 changedelete = { text = "|" },
             },
+            signs_staged        = {
+                add          = { text = "+" },
+                delete       = { text = "-" },
+                topdelete    = { text = "-" },
+                change       = { text = "|" },
+                changedelete = { text = "|" },
+            },
             attach_to_untracked = false, -- do NOT activate if file untracked
 
             preview_config      = {

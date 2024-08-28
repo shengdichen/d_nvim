@@ -24,7 +24,7 @@ local STYLES = {
     _link_keyword = { link = "Keyword" },
     _link_special = { link = "Special" },
     _link_type = { link = "Type" },
-    _link_field = { link = "Keyword" },
+    _link_field = { link = "@field" },
     _link_function = { link = "Function" },
 }
 STYLES["function"] = { fg = PALETTE.purple }
@@ -411,6 +411,16 @@ local function filetype()
     end
 
     local function gitsigns()
+        STYLES.link_to_type("@markup.link.gitcommit")
+
+        map_each(
+            { "@string.special.path.gitcommit" },
+            STYLES.underline_like(STYLES.make_comment())
+        )
+
+        -- commit-hash during interactive-rebase (second column)
+        STYLES.link_to_comment("@constant.git_rebase")
+
         STYLES.link_to_comment({
             "GitSignsAdd",
             "GitSignsDelete",
@@ -419,6 +429,16 @@ local function filetype()
             "GitSignsChangedelete",
             "GitSignsUntracked",
         })
+        map_each(
+            {
+                "GitSignsStagedAdd",
+                "GitSignsStagedDelete",
+                "GitSignsStagedTopdelete",
+                "GitSignsStagedChange",
+                "GitSignsStagedChangedelete"
+            },
+            STYLES.BLUE
+        )
     end
 
     local function telescope()
