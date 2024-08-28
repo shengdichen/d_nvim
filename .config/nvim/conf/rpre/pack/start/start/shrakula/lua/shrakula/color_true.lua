@@ -286,6 +286,7 @@ local function syntax()
             },
             "Delimiter"
         )
+        MAP["@string.special.url.comment"] = STYLES.underline_like(STYLES.make_comment())
 
         map_each(
             { "Underlined", "@text.uri" },
