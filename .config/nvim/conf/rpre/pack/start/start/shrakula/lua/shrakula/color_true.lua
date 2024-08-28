@@ -397,11 +397,27 @@ local function syntax()
         }
     end
 
+    local function netrw()
+        -- REF:
+        --  |:help g:netrw_special_syntax|
+
+        STYLES.link_to_comment({
+            "netrwTreeBar",  -- e.g., for tree-style (liststyle == 3)
+            "netrwClassify", -- e.g., trailing |/| for directories
+            "netrwLink",     -- |-->| for sym-link target
+        })
+
+        STYLES.link_to_default("netrwDir")                 -- directory
+        STYLES.link_to_type("netrwSymLink")                -- sym-link
+        STYLES.link_to("netrwExe", { fg = PALETTE.green }) -- executable
+    end
+
     internal()
     diagnostic()
     lsp()
     cmp()
     ibl()
+    netrw()
 end
 
 local function filetype()

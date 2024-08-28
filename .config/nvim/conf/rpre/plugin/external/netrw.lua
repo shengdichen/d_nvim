@@ -16,7 +16,7 @@ local function visual()
     vim.g.netrw_banner = 0    -- hide banner
 
     vim.g.netrw_hide = 0      -- show dotfiles
-    vim.g.netrw_liststyle = 1 -- show extra info
+    vim.g.netrw_liststyle = 3 -- tree-style
 
     vim.g.netrw_sort_options = "name"
     vim.g.netrw_sort_direction = "normal" -- in ascending order
