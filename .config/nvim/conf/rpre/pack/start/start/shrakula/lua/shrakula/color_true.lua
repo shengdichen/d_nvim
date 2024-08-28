@@ -1,4 +1,3 @@
-local util_lua = require("util_lua")
 local PALETTE = require("shrakula.palette")
 
 ---@type table<string, table<string, any>>
@@ -13,21 +12,37 @@ local function map_each(groups, style)
 end
 
 local STYLES = {
+    GREY_BRIGHT = { fg = PALETTE.grey_bright },
+
+    RED = { fg = PALETTE.red },
+    GREEN = { fg = PALETTE.green },
+    BLUE = { fg = PALETTE.blue },
+
+    YELLOW = { fg = PALETTE.yellow },
+    CYAN = { fg = PALETTE.cyan },
+    MAGENTA = { fg = PALETTE.magenta },
+
+    ORANGE = { fg = PALETTE.orange },
+    PURPLE = { fg = PALETTE.purple },
+
     default = { bg = "NONE", fg = PALETTE.white },
-    commment = { fg = PALETTE.grey_bright },
-    keyword = { fg = PALETTE.magenta },
-    field = { fg = PALETTE.blue },
-    type = { fg = PALETTE.cyan },
+    COMMENT = { fg = PALETTE.grey_bright },
+    KEYWORD = { fg = PALETTE.magenta },
+    SPECIAL = { fg = PALETTE.orange },
+    LITERAL = { fg = PALETTE.green },
+    TYPE = { fg = PALETTE.cyan },
+    FUNCTION = { fg = PALETTE.purple },
+    FIELD = { fg = PALETTE.blue },
 
     _link_default = { link = "Normal" },
     _link_comment = { link = "Comment" },
+    _link_literal = { link = "Float" },
     _link_keyword = { link = "Keyword" },
     _link_special = { link = "Special" },
     _link_type = { link = "Type" },
     _link_field = { link = "@field" },
     _link_function = { link = "Function" },
 }
-STYLES["function"] = { fg = PALETTE.purple }
 
 ---@param groups string[]|string
 ---@param name string|table<string, string>
@@ -51,6 +66,11 @@ end
 ---@param groups string[]|string
 STYLES.link_to_comment = function(groups)
     STYLES.link_to(groups, STYLES._link_comment)
+end
+
+---@param groups string[]|string
+STYLES.link_to_literal = function(groups)
+    STYLES.link_to(groups, STYLES._link_literal)
 end
 
 ---@param groups string[]|string
@@ -80,7 +100,7 @@ end
 
 ---@return table<string, table<string, any>>
 STYLES.make_default = function()
-    return {}
+    return { bg = "NONE", fg = PALETTE.white }
 end
 
 ---@return table<string, table<string, any>>
@@ -88,9 +108,14 @@ STYLES.make_comment = function()
     return { fg = PALETTE.grey_bright }
 end
 
+---@return table<string, table<string, any>>
+STYLES.make_special = function()
+    return { fg = PALETTE.orange }
+end
+
 ---@param style table<string, any>|nil
 ---@return table<string, any>
-function STYLES.underline_like(style)
+STYLES.underline_like = function(style)
     if style == nil then style = {} end
     style.underline = true
     return style
@@ -98,9 +123,17 @@ end
 
 ---@param style table<string, any>|nil
 ---@return table<string, any>
-function STYLES.reverse_like(style)
+STYLES.reverse_like = function(style)
     if style == nil then style = {} end
     style.reverse = true
+    return style
+end
+
+---@param style table<string, any>|nil
+---@return table<string, any>
+STYLES.bold_like = function(style)
+    if style == nil then style = {} end
+    style.bold = true
     return style
 end
 
@@ -114,12 +147,12 @@ local function common()
     --  ->  specify explicitly (if same as |Normal|, consider using "fg")
 
     local function general()
-        MAP.Comment = { fg = PALETTE.grey_bright }
-        MAP.MatchParen = { fg = PALETTE.cyan, underline = true }
+        MAP.Comment = STYLES.COMMENT
+        MAP.MatchParen = STYLES.underline_like({ fg = PALETTE.cyan })
         MAP.EndOfBuffer = { fg = PALETTE.black }                   -- tilde at EOF
 
         MAP.IncSearch = { bg = PALETTE.white, fg = PALETTE.black } -- current match, during search
-        MAP.CurSearch = { link = "IncSearch" }                     -- current match, after search (jumping)
+        STYLES.link_to("CurSearch", "IncSearch")                   -- current match, after search (jumping)
         MAP.Search = { bg = PALETTE.grey_bright, fg = "fg" }       -- other matches
 
         MAP.Visual = { bg = PALETTE.grey_bright, fg = PALETTE.black }
@@ -153,12 +186,12 @@ local function common()
     end
 
     local function cmd()
-        MAP.WarningMsg = { fg = PALETTE.orange }
-        MAP.ErrorMsg = { fg = PALETTE.red }
-        MAP.Question = { fg = PALETTE.purple }
+        MAP.WarningMsg = STYLES.ORANGE
+        MAP.ErrorMsg = STYLES.RED
+        MAP.Question = STYLES.PURPLE
 
         STYLES.link_to_comment("WildMenu")
-        MAP.Title = { fg = PALETTE.cyan }
+        MAP.Title = STYLES.CYAN
 
         MAP.PmenuSel = { bg = PALETTE.white, fg = PALETTE.black } -- selected
         MAP.Pmenu = { bg = PALETTE.grey_dark }                    -- non-selected
@@ -169,8 +202,8 @@ local function common()
     end
 
     local function diff()
-        MAP.DiffAdd = { fg = PALETTE.green }
-        MAP.DiffDelete = { fg = PALETTE.red }
+        MAP.DiffAdd = STYLES.GREEN
+        MAP.DiffDelete = STYLES.RED
 
         -- lines with differences
         MAP.DiffChange = { bg = PALETTE.grey_bright, fg = PALETTE.black }
@@ -179,18 +212,18 @@ local function common()
     end
 
     local function spellcheck()
-        MAP.SpellCap = { fg = PALETTE.yellow }
-        MAP.SpellLocal = { fg = PALETTE.yellow }
-        MAP.SpellRare = { fg = PALETTE.orange }
+        MAP.SpellCap = STYLES.YELLOW
+        MAP.SpellLocal = STYLES.YELLOW
+        MAP.SpellRare = STYLES.ORANGE
 
-        MAP.SpellBad = { fg = PALETTE.red, underline = true }
+        MAP.SpellBad = STYLES.underline_like({ fg = PALETTE.red })
     end
 
     local function misc()
         -- sign-column(s) for rows without sign(s)
         STYLES.link_to_default("SignColumn")
 
-        MAP.Directory = { fg = PALETTE.cyan }
+        MAP.Directory = STYLES.CYAN
 
         STYLES.link_to_comment("VertSplit")
 
@@ -214,61 +247,47 @@ local function syntax()
         --  |:help group-name|
         --  |:help treesitter-highlight-groups|
 
-        -- literals
-        map_each(
-            { "String", "Character", "Number", "Boolean", "Float" },
-            { fg = PALETTE.green }
-        )
+        MAP.Float = STYLES.LITERAL
+        STYLES.link_to_literal({
+            "String", "Character", "Number", "Boolean"
+        })
 
-        MAP.Identifier = { link = "Normal" }
-        map_each(
-            { "@field", "@property", "@variable.member" },
-            { fg = PALETTE.blue }
-        )
+        STYLES.link_to_default("Identifier")
 
-        -- keyword
-        map_each(
-            { "Statement", "Conditional", "Repeat", "Label", "Operator", "Keyword", "Exception" },
-            { fg = PALETTE.magenta }
-        )
-        map_each(
-            {
-                "@module.builtin",
-                "@attribute", "@attribute.builtin"
-            },
-            { link = "Keyword" }
-        )
+        MAP["@field"] = STYLES.FIELD
+        STYLES.link_to_field({
+            "@property", "@variable.member"
+        })
 
-        -- function
-        map_each(
-            { "Function", "PreProc", "Include", "Define", "Macro", "PreCondit" },
-            { fg = PALETTE.purple }
-        )
-        MAP["@function.builtin"] = { link = "Function" }
-        map_each(
-            { "@keyword.import", "@include" },
-            { link = "Include" }
-        )
+        MAP.Keyword = STYLES.KEYWORD
+        STYLES.link_to_keyword({
+            "Statement", "Conditional", "Repeat", "Label", "Operator", "Exception",
+            "@module.builtin",
+            "@attribute", "@attribute.builtin"
+        })
 
-        -- type
-        MAP.Type = { fg = PALETTE.cyan }
+        MAP.Function = STYLES.FUNCTION
+        STYLES.link_to_function({
+            "PreProc", "Define", "Macro", "PreCondit",
+            "@function.builtin",
+
+            "Include",
+            "@keyword.import", "@include"
+        })
+
+        MAP.Type = STYLES.TYPE
         STYLES.link_to_type({
             "StorageClass", "Structure", "TypeDef",
             "@constructor", "@type.builtin"
         })
 
-        local style_special = { fg = PALETTE.orange }
-        -- global; special
+        MAP.Special = STYLES.SPECIAL
+        STYLES.link_to_special({
+            "Constant", "SpecialChar", "Tag", "SpecialComment", "Debug"
+        })
         map_each(
-            { "Constant", "Special", "SpecialChar", "Tag", "SpecialComment", "Debug" },
-            style_special
-        )
-        map_each(
-            {
-                "@string.special.url",
-                "@string.special.path",
-            },
-            STYLES.underline_like(util_lua.copy_shallow(style_special))
+            { "@string.special.url", "@string.special.path" },
+            STYLES.underline_like(STYLES.make_special())
         )
 
         -- comment; delimiter
@@ -294,7 +313,7 @@ local function syntax()
         )
 
         MAP.Ignore = { fg = PALETTE.grey_dark }
-        MAP.Error = { fg = PALETTE.red }
+        MAP.Error = STYLES.RED
 
         MAP.Todo = { bg = PALETTE.grey_bright, fg = PALETTE.black }
         STYLES.link_to(
@@ -408,9 +427,9 @@ local function syntax()
             "netrwLink",     -- |-->| for sym-link target
         })
 
-        STYLES.link_to_default("netrwDir")                 -- directory
-        STYLES.link_to_type("netrwSymLink")                -- sym-link
-        STYLES.link_to("netrwExe", { fg = PALETTE.green }) -- executable
+        STYLES.link_to_default("netrwDir") -- directory
+        MAP.netrwSymLink = STYLES.CYAN     -- sym-link
+        MAP.netrwExe = STYLES.GREEN        -- executable
     end
 
     internal()
@@ -428,7 +447,7 @@ local function filetype()
     end
 
     local function gitsigns()
-        STYLES.link_to_type("@markup.link.gitcommit")
+        MAP["@markup.link.gitcommit"] = STYLES.PURPLE
 
         map_each(
             { "@string.special.path.gitcommit" },
