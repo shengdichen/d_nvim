@@ -124,6 +124,10 @@ __update_treesitter() {
     #   1. must use the sync variant
     #   2. no-more to prevent more-prompt
     nvim -c "set nomore | TSUpdateSync | q"
+
+    # NOTE:
+    #   must relaunch to actually install the languages
+    nvim -c "q"
 }
 
 __stow() {
