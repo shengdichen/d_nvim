@@ -81,14 +81,25 @@ local function bind()
     vim.keymap.set("c", ":F", "Telescope ")
 
     local function content()
+        local make_conf = function()
+            return { disable_coordinates = true }
+        end
+
         -- current buffer
         vim.keymap.set("n", "f/", telescope_builtin.current_buffer_fuzzy_find)
         -- all open buffers
         vim.keymap.set("n", "ff", function()
-            telescope_builtin.live_grep({ search_dirs = util_vim.buffers_open() })
+            local c = make_conf()
+            c.search_dirs = util_vim.buffers_open()
+
+            telescope_builtin.live_grep(c)
         end)
+
         -- all under cwd
-        vim.keymap.set("n", "fd", telescope_builtin.live_grep)
+        vim.keymap.set("n", "fd", function()
+            telescope_builtin.live_grep(make_conf())
+        end
+        )
     end
 
     local function misc()
