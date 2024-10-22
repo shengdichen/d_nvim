@@ -51,6 +51,21 @@ local function conf()
 
                 return path, highlights
             end,
+
+            vimgrep_arguments = {
+                "rg",
+
+                "--hidden",
+                "--follow",
+
+                "--color=never",
+                "--no-heading",
+                "--with-filename",
+                "--line-number",
+                "--column",
+
+                "--smart-case"
+            }
         }
     end
 
