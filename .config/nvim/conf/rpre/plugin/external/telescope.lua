@@ -37,6 +37,20 @@ local function conf()
                     ["<C-q>"] = telescope_actions.smart_send_to_qflist
                 }
             },
+
+            path_display = function(__, path)
+                local highlights = {
+                    {
+                        {
+                            0,         -- highlight start
+                            #path + 1, -- highlight end: +1 for the separtor (":")
+                        },
+                        "Comment",
+                    },
+                }
+
+                return path, highlights
+            end,
         }
     end
 
