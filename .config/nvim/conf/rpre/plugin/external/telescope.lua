@@ -51,6 +51,10 @@ local function conf()
 
                 return path, highlights
             end,
+            -- applies to both live-grep & file-finding
+            file_ignore_patterns = {
+                "^%.git/"
+            },
 
             vimgrep_arguments = {
                 "rg",
