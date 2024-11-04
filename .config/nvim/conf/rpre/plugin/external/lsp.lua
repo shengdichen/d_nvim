@@ -137,11 +137,11 @@ local function lang()
             --  https://microsoft.github.io/pyright/#/settings
             c["settings"] = {
                 pyright = {
-                    disableOrganizeImports = true,     -- use ruff instead
+                    disableOrganizeImports = true, -- use ruff instead
                 },
                 python = {
                     analysis = {
-                        ignore = { '*' },     -- use ruff instead
+                        ignore = { '*' }, -- use ruff instead
                     },
                 },
             }
@@ -259,7 +259,7 @@ local function lang()
     end
 
     local function js()
-        local function tsserver()
+        local function typescript_ls()
             local c = {}
 
             -- disable tsserver's formatting (use none_ls as configured below)
@@ -270,7 +270,7 @@ local function lang()
                 client.server_capabilities.documentFormattingProvider = false
             end
 
-            set_official("tsserver", c)
+            set_official("ts_ls", c)
         end
 
         local function nonels(as_server)
@@ -301,7 +301,7 @@ local function lang()
             set_nonels(servers)
         end
 
-        tsserver()
+        typescript_ls()
         nonels()
         set_official("eslint")
     end
