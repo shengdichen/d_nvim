@@ -37,6 +37,39 @@ local function conf()
                     ["<C-q>"] = telescope_actions.smart_send_to_qflist
                 }
             },
+
+            path_display = function(__, path)
+                local highlights = {
+                    {
+                        {
+                            0,         -- highlight start
+                            #path + 1, -- highlight end: +1 for the separtor (":")
+                        },
+                        "Comment",
+                    },
+                }
+
+                return path, highlights
+            end,
+            -- applies to both live-grep & file-finding
+            file_ignore_patterns = {
+                "^%.git/"
+            },
+
+            vimgrep_arguments = {
+                "rg",
+
+                "--hidden",
+                "--follow",
+
+                "--color=never",
+                "--no-heading",
+                "--with-filename",
+                "--line-number",
+                "--column",
+
+                "--smart-case"
+            }
         }
     end
 
@@ -81,14 +114,25 @@ local function bind()
     vim.keymap.set("c", ":F", "Telescope ")
 
     local function content()
+        local make_conf = function()
+            return { disable_coordinates = true }
+        end
+
         -- current buffer
         vim.keymap.set("n", "f/", telescope_builtin.current_buffer_fuzzy_find)
         -- all open buffers
         vim.keymap.set("n", "ff", function()
-            telescope_builtin.live_grep({ search_dirs = util_vim.buffers_open() })
+            local c = make_conf()
+            c.search_dirs = util_vim.buffers_open()
+
+            telescope_builtin.live_grep(c)
         end)
+
         -- all under cwd
-        vim.keymap.set("n", "fd", telescope_builtin.live_grep)
+        vim.keymap.set("n", "fd", function()
+            telescope_builtin.live_grep(make_conf())
+        end
+        )
     end
 
     local function misc()
