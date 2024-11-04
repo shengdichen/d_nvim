@@ -96,7 +96,7 @@ local function lang()
         end
     end
 
-    local function python(use_pylsp)
+    local function python(use_pyright)
         local function ruff()
             local c = {}
 
@@ -117,6 +117,7 @@ local function lang()
             --  https://github.com/astral-sh/ruff-lsp?tab=readme-ov-file#example-neovim
 
             local c = {}
+
             if use_based then
                 -- REF:
                 --  https://detachhead.github.io/basedpyright/#/settings
@@ -129,21 +130,22 @@ local function lang()
                     },
                 }
                 set_official("basedpyright", c)
-            else
-                -- REF:
-                --  https://microsoft.github.io/pyright/#/settings
-                c["settings"] = {
-                    pyright = {
-                        disableOrganizeImports = true, -- use ruff instead
-                    },
-                    python = {
-                        analysis = {
-                            ignore = { '*' }, -- use ruff instead
-                        },
-                    },
-                }
-                set_official("pyright", c)
+                return
             end
+
+            -- REF:
+            --  https://microsoft.github.io/pyright/#/settings
+            c["settings"] = {
+                pyright = {
+                    disableOrganizeImports = true,     -- use ruff instead
+                },
+                python = {
+                    analysis = {
+                        ignore = { '*' },     -- use ruff instead
+                    },
+                },
+            }
+            set_official("pyright", c)
         end
 
         local function nonels()
@@ -210,13 +212,13 @@ local function lang()
             })
         end
 
-        if use_pylsp then
-            pylsp()
-        else
+        if use_pyright then
             ruff()
             pyright()
             nonels()
+            return
         end
+        pylsp()
     end
 
     local function csharp()
@@ -331,6 +333,15 @@ local function lang()
         set_official("bashls")
     end
 
+    local function java()
+        -- set_official("java_language_server",
+        --     {
+        --         cmd = { os.getenv("HOME") .. "/.local/bin/java-language-server/dist/lang_server_linux.sh" },
+        --     }
+        -- )
+        set_official("jdtls")
+    end
+
     local function prose()
         local function nonels()
             set_nonels(
@@ -410,6 +421,7 @@ local function lang()
     csharp()
     js()
     shell()
+    java()
     prose()
     misc()
 
