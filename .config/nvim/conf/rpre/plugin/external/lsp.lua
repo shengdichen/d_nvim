@@ -137,11 +137,11 @@ local function lang()
             --  https://microsoft.github.io/pyright/#/settings
             c["settings"] = {
                 pyright = {
-                    disableOrganizeImports = true,     -- use ruff instead
+                    disableOrganizeImports = true, -- use ruff instead
                 },
                 python = {
                     analysis = {
-                        ignore = { '*' },     -- use ruff instead
+                        ignore = { '*' }, -- use ruff instead
                     },
                 },
             }
