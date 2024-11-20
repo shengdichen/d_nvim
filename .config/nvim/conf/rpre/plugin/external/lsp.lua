@@ -409,6 +409,7 @@ local function lang()
             {
                 "lua_ls", "hls", "clangd", "zls",
                 "cssls", "html", "jsonls", -- vscode-extracted family
+                "dockerls", "docker_compose_language_service",
                 "vimls",
                 "sqlls",
             }
