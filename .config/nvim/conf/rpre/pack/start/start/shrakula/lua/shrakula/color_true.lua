@@ -149,7 +149,10 @@ local function common()
     local function general()
         MAP.Comment = STYLES.COMMENT
         MAP.MatchParen = STYLES.underline_like({ fg = PALETTE.cyan })
-        MAP.EndOfBuffer = { fg = PALETTE.black }                   -- tilde at EOF
+        STYLES.link_to_comment({
+            "WinSeparator",
+            "EndOfBuffer", -- post-EOF tildes
+        })
 
         MAP.IncSearch = { bg = PALETTE.white, fg = PALETTE.black } -- current match, during search
         STYLES.link_to("CurSearch", "IncSearch")                   -- current match, after search (jumping)

@@ -59,11 +59,24 @@ local function cursor()
     })
 end
 
+local function filler()
+    local item_to_char = {}
+    item_to_char.horiz = "-"
+    item_to_char.vert = "|"
+
+    item_to_char.fold = "-"
+
+    item_to_char.eob = " " -- illusion of hidden post-EOF tildes
+
+    vim.opt.fillchars = item_to_char
+end
+
 local function main()
     colorscheme()
     signcolumn()
     ibl()
     general()
     cursor()
+    filler()
 end
 main()
