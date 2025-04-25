@@ -107,7 +107,7 @@ local function lang()
                 client.server_capabilities.hoverProvider = false
             end
 
-            set_official("ruff_lsp", c)
+            set_official("ruff", c)
         end
 
         local function pyright(use_based)
@@ -409,7 +409,8 @@ local function lang()
             {
                 "lua_ls", "hls", "clangd", "zls",
                 "cssls", "html", "jsonls", -- vscode-extracted family
-                "vimls",
+                "dockerls", "docker_compose_language_service",
+                "vimls", "yamlls",
                 "sqlls",
             }
         ) do

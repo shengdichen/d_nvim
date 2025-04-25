@@ -33,6 +33,7 @@ local STYLES = {
     TYPE = { fg = PALETTE.cyan },
     FUNCTION = { fg = PALETTE.purple },
     FIELD = { fg = PALETTE.blue },
+    VISUAL = { bg = PALETTE.grey_bright, fg = PALETTE.black },
 
     _link_default = { link = "Normal" },
     _link_comment = { link = "Comment" },
@@ -42,6 +43,7 @@ local STYLES = {
     _link_type = { link = "Type" },
     _link_field = { link = "@field" },
     _link_function = { link = "Function" },
+    _link_visual = { link = "Visual" },
 }
 
 ---@param groups string[]|string
@@ -98,6 +100,11 @@ STYLES.link_to_function = function(groups)
     STYLES.link_to(groups, STYLES._link_function)
 end
 
+---@param groups string[]|string
+STYLES.link_to_visual = function(groups)
+    STYLES.link_to(groups, STYLES._link_visual)
+end
+
 ---@return table<string, table<string, any>>
 STYLES.make_default = function()
     return { bg = "NONE", fg = PALETTE.white }
@@ -149,13 +156,16 @@ local function common()
     local function general()
         MAP.Comment = STYLES.COMMENT
         MAP.MatchParen = STYLES.underline_like({ fg = PALETTE.cyan })
-        MAP.EndOfBuffer = { fg = PALETTE.black }                   -- tilde at EOF
+        STYLES.link_to_comment({
+            "WinSeparator",
+            "EndOfBuffer", -- post-EOF tildes
+        })
 
         MAP.IncSearch = { bg = PALETTE.white, fg = PALETTE.black } -- current match, during search
         STYLES.link_to("CurSearch", "IncSearch")                   -- current match, after search (jumping)
-        MAP.Search = { bg = PALETTE.grey_bright, fg = "fg" }       -- other matches
+        STYLES.link_to_visual("Search")                            -- other matches
 
-        MAP.Visual = { bg = PALETTE.grey_bright, fg = PALETTE.black }
+        MAP.Visual = STYLES.VISUAL
         MAP.VisualNOS = { bg = PALETTE.grey_dark, fg = "fg" }
 
         -- notably used for diagnostics, e.g., lsp
@@ -166,7 +176,7 @@ local function common()
     local function cursor()
         MAP.Cursor = STYLES.reverse_like()          -- the single point of the cursor
         MAP.CursorLine = { bg = PALETTE.grey_dark } -- the entire line that the cursor is on
-        MAP.QuickFixLine = { bg = PALETTE.grey_bright, fg = PALETTE.black }
+        STYLES.link_to_visual("QuickFixLine")
 
         STYLES.link_to_default("CursorLineNr")   -- current
         STYLES.link_to_comment("LineNr")         -- non-current
@@ -206,7 +216,7 @@ local function common()
         MAP.DiffDelete = STYLES.RED
 
         -- lines with differences
-        MAP.DiffChange = { bg = PALETTE.grey_bright, fg = PALETTE.black }
+        STYLES.link_to_visual("DiffChange")
         -- the differences themselves
         MAP.DiffText = { bg = PALETTE.white, fg = PALETTE.black }
     end
@@ -315,7 +325,7 @@ local function syntax()
         MAP.Ignore = { fg = PALETTE.grey_dark }
         MAP.Error = STYLES.RED
 
-        MAP.Todo = { bg = PALETTE.grey_bright, fg = PALETTE.black }
+        STYLES.link_to_visual("Todo")
         STYLES.link_to(
             { "@comment.note", "@comment.todo", "@comment.warning", "@comment.error" },
             "Todo"
