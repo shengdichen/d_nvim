@@ -2,6 +2,7 @@ Import-Module "$HOME\.local\lib\allumette\git.ps1" -Force
 
 $DIR_CONFIG = "$env:LOCALAPPDATA\nvim"
 $DIR_PLUGIN = "$DIR_CONFIG\rpre\pack\start\start"
+$USE_MSYS = $false
 
 function CopyConfig
 {
@@ -44,8 +45,14 @@ function PluginSnippet
         !(Test-Path "./deps/luasnip-jsregexp.so")
     )
     {
-        powershell -Command {
-            $env:LUA_LDLIBS="C:\msys64\ucrt64\bin\lua51.dll";
+        if ($USE_MSYS)
+        {
+            powershell -Command {
+                $env:LUA_LDLIBS="C:\msys64\ucrt64\bin\lua51.dll";
+                make install_jsregexp
+            }
+        } else
+        {
             make install_jsregexp
         }
     }
@@ -102,8 +109,14 @@ function PluginMisc
     Push-Location "./telescope-fzf-native.nvim"
     if (!(Test-Path "./build/libfzf.dll"))
     {
-        powershell -Command {
-            $env:MSYSTEM="MSYS"; make
+        if ($USE_MSYS)
+        {
+            powershell -Command {
+                $env:MSYSTEM="MSYS"; make
+            }
+        } else
+        {
+            make
         }
     }
     Pop-Location
