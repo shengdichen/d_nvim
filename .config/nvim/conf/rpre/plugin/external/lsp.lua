@@ -107,7 +107,7 @@ local function lang()
                 client.server_capabilities.hoverProvider = false
             end
 
-            set_official("ruff_lsp", c)
+            set_official("ruff", c)
         end
 
         local function pyright(use_based)
