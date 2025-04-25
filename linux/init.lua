@@ -1,11 +1,16 @@
 local function set_paths()
-    local base = "$HOME/.config/nvim/conf/"
-    local conf_paths = table.concat(
-        { base .. "/rpre/", "$VIMRUNTIME", base .. "/rpost/" }, ","
+    local base = os.getenv("HOME") .. "/.config/nvim"
+    local paths = table.concat(
+        {
+            base .. "/rpre",
+            "$VIMRUNTIME",
+            base .. "/rpost"
+        },
+        ","
     )
 
-    vim.o.runtimepath = conf_paths
-    vim.o.packpath = conf_paths
+    vim.o.runtimepath = paths
+    vim.o.packpath = paths
 end
 
 local function main()

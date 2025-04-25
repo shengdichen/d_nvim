@@ -131,9 +131,11 @@ __update_treesitter() {
 }
 
 __stow() {
-    (
-        cd .. && stow -R "$(basename "${SCRIPT_PATH}")"
-    )
+    local _dir="${HOME}/.config/nvim"
+    mkdir -p "${_dir}"
+
+    stow -R --target "${_dir}" "linux"
+    stow -R --target "${_dir}" "common"
 }
 
 main() {
