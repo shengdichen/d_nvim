@@ -8,6 +8,7 @@ DIR_CONFIG="${HOME}/.config/nvim"
 __stow() {
     mkdir -p "${DIR_CONFIG}"
     mkdir -p "${DIR_CONFIG}/rpre/pack/start/start"
+    mkdir -p "${DIR_CONFIG}/rpre/pack/opt/opt"
 
     stow -R --target "${DIR_CONFIG}" "linux"
     stow -R --target "${DIR_CONFIG}" "common"

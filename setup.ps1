@@ -8,6 +8,7 @@ function CopyConfig
 {
     New-Item $DIR_CONFIG -ItemType Directory -ErrorAction SilentlyContinue
     New-Item $DIR_PLUGIN -ItemType Directory -ErrorAction SilentlyContinue
+    New-Item "$DIR_CONFIG\rpre\pack\opt\opt" -ItemType Directory -ErrorAction SilentlyContinue
 
     Copy-Item ".\common\*" $DIR_CONFIG -Recurse -Force
     Copy-Item ".\windows\*" $DIR_CONFIG -Recurse -Force
