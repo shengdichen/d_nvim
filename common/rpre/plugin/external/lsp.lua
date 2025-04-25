@@ -1,3 +1,5 @@
+local util = require("util_lua")
+
 local function bind()
     local gid = vim.api.nvim_create_augroup("LspBind", { clear = true })
 
@@ -201,8 +203,8 @@ local function lang()
             set_official("pylsp", {
                 cmd = {
                     "pylsp",
-                    "--log-file",
-                    os.getenv("HOME") .. "/.local/state/nvim/pylsp.log",
+                    -- "--log-file",
+                    -- util.dir_log() .. /"pylsp.log",
                 },
                 settings = { pylsp = { plugins = c } },
             })

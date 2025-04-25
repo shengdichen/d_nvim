@@ -47,4 +47,26 @@ MODULE.combine = function(tbls)
     return new
 end
 
+---@return boolean
+MODULE.is_unix = function()
+    -- REF:
+    --  https://stackoverflow.com/questions/295052/how-can-i-determine-the-os-of-the-system-from-within-a-lua-script/326677#326677
+    return package.config:sub(1, 1) == "/"
+end
+
+---@return string
+MODULE.HOME = function()
+    -- REF:
+    --  https://stackoverflow.com/questions/70944869/why-does-a-simple-printos-getenvhome-get-nil/77882654#77882654
+    return os.getenv("HOME") or os.getenv("USERPROFILE") or ""
+end
+
+---@return string
+MODULE.dir_log = function()
+    if MODULE.is_unix() then
+        return os.getenv("HOME") .. "/.local/state/nvim"
+    end
+    return os.getenv("LOCALAPPDATA") .. "/nvim-data"
+end
+
 return MODULE
