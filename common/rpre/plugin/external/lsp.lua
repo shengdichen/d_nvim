@@ -382,6 +382,16 @@ local function lang()
         set_official("texlab")
     end
 
+    local function powershell()
+        -- REF:
+        --  https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md?tab=readme-ov-file#powershell_es
+        local c = {}
+
+        c["bundle_path"] = util.HOME() .. "/.local/lib/PowerShellEditorServices"
+
+        set_official("powershell_es", c)
+    end
+
     local function misc()
         require("neodev").setup()
 
@@ -424,6 +434,7 @@ local function lang()
     shell()
     java()
     prose()
+    powershell()
     misc()
 
     m_nonels.setup({ sources = sources_nonels })
