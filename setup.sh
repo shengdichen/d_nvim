@@ -3,6 +3,17 @@
 SCRIPT_PATH="$(realpath "$(dirname "${0}")")"
 cd "${SCRIPT_PATH}" || exit 3
 
+DIR_CONFIG="${HOME}/.config/nvim"
+
+__stow() {
+    mkdir -p "${DIR_CONFIG}"
+    mkdir -p "${DIR_CONFIG}/rpre/pack/start/start"
+    mkdir -p "${DIR_CONFIG}/rpre/pack/opt/opt"
+
+    stow -R --target "${DIR_CONFIG}" "linux"
+    stow -R --target "${DIR_CONFIG}" "common"
+}
+
 __install() {
     local _update
     if [ "${1}" = "--update" ]; then
@@ -107,7 +118,7 @@ __plugin() {
     }
 
     (
-        cd "./.config/nvim/conf/rpre/pack/start/start" || exit 3
+        cd "${DIR_CONFIG}/rpre/pack/start/start" || exit 3
 
         __lsp
         __snippet
@@ -130,12 +141,6 @@ __update_treesitter() {
     nvim -c "q"
 }
 
-__stow() {
-    (
-        cd .. && stow -R "$(basename "${SCRIPT_PATH}")"
-    )
-}
-
 main() {
     local _update
     case "${1}" in
@@ -145,8 +150,8 @@ main() {
             ;;
     esac
 
-    __plugin "${_update}"
     __stow
+    __plugin "${_update}"
     __update_treesitter
 
     unset SCRIPT_PATH
