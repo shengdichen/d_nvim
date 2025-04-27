@@ -4,7 +4,8 @@ local function set_paths()
         {
             base .. "/rpre",
             "$VIMRUNTIME",
-            base .. "/rpost" },
+            base .. "/rpost"
+        },
         ","
     )
 
